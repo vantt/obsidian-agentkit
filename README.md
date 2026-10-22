@@ -22,6 +22,7 @@ Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately
 Without Obsidian running, the skill falls back to file tools and labels its answers as approximate.
 
 ## Docs
+- [docs/BACKLOG.md](docs/BACKLOG.md): program board (work items, status, progress), linking to the plans in `docs/plans/`
 - [docs/FINDINGS.md](docs/FINDINGS.md): measured CLI behaviour
 - [docs/SPEC.md](docs/SPEC.md): design
 - [docs/GATES.md](docs/GATES.md): decisions taken at each gate

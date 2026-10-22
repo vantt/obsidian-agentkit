@@ -1,0 +1,113 @@
+# Program board: obsidian-agentkit
+
+Bảng quản lý công việc, trạng thái và tiến độ của toàn project. Mỗi epic có một plan chi tiết trong [`docs/plans/`](plans/); mỗi việc có ID (`E2.3`) trỏ tới dòng tương ứng trong plan đó.
+
+**Cập nhật lần cuối:** 2026-10-22 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4)
+
+## Tổng quan tiến độ
+
+**Toàn project: 7 / 44 việc xong (15%)**
+
+| Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
+|---|---|---|---|---|---|---|
+| E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | ⬜ Todo | P1 | 0/6 ░░░░░░░░░░ 0% | — | E2.5, E2.6 (agent làm được ngay) |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | ⏸ Chờ | P1 | 0/6 ░░░░░░░░░░ 0% | E2.2, E2.3 | Chờ thư mục test trên Drive |
+| E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
+| E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E5.1, E5.2 |
+| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
+| E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ⬜ Todo | P2 | 0/8 ░░░░░░░░░░ 0% | — | E7.1 chốt tình huống, E7.2 chạy không có skill |
+
+Ký hiệu trạng thái:
+- ✅ Done: xong, có bằng chứng.
+- 🔄 Doing: đang làm.
+- ⬜ Todo: chưa bắt đầu.
+- ⏸ Chờ: bị chặn bởi việc khác hoặc cần user.
+- ❌ Dropped: bỏ, kèm lý do.
+
+Ưu tiên:
+- P1: cần trước khi dùng trên vault thật.
+- P2: nên làm.
+- P3: để sau.
+
+## Đang làm
+
+_Trống._
+
+## Cần user
+
+Các việc này agent không tự làm được:
+
+| ID | Việc | User cần làm |
+|---|---|---|
+| E2.1 | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill |
+| E2.2, E2.3 | Test trên Google Drive | Tạo thư mục test trong Drive, mở thành vault riêng |
+| E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
+| E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
+| E5.6 | Dọn repo | Đồng ý commit việc dời thư mục distillery, và quyết định có commit `docs/handoff/` không |
+| E7.5, E7.7, E7.8 | Video, bài viết | Ghi màn hình theo kịch bản, duyệt tư liệu trước khi đăng |
+
+## Backlog chi tiết
+
+| ID | Việc | Epic | Ưu tiên | Trạng thái | Ai làm | Bằng chứng / ghi chú |
+|---|---|---|---|---|---|---|
+| E1.0 | Đầu vào, bản sao vault có git | E1 | — | ✅ | Agent + user | [GATES.md](GATES.md) cổng 0 |
+| E1.1 | Đo CLI 1.14.4 | E1 | — | ✅ | Agent | [FINDINGS.md](FINDINGS.md) |
+| E1.2 | Spec | E1 | — | ✅ | Agent | [SPEC.md](SPEC.md) |
+| E1.3 | Skill, bridge, profile, unit test | E1 | — | ✅ | Agent | `skills/obsidian-connect/`, 26/26 test |
+| E1.4 | Bộ probe, lịch sử điểm, nhật ký sự cố | E1 | — | ✅ | Agent | [HISTORY.md](../tests/compat/HISTORY.md) 29/29 |
+| E1.5 | 11 kịch bản test | E1 | — | ✅ | Agent | [RESULTS.md](../tests/RESULTS.md) |
+| E1.6 | Tài liệu HOW-IT-WORKS | E1 | — | ✅ | Agent | [HOW-IT-WORKS.md](HOW-IT-WORKS.md) |
+| E2.1 | Case 9 với agent trên Windows | E2 | P1 | ⏸ | User + agent | Cần máy Windows có Claude Code |
+| E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ⏸ | User + agent | Cần thư mục test trên Drive |
+| E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ⏸ | Agent | Cùng thư mục với E2.2 |
+| E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | — |
+| E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ⬜ | Agent | — |
+| E2.6 | Đo token từ transcript | E2 | P2 | ⬜ | Agent | — |
+| E3.1 | Cài skill cho vault thật | E3 | P1 | ⏸ | User + agent | Chờ E2.3 |
+| E3.2 | Profile vault thật | E3 | P1 | ⏸ | Agent | Chỉ đọc |
+| E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | — |
+| E3.4 | Chọn cách snapshot | E3 | P1 | ⏸ | User | — |
+| E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | — |
+| E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | — |
+| E4.1 | Plugin và marketplace của Claude Code | E4 | P3 | ⬜ | Agent | — |
+| E4.2 | Đường dẫn script không phụ thuộc chỗ cài | E4 | P3 | ⬜ | Agent | — |
+| E4.3 | Script cài đặt kiểm tra điều kiện | E4 | P3 | ⬜ | Agent | — |
+| E4.4 | Hướng dẫn cài trên Windows | E4 | P3 | ⬜ | Agent | — |
+| E4.5 | HOW-IT-WORKS tiếng Anh | E4 | P3 | ⬜ | Agent | — |
+| E5.1 | GitHub Actions | E5 | P2 | ⬜ | Agent | — |
+| E5.2 | `npm test` | E5 | P2 | ⬜ | Agent | — |
+| E5.3 | Checklist khi Obsidian cập nhật | E5 | P2 | ⬜ | Agent | — |
+| E5.4 | Nhắc chạy probe định kỳ | E5 | P3 | ⬜ | Agent | — |
+| E5.5 | P18 tự dọn Thùng rác | E5 | P3 | ⬜ | Agent | — |
+| E5.6 | Dọn repo (distillery, handoff) | E5 | P2 | ⏸ | User | — |
+| E6.1 | Đo task của plugin Tasks qua CLI | E6 | P2 | ⬜ | Agent | — |
+| E6.2 | Đo Templater qua `--create` | E6 | P2 | ⬜ | Agent | — |
+| E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P2 | ⬜ | Agent | — |
+| E6.4 | Viết `references/plugins.md` | E6 | P2 | ⬜ | Agent | Sau E6.1–E6.3 |
+| E6.5 | Fixture và kịch bản test cho plugin | E6 | P2 | ⬜ | Agent | Sau E6.4 |
+| E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |
+| E7.1 | Chốt tình huống diễn tập | E7 | P2 | ⬜ | Agent | Đề xuất 8 tình huống S1–S8 trong plan |
+| E7.2 | Chạy không có skill | E7 | P2 | ⬜ | Agent | Trên bản sao vault, reset giữa mỗi lần |
+| E7.3 | Chạy có skill | E7 | P2 | ⬜ | Agent | Dùng lại RESULTS nếu trùng |
+| E7.4 | Bảng so sánh và biểu đồ | E7 | P2 | ⬜ | Agent | `docs/showcase/COMPARISON.md` |
+| E7.5 | Ảnh, diff, quay terminal | E7 | P2 | ⬜ | Agent + user | Chỉ dùng fixture tổng hợp |
+| E7.6 | Kho "aha moment" | E7 | P2 | ⬜ | Agent | `docs/showcase/STORIES.md` |
+| E7.7 | Bản nháp bài viết và kịch bản video | E7 | P2 | ⬜ | Agent + user | `POST.md`, `VIDEO-SCRIPT.md` |
+| E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ⬜ | Agent + user | Không có tên note hoặc đường dẫn thật |
+
+## Cách cập nhật board
+
+1. **Bắt đầu một việc:** đổi trạng thái thành 🔄, thêm dòng vào mục "Đang làm".
+2. **Xong một việc:**
+   - đổi trạng thái thành ✅ và điền bằng chứng (file, commit, kết quả test);
+   - đánh dấu trong plan của epic;
+   - cập nhật cột "Tiến độ" của epic và dòng "Toàn project".
+3. **Việc mới:**
+   - thêm vào plan của epic (hoặc tạo epic mới `docs/plans/E<n>-<tên>.md`);
+   - thêm dòng vào bảng chi tiết;
+   - cập nhật tổng số việc.
+4. **Quyết định quan trọng** ghi vào [GATES.md](GATES.md), rồi trỏ tới từ cột bằng chứng.
+5. Cập nhật dòng "Cập nhật lần cuối" ở đầu file.
+
+Thanh tiến độ: mỗi █ = 10%. Làm tròn xuống.
