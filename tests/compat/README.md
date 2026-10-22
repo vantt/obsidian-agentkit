@@ -3,7 +3,7 @@
 The skill's trap list and guards are true for the CLI version in `SKILL.md` `metadata.tested-cli`. When `obs --preflight` prints `match=no`, or before a release, run this suite and compare.
 
 ## What it measures
-`probes.mjs` holds 28 probes. Each one re-checks a single behaviour the skill relies on, and is tied to a finding in `docs/FINDINGS.md`. A probe **passes** when the CLI still behaves as recorded. A failure means the CLI changed, so the related skill text or guard may now be wrong or unnecessary. A failure is not always bad news: a fixed trap also shows up as a failure.
+`probes.mjs` holds 29 probes. Each one re-checks a single behaviour the skill relies on, and is tied to a finding in `docs/FINDINGS.md`. A probe **passes** when the CLI still behaves as recorded. A failure means the CLI changed, so the related skill text or guard may now be wrong or unnecessary. A failure is not always bad news: a fixed trap also shows up as a failure.
 
 | Kind | Probes |
 |---|---|
@@ -13,12 +13,12 @@ The skill's trap list and guards are true for the CLI version in `SKILL.md` `met
 | Link integrity | P13–P17 |
 | Data safety | P18 P19 |
 | Metadata and conventions | P22–P24 |
-| Other writes, UI and the bridge | P20 P21 P26 P28 |
+| Other writes, UI and the bridge | P20 P21 P26 P28 P29 |
 
 ## Scoring
 - Weight = damage tier from `docs/research/YARDSTICK.md`: data loss 5, link graph 4, silent wrong answer 3, metadata 3, tokens 2, environment or UI 1.
 - **Score = passed weight ÷ weight of the probes that ran**, as a %. The run also records passed/ran counts.
-- Each run writes `history/<UTC time>_<cli>_<env>.json` (every probe: id, finding, weight, pass, observed) and appends one row to `HISTORY.md`. That row includes **which probes flipped since the previous run**.
+- Each run writes `history/<UTC time>_<cli>_<env>.json` (every probe: id, finding, weight, pass, observed) and rebuilds `HISTORY.md` from all JSON files. Each row lists **which probes flipped since the last run that ran them**; partial (`--only`, `--no-write`) runs are labelled.
 - `node tests/compat/probes.mjs --compare` prints the flips between the last two runs, with the observed output.
 
 ## Setup (once)

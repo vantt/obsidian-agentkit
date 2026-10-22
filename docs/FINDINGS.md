@@ -122,6 +122,8 @@ jackal's `HIGH_RISK_REPORT.md` gives 13/57 silent failures on CLI 1.12.1. The ma
 - **F9h `outline`.** `format=json` gives `{"level","heading","line"}` with 1-based lines, which feed straight into a ranged read (`Read offset=…`). `total` → 31 headings for the 2,974-line CRLF note.
 - **F9i `tag name=proj verbose`** counts nested `#proj/sub` too (5 occurrences, where ground truth for exact `#proj` is 2 in body + 2 in frontmatter). It does not count `#projects` or code blocks.
 
+- **F9j `daily:read` creates the note (found in Phase 4, 2026-10-22).** With no daily note on disk, `daily:read` printed nothing (bridge exit 4), and right afterwards `2026-10-22.md` existed with 0 bytes. A read command has a write side effect. A later `daily:append` into that empty file starts the note with a blank line (`\n- [ ] …`). Verdict: new finding. The skill checks with `daily:path` and file tools instead.
+
 ## F10 Remaining assumptions
 
 - **F10a Claude Code Edit on CRLF.** I took a copy of the 2,974-line CRLF note, read lines 105–108, then used Edit to insert one line. Afterwards `gt.mjs crlf` reported `crlf: 2975, lf: 0, mixed: false`. Verdict: confirmed, line endings are preserved, including in the inserted line. The `read` CLI command also returns the CRLF bytes unchanged.

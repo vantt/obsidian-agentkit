@@ -10,7 +10,7 @@ Evidence: `docs/FINDINGS.md` in the obsidian-connect repo (`F#`). Re-test on oth
 | `Error: Command "x" not found` | app still loading after start or reload, or no such command | 6 |
 | `Vault not found.` | wrong `vault=` name | 3 |
 | `No matches found.` / `No backlinks found.` / `No links found.` / `No tags found.` / `No headings found.` / `No frontmatter found.` / `No aliases found.` | empty; check `path=` and spelling before saying "none" | 4 |
-| empty stdout from `daily:read` | today's daily note does not exist yet | 4 |
+| empty stdout from `daily:read` | today's note is empty, or did not exist and was **just created empty** | 4 |
 | `The CLI is unable to find Obsidian…` (exit 1) | app closed; switch to file mode | 2 |
 
 ## Scope and output size
@@ -36,6 +36,7 @@ Evidence: `docs/FINDINGS.md` in the obsidian-connect repo (`F#`). Re-test on oth
   - Any list write, or `type=`, **rewrites `.obsidian/types.json` vault-wide** (for example `tags: tags` becomes `multitext`).
   - So edit typed properties in the file instead.
 - `daily:append` creates the note from its template and the `YYYY/MM` subfolders, but the root daily folder must already exist. Running it again appends again.
+- `daily:read` **creates** today's note as an empty file when it does not exist (bridge exit 4, empty output). Check for the note with `obs --abs $(obs daily:path)` and file tools instead.
 - `\n` inside `content=` becomes LF. In a CRLF note, append with the file tools instead if the line endings must match.
 
 ## Environment

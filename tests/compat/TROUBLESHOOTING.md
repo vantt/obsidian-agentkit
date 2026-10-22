@@ -24,6 +24,9 @@ Format: **Symptom** / Cause / Fix / First seen (CLI version, date).
 - **`backlinks … total` lags after a move into a new folder** (9 → 1 for 8+ s, then back to 9). Fix: verify by polling (the bridge polls up to `OBS_VERIFY_MS`, default 30 s), never by one fixed sleep.
 - **After `git clean` removed a folder, `file path=` still found a file there for about 1 s.** Fix: before each run, poll until the CLI agrees with the disk (target exists, removed paths `not found`).
 
+- **P29 failed only in the full run** (`before=false after=false`). Cause: P26 had just created and the reset deleted today's daily note, but the index still listed it, so `daily:read` read the ghost instead of creating a file. Fix: before a probe that depends on a file being absent, poll `file path=` until the CLI says not found.
+- **`HISTORY.md` showed every probe as flipped after a `--only` run.** Cause: skipped probes (pass = null) were compared with real results. Fix: `HISTORY.md` is rebuilt from `history/*.json`, comparing only probes that ran in both runs; partial runs are labelled.
+
 ## Output size
 
 - **A search probe printed 410 KB.** Cause: unquoted multi-word query (`query=Section A`) matches each word, and `search:context` repeats a line per matching term. Fix: quote phrases (`query='"Section A"'`), always pass `path=` and `limit=`, and pipe probe output through `head -c` while exploring.

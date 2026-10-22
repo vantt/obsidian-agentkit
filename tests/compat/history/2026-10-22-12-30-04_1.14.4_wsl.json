@@ -1,0 +1,246 @@
+{
+ "date": "2026-10-22T12:30:04.199Z",
+ "cli": "1.14.4",
+ "tested_cli": "1.14.4",
+ "env": "wsl",
+ "node": "24.18.0",
+ "score": {
+  "passed": 1,
+  "ran": 1,
+  "weighted_pct": 100
+ },
+ "results": [
+  {
+   "id": "P01",
+   "finding": "F1",
+   "weight": 1,
+   "name": "version string",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P02",
+   "finding": "F6",
+   "weight": 3,
+   "name": "Error: text with exit 0",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P03",
+   "finding": "F1c",
+   "weight": 5,
+   "name": "vault= ignored unless first",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P04",
+   "finding": "F1c",
+   "weight": 3,
+   "name": "wrong vault prints \"Vault not found.\" (no Error:)",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P05",
+   "finding": "F6",
+   "weight": 3,
+   "name": "empty search string",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P06",
+   "finding": "F8b",
+   "weight": 3,
+   "name": "plain tasks is vault-wide",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P07",
+   "finding": "F7",
+   "weight": 3,
+   "name": "plain tags is vault-wide; active is file-only",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P08",
+   "finding": "F8a",
+   "weight": 2,
+   "name": "search format=json is a path list",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P09",
+   "finding": "F8a",
+   "weight": 2,
+   "name": "search:context json has 1-based lines",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P10",
+   "finding": "F8c",
+   "weight": 2,
+   "name": "search total counts files",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P11",
+   "finding": "F9f",
+   "weight": 2,
+   "name": "search:context ignores total",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P12",
+   "finding": "F9h",
+   "weight": 2,
+   "name": "outline json line numbers",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P13",
+   "finding": "F4e",
+   "weight": 4,
+   "name": "backlinks: all forms, not code/alias-name",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P25",
+   "finding": "F9d",
+   "weight": 1,
+   "name": "properties format=json is JSON",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P27",
+   "finding": "F6",
+   "weight": 1,
+   "name": "unknown flags ignored silently",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P28",
+   "finding": "F1",
+   "weight": 1,
+   "name": "bridge --preflight <= 5 lines, exit 0",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P14",
+   "finding": "F4a",
+   "weight": 4,
+   "name": "rename updates links when alwaysUpdateLinks on",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P15",
+   "finding": "F4c",
+   "weight": 4,
+   "name": "rename blocks on modal when alwaysUpdateLinks off",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P16",
+   "finding": "F4d",
+   "weight": 2,
+   "name": "move into missing folder: ENOENT, exit 0",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P17",
+   "finding": "F4b",
+   "weight": 1,
+   "name": "move restyles md links to newLinkFormat",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P18",
+   "finding": "F5",
+   "weight": 5,
+   "name": "CLI delete ignores trashOption local (Recycle Bin)",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P19",
+   "finding": "F9c",
+   "weight": 5,
+   "name": "create on existing path makes \"name 1.md\"",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P20",
+   "finding": "F9c",
+   "weight": 1,
+   "name": "create makes parent folders",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P21",
+   "finding": "F9e",
+   "weight": 1,
+   "name": "create opens no tab",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P22",
+   "finding": "F9a",
+   "weight": 3,
+   "name": "property:set \"a, b\" writes a string",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P23",
+   "finding": "F9b",
+   "weight": 3,
+   "name": "property:set list rewrites types.json",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P24",
+   "finding": "F9a",
+   "weight": 3,
+   "name": "property:set number without type gives string",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P26",
+   "finding": "F9g",
+   "weight": 2,
+   "name": "daily:append twice duplicates",
+   "pass": null,
+   "observed": "skipped"
+  },
+  {
+   "id": "P29",
+   "finding": "F9j",
+   "weight": 2,
+   "name": "daily:read creates an empty daily note",
+   "pass": true,
+   "observed": "before=false after=true"
+  }
+ ]
+}

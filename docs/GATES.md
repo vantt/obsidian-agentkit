@@ -62,3 +62,38 @@ The user let the agent pass the review gates of `docs/handoff/BUILD-PROMPT.md` o
 2. **The profile goes to stdout, or `--out` to a gitignored file in the agent's working dir, never into the vault.** Why: Drive sync and no vault pollution.
 3. **The bridge may use `eval` read-only, for one `getConfig` call inside `--rename`/`--move`/`--preflight`.** The agent itself is still denied `eval`. Why: a stale file value could let a rename through while the modal blocks and links break (F4c), which is worse than one controlled read-only eval.
 4. **Probe suite, `HISTORY.md` with weighted scores, `RESULTS.md` rows per version, and `tested-cli` in the SKILL metadata** (SPEC §5).
+
+## Phase 3 build notes (no gate)
+
+- **`backlinks … total` lagged** after a move into a new folder (9 → 1 for 8+ s). Decision: the guarded move polls for up to 30 s instead of sleeping once. Why: a fixed sleep either wastes time or reports a false failure.
+- **With Obsidian closed, the "unable to find Obsidian" message comes on stderr from WSL.** The first bridge version read only stdout and mapped it to exit 3. Fixed: the bridge checks both streams, and a test was added.
+- **Probe harness flakiness.** Write probes left ghost index entries that broke a later read probe, and a reset right after an app start left the index stale. Decision: read-only probes run first; the start does a reset, then `reload`, then waits until backlinks equal the file-only ground truth. Every lesson went into `tests/compat/TROUBLESHOOTING.md`.
+
+## Gate 3: accepting the gaps (2026-10-22)
+
+**Issues met in Phase 4**
+
+1. **Case 4 answered correctly but cost about 6,100 tokens**, because SKILL.md said "`total`, then `format=json`".
+2. **Case 5 found that `daily:read` creates an empty daily note** (a new finding, F9j).
+3. **Case 6 found that diacritics change search results** ("Đà Nẵng" ≠ "Da Nang").
+4. **Agents in cases 2, 3, 7 and 8b reported gaps in the skill text:**
+   - empty snapshot commits;
+   - date-like values on unregistered keys;
+   - alias-name links;
+   - verifying a tag rename when nested tags are kept;
+   - conflict-copy patterns that match ordinary notes;
+   - `rg` broken by a shell hook.
+5. **One agent in case 2 wrongly stated that `[[TN Alias]]` resolves.** It does not (F4e). This did not affect the result, and the skill's backlink row now states the rule.
+
+**Decisions and reasons**
+
+1. **Every gap was fixed in the skill text, not in the bridge,** with one new probe (P29). Only case 4 was re-run to confirm the token fix (about 60 tokens).
+   - The other cases had already passed. The fixes either add guidance for situations those runs handled correctly anyway, or clarify wording.
+   - Why: the user asked for 1 run per case and 3 only on failure. No case failed its pass criteria.
+2. **Gaps accepted for v1, recorded in `tests/RESULTS.md`:**
+   - *Case 9:* bridge-level only. Answers are identical from PowerShell and WSL, but no Windows-native agent session was run.
+   - *Case 10, Google Drive Recycle Bin, sync conflicts:* not tested (user decision).
+   - *Admin terminal:* not tested.
+   - *Token estimates:* they count bridge output and Read lines, not output from the agent's own `grep`/`cat`. This undercounts cases 1, 2, 7 and 8b.
+   - *Sample size:* single runs, so variance between sessions is unknown.
+3. **The pre-authorised gate decision (user, 2026-10-22) is applied:** the agent accepts these gaps and reports them for review rather than blocking. They are what the user should look at first.

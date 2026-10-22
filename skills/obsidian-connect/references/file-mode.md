@@ -19,6 +19,13 @@ Run from the vault root. Use `rg` if it exists, otherwise `grep -r`. From WSL on
 | Properties | Read the frontmatter (the first lines up to the second `---`) | — |
 | Daily note path | profile `daily_notes.format` (moment.js tokens) + `folder` | the template is not applied; copy it by hand |
 
+Backlink rules that match Obsidian:
+- Links in frontmatter values (`related: ["[[X]]"]`) count.
+- Matches inside fenced code or inline code do not count; check the hits by hand.
+- `[[Alias]]` (a link by alias name) does not resolve in Obsidian; report it separately.
+
+If `rg` fails (missing, or rewritten by a shell hook), use `grep -rl --include='*.md'` with the same pattern. Read-back in file mode means re-reading the frontmatter lines, because `properties` needs the CLI.
+
 ## Writes in file mode
 - Single-note create and edit are allowed. Follow the profile's link style, folders and property types.
 - **Rename, move and trash are not allowed.** Links would not be updated. Tell the user to open Obsidian, or to do it in the app.

@@ -117,6 +117,7 @@ const probes = [
   { id: 'P24', f: 'F9a', w: 3, name: 'property:set number without type gives string', write: true, run: () => { out(['property:set', 'name=rating', 'value=7', `path=${L}/props/Property Note.md`]); const y = gt('yaml', dir, `${L}/props/Property Note.md`); return { pass: y.keys.rating === 'string', obs: y.keys.rating }; } },
   { id: 'P25', f: 'F9d', w: 1, name: 'properties format=json is JSON', run: () => { try { JSON.parse(out(['properties', `path=${L}/props/Property Note.md`, 'format=json'])); return { pass: true, obs: '' }; } catch (e) { return { pass: false, obs: e.message }; } } },
   { id: 'P26', f: 'F9g', w: 2, name: 'daily:append twice duplicates', write: true, run: () => { const p = out(['daily:path']); out(['daily:append', 'content=P26 marker']); out(['daily:append', 'content=P26 marker']); const t = fs.existsSync(path.join(dir, p)) ? fs.readFileSync(path.join(dir, p), 'utf8') : ''; const n = (t.match(/P26 marker/g) || []).length; return { pass: n === 2, obs: `${p} count=${n}` }; } },
+  { id: 'P29', f: 'F9j', w: 2, name: 'daily:read creates an empty daily note', write: true, run: () => { const p = out(['daily:path']); for (let i = 0; i < 15 && run(['file', `path=${p}`]).code === 0; i++) sleep(1000); const before = fs.existsSync(path.join(dir, p)) || run(['file', `path=${p}`]).code === 0; out(['daily:read']); sleep(800); const after = fs.existsSync(path.join(dir, p)); return { pass: !before && after && fs.statSync(path.join(dir, p)).size === 0, obs: `before=${before} after=${after}` }; } },
   { id: 'P27', f: 'F6', w: 1, name: 'unknown flags ignored silently', run: () => { const r = out(['search', 'query="Section A"', `path=${L}`, 'bogusflag=1', 'matches']); return { pass: r.split('\n').length === 2, obs: r.replace(/\n/g, ' | ').slice(0, 60) }; } },
   { id: 'P28', f: 'F1', w: 1, name: 'bridge --preflight <= 5 lines, exit 0', run: () => { const r = spawnSync(process.execPath, [path.join(here, '..', '..', 'skills/obsidian-connect/scripts/obs.mjs'), '--preflight'], { encoding: 'utf8', env: { ...process.env, OBS_VAULT: vault } }); return { pass: r.status === 0 && r.stdout.trim().split('\n').length <= 5, obs: `exit=${r.status}` }; } },
 ];
@@ -148,12 +149,28 @@ const record = { date, cli: cliVer, tested_cli: TESTED_CLI, env: arg('--env-labe
 fs.mkdirSync(histDir, { recursive: true });
 const file = path.join(histDir, `${date.slice(0, 19).replace(/[:T]/g, '-')}_${cliVer}_${record.env}.json`);
 fs.writeFileSync(file, JSON.stringify(record, null, 1) + '\n');
-const prev = previous(file);
-const changed = prev ? results.filter((r) => { const o = prev.results.find((x) => x.id === r.id); return o && o.pass !== r.pass; }).map((r) => `${r.id}:${r.pass ? 'now pass' : 'now FAIL'}`) : [];
-if (!fs.existsSync(histMd)) fs.writeFileSync(histMd, '# Probe score history\n\nOne row per run of `tests/compat/probes.mjs`. Method and scoring: `README.md`. Raw results: `history/*.json`.\n\n| Date (UTC) | CLI | Env | Passed / ran | Weighted score | Changed vs previous run | Failed probes |\n|---|---|---|---|---|---|---|\n');
-fs.appendFileSync(histMd, `| ${date.slice(0, 16).replace('T', ' ')} | ${cliVer} | ${record.env} | ${passed.length}/${ran.length} | ${record.score.weighted_pct}% | ${changed.join(', ') || (prev ? 'none' : 'first run')} | ${ran.filter((r) => !r.pass).map((r) => r.id).join(', ') || '—'} |\n`);
+rebuildHistory();
 console.log(`\nscore ${passed.length}/${ran.length} weighted ${record.score.weighted_pct}%  -> ${path.relative(process.cwd(), file)}`);
 if (cliVer !== TESTED_CLI) console.log(`CLI ${cliVer} differs from tested ${TESTED_CLI}: update FINDINGS, traps.md and SKILL metadata for every changed probe.`);
+
+// HISTORY.md is derived from history/*.json (the source of truth), so it is rebuilt on every run.
+// "Changed" compares only probes that ran in both this run and the previous run that ran them.
+function rebuildHistory() {
+  const runs = fs.readdirSync(histDir).filter((x) => x.endsWith('.json')).sort().map((f) => JSON.parse(fs.readFileSync(path.join(histDir, f), 'utf8')));
+  const last = {};
+  const rows = runs.map((r) => {
+    const flips = [];
+    for (const x of r.results) {
+      if (x.pass === null) continue;
+      if (x.id in last && last[x.id] !== x.pass) flips.push(`${x.id}:${x.pass ? 'now pass' : 'now FAIL'}`);
+      last[x.id] = x.pass;
+    }
+    const ran = r.results.filter((x) => x.pass !== null);
+    const kind = ran.length < r.results.length ? ` (partial: ${ran.map((x) => x.id).join(' ')})` : '';
+    return `| ${r.date.slice(0, 16).replace('T', ' ')} | ${r.cli} | ${r.env} | ${r.score.passed}/${r.score.ran}${kind} | ${r.score.weighted_pct}% | ${flips.join(', ') || 'none'} | ${ran.filter((x) => !x.pass).map((x) => x.id).join(', ') || '—'} |`;
+  });
+  fs.writeFileSync(histMd, '# Probe score history\n\nGenerated from `history/*.json` on every run of `tests/compat/probes.mjs`. Method and scoring: `README.md`.\n"Changed" lists probes whose result differs from the last run that ran them.\n\n| Date (UTC) | CLI | Env | Passed / ran | Weighted score | Changed | Failed probes |\n|---|---|---|---|---|---|---|\n' + rows.join('\n') + '\n');
+}
 
 function previous(exclude) {
   if (!fs.existsSync(histDir)) return null;
