@@ -46,3 +46,19 @@ The user let the agent pass the review gates of `docs/handoff/BUILD-PROMPT.md` o
    - Why: F9c and F9g.
 
 **Not verified at this gate:** admin terminal, Drive Recycle Bin, MCP.
+
+## Gate 2: SPEC approval (2026-10-22)
+
+**Issues met**
+
+1. **Bridge shape.** BUILD-PROMPT suggests a POSIX shell script plus a PowerShell script, or one Node script. Node runs on both sides (Windows v22, WSL v24).
+2. **Where the profile goes.** Writing into the vault would sync through Drive and mix generated files with notes.
+3. **Reading `alwaysUpdateLinks` live needs `eval`,** which is on the "never without request" list. The file value can differ from the live one (F11).
+4. **New user requests:** a version pin, a re-runnable probe suite with scoring and history, and a troubleshooting log.
+
+**Decisions and reasons**
+
+1. **One Node bridge.** It means a single implementation of exit-code parsing and guards, and it sidesteps the Git Bash `.exe` trap. The cost: Node must be installed. Preflight reports `no-node` implicitly, because the script cannot start, so the skill says "if `node` is missing, use file mode".
+2. **The profile goes to stdout, or `--out` to a gitignored file in the agent's working dir, never into the vault.** Why: Drive sync and no vault pollution.
+3. **The bridge may use `eval` read-only, for one `getConfig` call inside `--rename`/`--move`/`--preflight`.** The agent itself is still denied `eval`. Why: a stale file value could let a rename through while the modal blocks and links break (F4c), which is worse than one controlled read-only eval.
+4. **Probe suite, `HISTORY.md` with weighted scores, `RESULTS.md` rows per version, and `tested-cli` in the SKILL metadata** (SPEC §5).
