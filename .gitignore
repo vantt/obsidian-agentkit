@@ -1,0 +1,25 @@
+# Reference clones from distill (other people's code)
+/upstreams/
+
+# Local test vault copies and generated vault profiles
+/test-vault/
+/.vault-profile*
+
+# Local agent state and secrets
+.claude/settings.local.json
+.env
+.env.*
+*.local
+
+# Node / Python tooling
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
