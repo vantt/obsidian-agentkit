@@ -156,7 +156,65 @@ obs --preflight   → cli-status=Obsidian is not running -> use file mode   (exi
 ```
 Agent đọc `file-mode.md`, tìm backlink bằng grep, ghi rõ "kết quả gần đúng", và từ chối rename.
 
-## 5. Kiểm thử và bảo trì (ngoài skill, trong repo)
+## 5. Vì sao ít tốn token
+
+Token của một tác vụ đến từ hai nguồn:
+- **Chữ của skill** mà agent phải đọc.
+- **Output của các công cụ** đổ vào context: kết quả lệnh, nội dung file. Đây thường là phần lớn hơn nhiều.
+
+Mỗi lượt gọi công cụ còn kéo theo một vòng suy luận nữa, nên chi phí thực tế là **số lượt × lượng output mỗi lượt** (YARDSTICK). Skill cắt giảm cả hai nguồn.
+
+### 5.1 Chữ của skill: chỉ nạp phần cần dùng
+
+| Phần | Nạp khi nào | Kích thước (ước tính, ký tự ÷ 4) |
+|---|---|---|
+| `description` | Luôn có trong danh sách skill | 51 từ |
+| `SKILL.md` | Khi skill được kích hoạt | ~1,6k token |
+| Mỗi file `references/` | Chỉ khi việc cần đến | 550–1.100 token |
+| **Tác vụ điển hình** (SKILL + một reference lớn nhất) | | **≤ ~2,7k token** |
+
+So sánh với các repo đã khảo sát (REPORT.md): pablo nạp khoảng 9k token (SKILL cộng reference 651 dòng), jackal khoảng 1,8k. Skill này không chép tài liệu lệnh CLI vào; khi cần cú pháp, agent gọi `obsidian help <lệnh>`. `tests/size-check.mjs` kiểm tra ngân sách này mỗi lần chạy test, để skill không phình dần.
+
+### 5.2 Output công cụ: các quy tắc làm output nhỏ
+
+| Quy tắc trong skill | Vì sao tiết kiệm | Số đo thực tế |
+|---|---|---|
+| **Hỏi số lượng thì dừng ở `total`** | Chỉ trả về một con số, thay vì cả danh sách | Case 4: 24.499 byte (~6.100 token) giảm còn 248 byte (~60 token) sau khi sửa skill |
+| **Dùng chỉ mục của Obsidian thay vì đọc file** | `backlinks`, `tasks`, `tags` trả lời từ chỉ mục có sẵn, không phải mở hàng nghìn note | Đếm 114 task trên 1.845 note: 1 lệnh, output chỉ là con số `114`. Grep toàn vault từ WSL mất 5–8 giây và trả về từng dòng khớp |
+| **Đặt cụm từ trong ngoặc kép** | `query=Section A` khớp từng từ riêng, còn `search:context` lặp mỗi dòng theo số từ khớp | Cùng câu hỏi: 410 KB khi không có ngoặc kép, 254 byte khi có (F8c) |
+| **Luôn có `path=` và `limit=`** | Thu hẹp phạm vi tìm và chặn số kết quả | Case 6: tìm "Đà Nẵng" trên 1.845 note, tổng output ~960 token (ngân sách 4k) |
+| **Outline rồi đọc đúng khoảng dòng** | Note dài không bao giờ bị đọc hết | Case 8a: note 2.974 dòng, agent chỉ đọc 8 dòng, ~680 token cả tác vụ |
+| **Sửa theo dòng (Edit)** | Không phải đọc lại hay ghi lại cả file | Case 3: diff 3 dòng, ~200 token |
+| **`head -c 4000` cho output dài** | Chặn trên cho mọi danh sách dài | — |
+| **Biết lệnh nào bỏ qua `total`** | `search:context` và `bases` in toàn bộ dù có `total`; skill dặn luôn kèm `limit` | Tránh được một dạng bùng output mà CLI không báo (F9f) |
+
+### 5.3 Ít lượt gọi hơn
+
+| Cơ chế | Tiết kiệm |
+|---|---|
+| **Preflight một lần, trả lời trong ≤ 5 dòng** | Môi trường, phiên bản, vault và cài đặt có trong một lần gọi. Agent không phải thử từng lệnh để tìm hiểu |
+| **Mã thoát rõ ràng** | CLI thô báo lỗi bằng chữ kèm exit 0, nên agent hay phải gọi thêm để kiểm tra, hoặc thử lại nhiều lần. Bridge trả 3/4/6/7 ngay, kèm hướng xử lý |
+| **Không bao giờ thử lại khi timeout hoặc mất kết nối** | Obsidian tắt: phát hiện trong 1 lần gọi, khoảng 150 ms (case 7) |
+| **Lệnh gộp của bridge** | `--rename` tự chạy khoảng 6 lệnh CLI bên trong (kiểm tra file, cài đặt, đếm link trước và sau, chờ chỉ mục) nhưng chỉ in **một dòng** kết quả: `backlinks 9->9; unresolved 87->87; verified` |
+| **Profile ~25 dòng** | Thay cho việc agent tự mở và đọc 5–6 file JSON trong `.obsidian/`. Chỉ chạy khi sắp ghi; tác vụ chỉ đọc thì bỏ qua |
+
+### 5.4 Kết quả đo trên 11 kịch bản
+
+Ước tính output công cụ của mỗi tác vụ (chi tiết: [tests/RESULTS.md](../tests/RESULTS.md)):
+
+| Tác vụ | Số lượt | Output (ước tính) |
+|---|---|---|
+| Đếm task toàn vault | 3 | ~60 token |
+| Sửa 3 property | 4 | ~200 token |
+| Liệt kê backlink | 5 | ~300 token |
+| Đổi tên note có 9 link trỏ tới, có kiểm tra | 9 | ~380 token |
+| Sửa một dòng trong note 2.974 dòng | 5 | ~680 token |
+| Tìm chủ đề trong 1.845 note | 4 | ~960 token |
+| Đổi tên tag trên toàn vault (có dry-run) | 10 | ~2.100 token |
+
+Cách đo: số byte output của bridge (ghi bằng `OBS_LOG`) cộng số dòng file agent đọc, chia 4. Các con số này **thấp hơn thực tế một chút**, vì chưa tính output từ các lệnh grep/cat mà agent tự chạy (xem lỗ hổng ở GATES.md, cổng 3).
+
+## 6. Kiểm thử và bảo trì (ngoài skill, trong repo)
 
 Các file này không phải một phần của skill khi cài đặt, nhưng giữ cho skill đúng khi Obsidian ra bản mới:
 
