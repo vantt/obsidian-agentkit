@@ -19,7 +19,7 @@ Phase 1 of `docs/handoff/BUILD-PROMPT.md`. Every item: command, short output exc
 | Git Bash | `obsidian …` resolves to `Obsidian.exe`: plain commands work (with a leading blank line), colon commands exit **127** with no output (`property:read …` → `exit=127`) | confirmed (lesson `windows-com-redirector-and-wrapper`) |
 | Admin terminal | not tested (would need elevation) | could not test |
 
-- **F1a Obsidian closed.** In all three environments, `version` prints `The CLI is unable to find Obsidian. Please make sure Obsidian is running and try again.` and exits **1**. It takes about 144 ms, does not hang, and does not start Obsidian. Verdict: confirmed. One call is enough to detect it.
+- **F1a Obsidian closed.** In all three environments, `version` prints `The CLI is unable to find Obsidian. Please make sure Obsidian is running and try again.` and exits **1**. From WSL interop this message arrives on **stderr** with empty stdout (seen when the app was closed during a later run); in PowerShell it showed on the console stream. It takes about 144 ms, does not hang, and does not start Obsidian. Verdict: confirmed. One call is enough to detect it.
 - **F1b App starting up or reloading.** For a few seconds, commands fail with `Error: Command "vault" not found. Did you mean: daily?` or `Error: Command "eval" not found. It may require a plugin to be enabled.`, still exit 0. `vault info=name` can succeed before every command is registered. Verdict: confirmed. The bridge must treat "Command … not found" during the first seconds as "not ready".
 - **F1c Vault targeting.** `vault=<name>` must be the first argument. `version vault=vault-copy` and `vault info=name vault=no-such-vault` both ignored the param and answered for the focused vault. A wrong name in the first position prints `Vault not found.` with exit 0 and no `Error:` prefix. Verdict: confirmed (lesson `vault-targeting-first-param`).
 - **F1d Interop cwd.** Run from a `/mnt/c` cwd so the Windows process gets a drive-letter working directory.
@@ -134,7 +134,7 @@ jackal's `HIGH_RISK_REPORT.md` gives 13/57 silent failures on CLI 1.12.1. The ma
 | `app.json` | yes | `alwaysUpdateLinks: true`, `showLineNumber`, `spellcheck` | `newFileLocation: root`, `attachmentFolderPath: /`, `useMarkdownLinks: false`, `newLinkFormat: shortest`, `trashOption: system`, `userIgnoreFilters: null` (all defaults) |
 | `daily-notes.json` | **no** (core plugin enabled) | none | defaults: root folder, `YYYY-MM-DD`, no template (`daily:path` → `2026-10-22.md`) |
 | `templates.json` | **no** (core plugin enabled) | none | `templates` → `Error: No template folder configured.` |
-| `types.json` | yes | `aliases`, `cssclasses`, `tags`, 22 plugin keys (`TQ_*`) | — |
+| `types.json` | yes | `aliases`, `cssclasses`, `tags`, 21 plugin keys (`TQ_*`) | — |
 | `core-plugins.json` | yes | daily-notes, templates, bases, canvas, properties, … | — |
 | `community-plugins.json` | yes | 25 enabled (Tasks, Templater, Dataview, Tag Wrangler, Omnisearch, Kanban, …) | — |
 | `plugins/templater-obsidian/data.json` | no | Templater defaults | — |

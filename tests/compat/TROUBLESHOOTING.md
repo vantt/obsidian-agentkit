@@ -8,6 +8,7 @@ Format: **Symptom** / Cause / Fix / First seen (CLI version, date).
 
 - **`obsidian: command not found` in WSL.** Cause: the Windows install dir is not on the WSL PATH. Fix: call `Obsidian.com` by full path under `/mnt/c/Users/<user>/AppData/Local/Programs/Obsidian/` (find it with `cmd.exe /c where obsidian`). Run from a Windows-mounted cwd (`cd /mnt/c`), otherwise interop warns about the UNC cwd. First seen 1.14.4, 2026-10-22.
 - **Git Bash: colon commands exit 127, plain commands print a leading blank line.** Cause: `obsidian` resolves to `Obsidian.exe` (GUI subsystem), not `Obsidian.com`. Fix: call `obsidian.com` explicitly. PowerShell and cmd resolve `.com` first and are fine. First seen 1.14.4.
+- **Git Bash: `node \\wsl.localhost\…\obs.mjs` → `MODULE_NOT_FOUND`.** Cause: Git Bash mangles the UNC prefix. Fix: when testing Windows-native shells, copy the bridge to a drive path (for example `C:\obsidian-agentkit-test\bridge\`). PowerShell handles the UNC path fine.
 - **A test hit the wrong vault.** Cause: without `vault=` the CLI targets the most recently focused vault. Fix: `vault=<copy>` is always the first argument; check with `vault info=path` before any write.
 
 ## Vault state
@@ -18,6 +19,10 @@ Format: **Symptom** / Cause / Fix / First seen (CLI version, date).
 - **A rename "test" passed because someone clicked the Update-links modal.** Cause: with `alwaysUpdateLinks` off, rename/move opens a modal and the CLI blocks; a person at the screen may answer it. Fix: answer it from the probe with `eval` (`[...document.querySelectorAll('.modal button')].find(b=>b.textContent==='Do not update').click()`), and ask the user not to touch the test vault window during probes. Check `dev:dom selector=".modal" text` when a call times out.
 - **`.obsidian/plugins/*/data.json` shows up in `git status` after a test.** Cause: plugins (for example colored-tags) save state when tags change. Fix: ignore those paths when judging a diff; commit them as baseline noise between runs.
 - **CLI `delete` does not create `.trash/` even with `trashOption: local`.** It goes to the Windows Recycle Bin. Check with PowerShell: `(New-Object -ComObject Shell.Application).NameSpace(10).Items() | ? Name -like '<file>*'`.
+
+- **Link counts look wrong for 10-40 s after `reload`** (unresolved 72 instead of 87, `backlinks … total` 0 while the list shows 9). Cause: reload rebuilds the whole metadata cache. Fix: avoid `reload` mid-test; when needed, poll `unresolved total` and a known `backlinks … total` until they equal the pre-reload baseline three times in a row.
+- **`backlinks … total` lags after a move into a new folder** (9 → 1 for 8+ s, then back to 9). Fix: verify by polling (the bridge polls up to `OBS_VERIFY_MS`, default 30 s), never by one fixed sleep.
+- **After `git clean` removed a folder, `file path=` still found a file there for about 1 s.** Fix: before each run, poll until the CLI agrees with the disk (target exists, removed paths `not found`).
 
 ## Output size
 

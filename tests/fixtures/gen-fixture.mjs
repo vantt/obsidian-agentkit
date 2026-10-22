@@ -116,6 +116,22 @@ for (let i = 0; i < bulk; i++) {
   put(`bulk/${String(Math.floor(i / 100)).padStart(2, '0')}/bulk-${String(i).padStart(5, '0')}.md`, `# Bulk ${i}\n\n${body}${link}\n`);
 }
 
+// --standalone: also write .obsidian config so the fixture can be opened as its own vault
+// and so profile.mjs has non-default values to report.
+if (args.includes('--standalone')) {
+  const j = (o) => JSON.stringify(o, null, 2);
+  put('.obsidian/app.json', j({ alwaysUpdateLinks: true, useMarkdownLinks: false, newLinkFormat: 'relative', newFileLocation: 'folder', newFileFolderPath: 'inbox', attachmentFolderPath: 'attachments', trashOption: 'local', userIgnoreFilters: ['bulk/'] }));
+  put('.obsidian/core-plugins.json', j({ 'daily-notes': true, templates: true, bases: true, canvas: true, properties: true }));
+  put('.obsidian/community-plugins.json', j(['obsidian-tasks-plugin', 'dataview']));
+  put('.obsidian/daily-notes.json', j({ folder: 'daily', format: 'YYYY/MM/YYYY-MM-DD', template: 'templates/daily' }));
+  put('.obsidian/templates.json', j({ folder: 'templates' }));
+  put('.obsidian/types.json', j({ types: { aliases: 'aliases', tags: 'tags', created: 'date', due: 'datetime', rating: 'number', done: 'checkbox', related: 'multitext' } }));
+  put('.obsidian/app (conflict 2026-01-01-00-00-00).json', j({ alwaysUpdateLinks: false }));
+  put('templates/daily.md', '---\ntype: daily\n---\n# {{date:YYYY-MM-DD}}\n\n## Log\n');
+  put('daily/.keep', '');
+  put('inbox/.keep', '');
+}
+
 for (const [rel, text] of files) {
   const p = path.join(outDir, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
