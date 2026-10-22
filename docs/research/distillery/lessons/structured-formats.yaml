@@ -1,0 +1,113 @@
+# Lessons whose primary domain is "structured-formats". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: base-query-via-cli
+    domains:
+      - structured-formats
+      - bounded-retrieval
+    layer: content
+    what: >-
+      `base:query` runs a Base by file or path and optional view with `format` json
+      (default), csv, tsv, md or paths; `base:views` lists views.
+    notable: >-
+      Lets the agent get Base results from Obsidian instead of evaluating .base filters by
+      hand, which is where models fail. Kepano has no query command (authoring only). Format
+      defaults come from pablo's reference and are untested.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L120-L125
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L417-L426
+    contrast: new
+    score:
+      relevance: 2
+      facts:
+        - a
+        - b
+        - d
+      impact: 3
+      evidence: 2
+      effort: 1
+      why: >-
+        a: agent hand-evaluates filters and returns wrong rows for job 8. b: no host route
+        for Base queries. d: a command with fixed output. Two sources.
+    final_score: 12
+    keywords:
+      - base:query
+      - base:views
+    decision: {state: candidate}
+
+  - key: bases-authoring-gotchas
+    domains:
+      - structured-formats
+      - safety-and-verification
+    layer: content
+    what: >-
+      Kepano's Bases skill lists concrete failure modes (unquoted special characters,
+      mismatched formula quotes, `formula.X` used without definition, Duration has no
+      `.round()`) with CORRECT and WRONG pairs and a `this` context rule.
+    notable: >-
+      High-density gotcha content on a feature the model knows poorly. Cost is the loading
+      unit: SKILL.md is 499 lines (~3.3k tokens) plus 1.9k of function reference, so it must
+      stay on demand and load only for .base work.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-bases/SKILL.md#L14-L15
+      - kepano-skills@3ccff5338ea7:skills/obsidian-bases/SKILL.md#L146-L150
+      - kepano-skills@3ccff5338ea7:skills/obsidian-bases/SKILL.md#L197-L206
+    contrast: new
+    score:
+      relevance: 2
+      facts:
+        - a
+        - b
+        - e
+      impact: 3
+      evidence: 1
+      effort: 2
+      why: >-
+        a: invalid .base file Obsidian cannot open or a formula that errors. b: no host
+        Bases knowledge. e: broken formulas fail quietly in the UI. One source, large load.
+    final_score: 3
+    keywords:
+      - bases
+      - formula
+      - Duration
+      - this
+    decision: {state: candidate}
+
+  - key: canvas-validation-checklist
+    domains:
+      - structured-formats
+      - safety-and-verification
+    layer: content
+    what: >-
+      An 8-item post-edit checklist for .canvas files (unique ids across nodes and edges,
+      fromNode and toNode resolve, required fields per type, enums, colors, parseable JSON)
+      and 16-character hex id generation with a collision check.
+    notable: >-
+      Checklist is exactly the read-back step missing elsewhere, but it is prose; the same
+      checks fit one small script. Covers job 12 only.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/json-canvas/SKILL.md#L222-L235
+      - kepano-skills@3ccff5338ea7:skills/json-canvas/SKILL.md#L200
+    contrast: new
+    score:
+      relevance: 2
+      facts:
+        - a
+        - b
+        - d
+      impact: 3
+      evidence: 1
+      effort: 2
+      why: >-
+        a: duplicate ids or dangling edges produce a canvas Obsidian drops or repairs
+        wrongly. b: no host canvas rule. d: the checklist can be a validator. One source.
+    final_score: 3
+    keywords:
+      - canvas
+      - validation
+      - ids
+    decision: {state: candidate}

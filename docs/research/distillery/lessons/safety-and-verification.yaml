@@ -1,0 +1,198 @@
+# Lessons whose primary domain is "safety-and-verification". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: error-text-exit-zero
+    domains:
+      - safety-and-verification
+      - access-routing
+    layer: validation
+    what: >-
+      The CLI prints `Error:` but exits 0, so shell automation that checks only `$?` misses
+      failures; jackal measured it, pablo shows the `Error:` string for template:insert and
+      silent failures for admin terminals.
+    notable: >-
+      Foundation for the read-back and wrapper design: every CLI call must parse stdout for
+      `Error:` and for empty output, because exit status cannot be trusted. Jackal keeps it
+      only in its report and README, not in SKILL.md, so an agent loading just the skill
+      never sees it. Measured on CLI 1.12.1; may be fixed later.
+    where:
+      - jackal-cli-skills@ab6533943454:HIGH_RISK_REPORT.md#L87-L103
+      - jackal-cli-skills@ab6533943454:README.md#L24-L25
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L309
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - d
+        - e
+      impact: 5
+      evidence: 2
+      effort: 1
+      why: >-
+        a: failed write reported as success (failures_it_prevents). b: not in any SKILL.md.
+        c: part of 13 silent failures in 57 scenarios. d: one wrapper check enforces it. e:
+        measured by a benchmark. One measured source plus pablo's error strings.
+    final_score: 30
+    keywords:
+      - exit code
+      - 'Error:'
+      - silent failure
+    decision: {state: candidate}
+
+  - key: delete-to-trash-unverified
+    domains:
+      - safety-and-verification
+      - link-integrity
+    layer: content
+    what: >-
+      Jackal marks `delete` as move to system trash (safe) and pablo says it moves to trash
+      by default with `permanent` as a flag, but neither tests where the trash is.
+    notable: >-
+      With Obsidian on Windows and the vault under Google Drive, the system trash may be the
+      Windows recycle bin while Drive syncs the deletion; whether a vault .trash is used is
+      unverified. Delete protection is only as good as that assumption. Check on the real
+      setup before relying on it.
+    where:
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L53
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L81-L82
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - e
+      impact: 3
+      evidence: 2
+      effort: 1
+      why: >-
+        a: a deleted note is unrecoverable if the trash assumption is wrong (data loss, sync
+        conflicts in failures). b: no host rule. e: the failure shows only when recovery is
+        needed. Two sources claim it, none tested it.
+    final_score: 18
+    keywords:
+      - delete
+      - trash
+      - recycle bin
+    decision: {state: candidate}
+
+  - key: history-and-diff-recovery
+    domains:
+      - safety-and-verification
+    layer: content
+    what: >-
+      `history:*` (File Recovery snapshots), `diff`, and `sync:*` restore paths, with
+      History vs Sync history distinguished; Sync history needs a subscription.
+    notable: >-
+      A recovery route that needs no git. File Recovery must be enabled and its snapshot
+      interval is coarse, so it is a partial substitute for a pre-bulk-edit snapshot, not a
+      replacement. The goal's Google Drive setup has Drive version history, which these
+      sources do not cover.
+    where:
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L432-L443
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L460-L469
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - d
+      impact: 3
+      evidence: 1
+      effort: 1
+      why: >-
+        a: bad bulk edit has no undo. b: no host snapshot or recovery rule. d: commands
+        usable in a wrapper. One source.
+    final_score: 9
+    keywords:
+      - history
+      - diff
+      - restore
+      - File Recovery
+    decision: {state: candidate}
+
+  - key: never-without-request-and-confirm
+    domains:
+      - safety-and-verification
+      - note-and-metadata-editing
+    layer: content
+    what: >-
+      Jackal lists four commands never run without an explicit user request (including
+      `delete permanent`) and says to confirm before bulk property changes, file moves or
+      deletes; no numeric threshold.
+    notable: >-
+      Only repo with a deny and confirm list. The goal's threshold (more than 5 files, or
+      any rename, move, delete) is stricter and measurable; jackal gives a rule without a
+      number. Pablo documents `delete permanent` and `move` with no caution at all.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L136-L145
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L81-L82
+    contrast: extends
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 1
+      effort: 1
+      why: >-
+        a: agent deletes permanently or bulk-edits without asking (data loss). b: no host
+        rule or threshold. c: every destructive command. One source states a rule; pablo
+        shows the unguarded alternative.
+    final_score: 9
+    keywords:
+      - confirm
+      - delete permanent
+      - bulk
+    decision: {state: candidate}
+
+  - key: benchmark-matrix-and-version-pin
+    domains:
+      - safety-and-verification
+    layer: validation
+    what: >-
+      Jackal ships a 57-scenario matrix (direct vs skill-guided, exit code, stdout shape,
+      error flag, side-effect scope) with raw captures and a date and CLI version pin
+      (1.12.1, 2026-02-13); pablo ships a trigger eval set; roasbeef has plugin tests and CI
+      but none for the skill scripts.
+    notable: >-
+      Only jackal's matrix can be rerun to re-check the traps on the user's CLI version,
+      which the goal needs because the failures were measured on 1.12. Pablo's eval set
+      tests description triggering, not command correctness.
+    where:
+      - jackal-cli-skills@ab6533943454:reports/obsidian-cli-command-matrix.csv#L1
+      - jackal-cli-skills@ab6533943454:HIGH_RISK_REPORT.md#L3-L4
+      - pablo-cli-skill@d7782314eadf:eval/eval_set.json#L1-L5
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 2
+      effort: 2
+      why: >-
+        peripheral: it validates sources rather than guiding the agent. a: trusting gotchas
+        measured on an old CLI version. b: host has no test set. Two sources, different
+        kinds.
+    final_score: 2
+    keywords:
+      - benchmark
+      - eval set
+      - version pin
+    decision: {state: candidate}

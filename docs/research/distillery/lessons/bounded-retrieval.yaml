@@ -1,0 +1,317 @@
+# Lessons whose primary domain is "bounded-retrieval". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: search-bounded-structured-output
+    domains:
+      - bounded-retrieval
+      - access-routing
+    layer: content
+    what: >-
+      Search is scoped with `path=` and `limit=`; jackal prescribes `format=json matches`
+      for line-numbered results, kepano shows `limit=10`, pablo documents limit and says
+      `matches` is accepted but returns only paths in v1.12.
+    notable: >-
+      Sources contradict each other on what `format=json matches` returns (jackal: objects
+      with line and text; pablo: path array, matches is a no-op). Do not copy either claim
+      before running scenario test 6 on the installed CLI version. `search:context`
+      (path:line: text) is the grep-style option both pablo and the official docs list. Only
+      three of four sources teach any limit at all, and none says to always set one.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L81-L86
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L51
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L139-L163
+    contrast: contradicts
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 3
+      effort: 1
+      why: >-
+        a: unbounded or wrongly formatted search output blows tokens or returns text the
+        agent cannot parse. b: no host default yet. c: recurs on every search. e: default
+        output is unstructured text, wrong parse is silent. Three sources, one conflict to
+        resolve by test.
+    final_score: 36
+    keywords:
+      - search
+      - limit
+      - format=json
+      - matches
+      - search:context
+    decision: {state: candidate}
+
+  - key: scoped-task-and-tag-queries
+    domains:
+      - bounded-retrieval
+      - safety-and-verification
+    layer: validation
+    what: >-
+      `tasks todo` and `tags counts` return nothing unless scoped (`tasks all todo`, `tags
+      all counts`); jackal measured naive calls returning 0 and 'No tags found'. Pablo says
+      in v1.12 plain `tasks` already equals `tasks all`.
+    notable: >-
+      Measured silent failure, the single most cited trap in the goal. Sources disagree on
+      the plain `tasks` case (jackal says active file only, pablo says all), so the host
+      rule should be: always pass an explicit scope keyword and count with `total` first.
+      Kepano's `tasks daily todo` example has no scope warning.
+    where:
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L90
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L100-L101
+      - jackal-cli-skills@ab6533943454:HIGH_RISK_REPORT.md#L15-L49
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L251
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L55
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 3
+      effort: 1
+      why: >-
+        a: 'no open tasks' reported when there are some (silent wrong answer, scenario test
+        4). b: kepano skill has no warning. c: two commands show it in the test evidence. e:
+        exit 0 and empty result, plus measured by a benchmark. Three sources, one
+        disagreement.
+    final_score: 36
+    keywords:
+      - tasks all
+      - tags all
+      - active file scope
+    decision: {state: candidate}
+
+  - key: count-first-total-flag
+    domains:
+      - bounded-retrieval
+    layer: content
+    what: >-
+      `total` returns a count instead of a list on list commands (files, tasks, backlinks,
+      tags, search).
+    notable: >-
+      All three CLI skills mention it, none turns it into a rule. The cheap pattern is count
+      first, then list with a limit only if the count is small. That belongs in the host's
+      output-economy section as an instruction.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L60
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L38
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L219
+    contrast: extends
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 3
+      effort: 1
+      why: >-
+        a: listing every backlink or task dumps tokens when only a count was needed. b:
+        sources mention the flag but give no rule. c: applies to every list command. Three
+        sources.
+    final_score: 27
+    keywords:
+      - total
+      - count
+    decision: {state: candidate}
+
+  - key: output-format-quirks
+    domains:
+      - bounded-retrieval
+      - structured-formats
+    layer: content
+    what: >-
+      `properties format=json` returns YAML so jackal prescribes `format=tsv`; pablo lists
+      the format values but warns not every command supports every one and says use text or
+      json when in doubt.
+    notable: >-
+      Format choice is a correctness issue, not only a token one. Neither source gives a
+      per-command table of which formats work. Host should ship the three or four verified
+      combinations (search, properties, tasks, backlinks) instead of the generic list, after
+      testing on the installed version.
+    where:
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L75
+      - jackal-cli-skills@ab6533943454:HIGH_RISK_REPORT.md#L51-L67
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L576-L589
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 2
+      effort: 1
+      why: >-
+        a: agent parses YAML as JSON and drops or invents fields. b: no host rule. c: two
+        commands (properties, search) in jackal evidence. e: exit 0, wrong shape. One
+        measured source plus pablo's caveat.
+    final_score: 24
+    keywords:
+      - format=tsv
+      - format=json
+      - yaml
+    decision: {state: candidate}
+
+  - key: outline-without-ranged-read
+    domains:
+      - bounded-retrieval
+    layer: content
+    what: >-
+      Jackal and pablo both list `outline` (headings) but neither ties it to reading only
+      one section; no source teaches ranged reads or heading-anchored partial reads.
+    notable: >-
+      The pattern the goal needs (outline, then ranged Read of the section) is absent from
+      all four repos. Records a gap: jobs 2 and 9 get no guidance, so a 3000-line note is
+      read whole.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L117
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L563
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 2
+      effort: 1
+      why: >-
+        a: whole-note reads blow tokens on long notes. b: no host rule. c: every long-note
+        job. Two sources list outline, none teaches the pattern, so evidence is the gap
+        itself.
+    final_score: 18
+    keywords:
+      - outline
+      - ranged read
+      - section
+    decision: {state: candidate}
+
+  - key: examples-teach-unbounded-output
+    domains:
+      - bounded-retrieval
+    layer: craft
+    what: >-
+      Pablo's reference loops `read` over every tag match with no bound; roasbeef SKILL.md
+      shows SQL SELECT examples without LIMIT.
+    notable: >-
+      Examples are what agents copy. A skill that preaches limits but demonstrates unbounded
+      loops loses the saving. Check host examples for a visible limit or total on every list
+      or loop.
+    where:
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L597-L601
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/SKILL.md#L64-L67
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 2
+      effort: 1
+      why: >-
+        a: agent copies an unbounded loop and floods context. b: host has no example
+        discipline yet. c: two sources show it independently.
+    final_score: 18
+    keywords:
+      - unbounded loop
+      - examples
+      - LIMIT
+    decision: {state: candidate}
+
+  - key: frontmatter-sql-index
+    domains:
+      - bounded-retrieval
+      - vault-conventions
+    layer: enforcement
+    what: >-
+      roasbeef ships dataview.py and search.py that query a SQLite index (frontmatter
+      columns, tags via json_each, folder filter, n-results default 5, --json) so vault-wide
+      metadata and task queries need no running Obsidian.
+    notable: >-
+      A file-only way to answer vault-wide queries precisely, which the CLI-absent path in
+      the goal lacks. Costs a Python venv, chromadb, a build step and an index that goes
+      stale (SKILL.md tells the user to rebuild). Column names are hard-coded to the
+      author's vault (ticker, strategy, expiry). Vector side is out of scope.
+    where:
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/SKILL.md#L33-L49
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/SKILL.md#L78-L92
+    contrast: new
+    score:
+      relevance: 2
+      facts:
+        - a
+        - b
+        - d
+      impact: 3
+      evidence: 1
+      effort: 3
+      why: >-
+        peripheral: needs a Python venv, chromadb and a rebuilt index, heavy for a thin
+        skill. a: with no CLI, vault-wide task or property questions fall to grep and come
+        back incomplete. b: host has no file-only index. d: it is a script with flags. One
+        source, heavy setup, vector part out of scope.
+    final_score: 2
+    keywords:
+      - sqlite
+      - dataview.py
+      - json_each
+      - index
+    decision: {state: candidate}
+
+  - key: heading-chunked-snippets
+    domains:
+      - bounded-retrieval
+    layer: enforcement
+    what: >-
+      The indexer splits notes at headings (100-character minimum) so search returns
+      snippet-level chunks, and skips .obsidian, .smart-env, .claude, assets and Templates.
+    notable: >-
+      Snippet results cost fewer tokens than whole notes, and the exclusion list is the same
+      idea as exclusion globs for grep. The chunking itself sits inside vector RAG, which is
+      out of scope; the exclusion list transfers.
+    where:
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/scripts/index.py#L113
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/scripts/index.py#L58
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 3
+      why: >-
+        peripheral: needs an index and embeddings, outside the goal. a: agent reads whole
+        notes when a snippet is enough. b: no host rule. One source.
+    final_score: 0.67
+    keywords:
+      - chunk_by_headings
+      - EXCLUDED_FOLDERS
+    also_fits:
+      - upstream
+    decision: {state: candidate}

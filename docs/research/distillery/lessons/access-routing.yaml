@@ -1,0 +1,338 @@
+# Lessons whose primary domain is "access-routing". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: file-path-active-target
+    domains:
+      - access-routing
+      - link-integrity
+    layer: content
+    what: >-
+      `file=` resolves like a wikilink (name only), `path=` is exact vault-relative, and
+      omitting both targets the ACTIVE file.
+    notable: >-
+      The active-file default is a silent wrong-target risk for agent writes (append,
+      property:set) and only kepano states it, without a warning. Three sources document
+      name vs path; none says to always pass path= for writes. Host rule: writes must carry
+      path=, reads may use file=.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L32-L35
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L36
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L69-L76
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 3
+      effort: 1
+      why: >-
+        a: write lands in whichever note is open in Obsidian (wrong place, data corruption).
+        b: no host rule. c: every targeted command. e: no error, wrong file changed. Three
+        independent docs describe the same targeting model.
+    final_score: 36
+    keywords:
+      - file=
+      - path=
+      - active file
+    decision: {state: candidate}
+
+  - key: skill-load-cost-profile
+    domains:
+      - access-routing
+    layer: craft
+    what: >-
+      Measured always-loaded and on-demand cost: kepano 6 descriptions 226 words (~300
+      tokens), CLI skill 796 tokens; jackal 1 file ~1840 tokens; pablo description 167 words
+      plus 23 triggers, body ~3350, reference ~5400; roasbeef ~1385 single tier.
+    notable: >-
+      Cost differs 4x for the same CLI. Kepano splits into 6 skills so only the needed one
+      loads, but 4 of them trigger on 'Obsidian notes' (overlap) and the CLI description
+      spends words on plugin development. Pablo puts skip-when clauses and 23 trigger words
+      in the always-loaded description. Host target is description about 60 words, body
+      about 1.5k tokens; kepano's CLI skill meets it, nobody ships a preflight inside it.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/SKILL.md
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 3
+      effort: 1
+      why: >-
+        a: oversized skill text on every triggered task breaks the cheap goal. b: no host
+        budget yet. c: every session pays the description. Four sources measured with the
+        same method (chars/4).
+    final_score: 27
+    keywords:
+      - description words
+      - loading tiers
+    decision: {state: candidate}
+
+  - key: preflight-and-fallback-table
+    domains:
+      - access-routing
+      - safety-and-verification
+    layer: content
+    what: >-
+      A manual preflight (`obsidian vault`, `obsidian version`) and a symptom to action
+      table that falls back to file tools when the CLI is missing, the index is empty, or
+      colon commands fail.
+    notable: >-
+      Closest any source gets to criterion 3. It is prose for the agent to run, not a
+      script, and it has no WSL, Windows-interop, Google Drive or file-only procedure. The
+      index-not-ready row recommends Grep as the fallback, which is the opposite of a
+      grep-incompleteness warning. Host should turn the preflight into one script call and
+      attach an honest approximate label to the fallback answer.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L147-L162
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L55-L59
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L274
+    contrast: extends
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - d
+      impact: 4
+      evidence: 2
+      effort: 2
+      why: >-
+        a: CLI unreachable from WSL means hangs or retry loops (failures_it_prevents). b: no
+        host preflight or fallback rule. c: every session starts with it. d: it can be a
+        script returning one status line. Two sources, partial overlap.
+    final_score: 12
+    keywords:
+      - preflight
+      - fallback
+      - CLI not installed
+    decision: {state: candidate}
+
+  - key: live-help-as-truth
+    domains:
+      - access-routing
+      - bounded-retrieval
+    layer: craft
+    what: >-
+      The CLI skill carries about 11 example commands and defers the full reference to
+      `obsidian help`, stating that output is always current.
+    notable: >-
+      Keeps always-loaded cost low (796 tokens for the whole skill) and avoids version
+      drift. Counter-example in the same set: pablo-cli-skill ships a 651-line static
+      command reference (~5.4k tokens) pinned to v1.12 behaviour, which its own text says
+      may change. Trade-off: the agent pays one extra call per unfamiliar command.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L12
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 2
+      effort: 1
+      why: >-
+        a: a static reference goes stale and teaches flags that no longer exist, by design
+        of the goal's no-full-reference scope. b: no host rule. Two sources show both sides
+        of the choice.
+    final_score: 12
+    keywords:
+      - obsidian help
+      - command reference
+    decision: {state: candidate}
+
+  - key: cli-vs-files-routing-rule
+    domains:
+      - access-routing
+      - bounded-retrieval
+    layer: content
+    what: >-
+      One prose rule splits work between Obsidian CLI (when the index adds value) and plain
+      file tools (plain text manipulation).
+    notable: >-
+      Only source that states when NOT to use the CLI. It is a three-line rule of thumb, not
+      a task table, and it never says which of the 15 jobs fall on which side, so an agent
+      still guesses for rename, daily note, tags. A thin host skill should keep the rule and
+      add the table. Kepano never routes (CLI skill just lists commands); pablo-cli-skill
+      names parsing vault files with scripts as an explicit non-goal, so the file path is
+      untaught there.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L19-L27
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L14-L18
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 1
+      effort: 1
+      why: >-
+        a: agent uses CLI for plain edits (UI opens, app must run) or greps where the link
+        index is needed, both wrong for the goal. b: no host rule yet. c: applies to every
+        vault task. One source states the rule; pablo only shows the file path is omitted.
+    final_score: 9
+    keywords:
+      - index adds value
+      - file tools
+    decision: {state: candidate}
+
+  - key: windows-com-redirector-and-wrapper
+    domains:
+      - access-routing
+    layer: content
+    what: >-
+      On Windows the CLI needs Obsidian.com beside Obsidian.exe and a normal-privilege
+      terminal; Git Bash resolves to the .exe so a ~/bin/obsidian wrapper script is the fix;
+      admin terminals fail silently.
+    notable: >-
+      Only source that treats the Windows bridge as a real problem. It solves Git Bash, not
+      WSL: WSL has no mention anywhere in this repo. The wrapper-script idea transfers
+      directly to the user's need (a WSL shim that calls the Windows binary), the specifics
+      do not.
+    where:
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L64-L66
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L288-L289
+    contrast: extends
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - d
+        - e
+      impact: 4
+      evidence: 1
+      effort: 2
+      why: >-
+        a: WSL agent cannot reach the Windows CLI (hang or false none). b: nothing in host
+        covers it. d: wrapper plus preflight is enforceable code. e: admin-terminal failures
+        pass silently. One source, Git Bash not WSL.
+    final_score: 6
+    keywords:
+      - Obsidian.com
+      - wrapper
+      - exit 127
+    decision: {state: candidate}
+
+  - key: vault-targeting-first-param
+    domains:
+      - access-routing
+    layer: content
+    what: >-
+      The CLI targets the most recently focused vault by default; `vault=<name>` must be the
+      first parameter.
+    notable: >-
+      Matters only for multi-vault setups. Cheap to include as one line in the preflight
+      output.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L39
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 1
+      why: >-
+        peripheral: the user has one vault today. a: wrong vault gets the write. b: no host
+        rule. One source.
+    final_score: 2
+    keywords:
+      - vault=
+      - recently focused
+    decision: {state: candidate}
+
+  - key: duplicate-mirror-copy-drift
+    domains:
+      - access-routing
+    layer: craft
+    what: >-
+      pablo-cli-skill keeps a second copy of the skill under plugins/ that must be synced by
+      hand; its SKILL.md already differs in frontmatter (shorter description, no triggers)
+      and a commit is titled "Sync plugins/ mirror".
+    notable: >-
+      Two copies of one skill drift and trigger differently. Cautionary lesson for how the
+      host packages its own skill: generate the plugin copy, do not hand-maintain it.
+    where:
+      - pablo-cli-skill@d7782314eadf:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 1
+      why: >-
+        peripheral: packaging hygiene, not agent behaviour. a: two descriptions mean
+        unpredictable trigger. b: no host rule. One source.
+    final_score: 2
+    keywords:
+      - mirror
+      - plugins copy
+      - sync
+    decision: {state: candidate}
+
+  - key: mcp-tool-surface-bounded-outputs
+    domains:
+      - access-routing
+      - bounded-retrieval
+    layer: enforcement
+    what: >-
+      The plugin's in-process MCP server exposes ten tools through the Obsidian API and
+      bounds the listing ones (list_commands limit 50, get_recent_files limit 10,
+      active-file preview 500 chars), but has no read, search, rename, move, delete or
+      property tool.
+    notable: >-
+      Shows what an MCP route buys (no CLI, API access, built-in caps) and what it lacks
+      (everything in jobs 3, 4, 6, 14 beyond execute_command). Runs inside Obsidian on the
+      same machine, so it does not solve WSL. Supports keeping MCP out of the core route.
+    where:
+      - roasbeef-plugin@03a22a8b563d:src/agent/ObsidianMcpServer.ts
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 3
+      why: >-
+        peripheral: it is a plugin-internal server, not something an external agent connects
+        to. a: agent assumes MCP covers rename or backlinks and it does not. b: no host
+        decision on MCP. One source.
+    final_score: 0.67
+    keywords:
+      - MCP
+      - execute_command
+      - get_recent_files
+    also_fits:
+      - upstream
+    decision: {state: candidate}

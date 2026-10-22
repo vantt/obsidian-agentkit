@@ -1,0 +1,224 @@
+# distill learning area: goal, domains, sources (cursor + coverage) and intake.
+# Written by distill.mjs; comments are not kept, so put reasons in fields. Lessons live in lessons/<domain>.yaml.
+goal:
+  status: confirmed
+  purpose: >-
+    Let an LLM coding agent (Claude Code in WSL2, Obsidian running on Windows) read,
+    search and modify an Obsidian vault correctly, with few turns and few tokens,
+    without corrupting notes, links or metadata, whether the agent runs on Windows next
+    to Obsidian or reaches it from WSL, and with the CLI present or absent.
+  core_domains:
+    - access-routing
+    - bounded-retrieval
+    - link-integrity
+    - note-and-metadata-editing
+    - vault-conventions
+    - safety-and-verification
+  in_scope:
+    - >-
+      Choosing file tools vs Obsidian CLI vs MCP vs script per task, with a one-call
+      preflight and an honest fallback
+    - >-
+      Calling the Windows Obsidian CLI from WSL (interop wrapper, path translation,
+      latency) and from Windows directly
+    - >-
+      Search and reading with explicit output limits (limit, format, paths, total,
+      ranged reads, exclusion globs)
+    - >-
+      Backlinks, links, orphans, unresolved links, and rename or move that keeps links
+      intact
+    - Frontmatter and property edits that keep YAML valid and property types unchanged
+    - Section-level edits in long notes, tasks, daily notes, templates
+    - >-
+      Bases queries, JSON Canvas creation, Dataview, Tasks plugin and Templater
+      behaviour as used by agents
+    - Web clipping into clean attributed Markdown notes
+    - >-
+      Detecting and following the vault's own conventions from .obsidian config (vault
+      profile)
+    - Known CLI silent failures and how to avoid them
+    - >-
+      Dry-run, snapshot and read-back checks for writes in a vault synced by Google
+      Drive
+  out_of_scope:
+    - Obsidian plugin or theme development and dev or debug commands
+    - Publishing and Obsidian Sync administration
+    - Teaching general Markdown or general Obsidian usage the model already knows
+    - Full CLI command reference (use obsidian help live)
+    - >-
+      Embedding or vector RAG infrastructure (covered by the separate semantic-search
+      distillery)
+  failures_it_prevents:
+    - Data loss from unguarded overwrite, delete or bulk edit
+    - Sync conflicts or half-written files in a Google Drive synced vault
+    - Broken links from renaming or moving files outside Obsidian
+    - >-
+      Silent wrong or incomplete answers (CLI scoping or format quirks, grep reported as
+      complete)
+    - Corrupted frontmatter or drifted property names and types
+    - Token blowups from unbounded search, full-note reads or MCP schema load
+    - Hangs or retry loops when the CLI or Obsidian is unreachable from WSL
+    - Unwanted UI side effects (windows opening, focus stealing)
+    - Notes created in the wrong place, format or link style
+
+domains:
+  - name: access-routing
+    definition: >-
+      Rules for picking file tools, CLI, MCP or a script per task, including preflight
+      detection, the WSL to Windows bridge, and honest fallback when the CLI is
+      unavailable.
+  - name: bounded-retrieval
+    definition: >-
+      Finding and reading vault content with explicit limits on output size, scope and
+      format so token cost stays predictable.
+  - name: link-integrity
+    definition: >-
+      Producing, resolving, enumerating and preserving wikilinks and backlinks across
+      create, rename, move and delete.
+  - name: note-and-metadata-editing
+    definition: >-
+      Precise edits to note bodies, sections, tasks and frontmatter properties that keep
+      YAML, types and formatting intact.
+  - name: vault-conventions
+    definition: >-
+      Discovering and following this vault's settings (link style, daily-note format,
+      templates, folders, property names, tag taxonomy), including a generated vault
+      profile.
+  - name: structured-formats
+    definition: >-
+      Correct authoring and querying of Obsidian-specific formats and plugins: Bases,
+      JSON Canvas, Dataview, Tasks, Templater.
+  - name: ingestion
+    definition: >-
+      Turning external content (web pages, documents) into clean, attributed vault notes
+      at low token cost.
+  - name: safety-and-verification
+    definition: >-
+      Dry-run, snapshot, confirmation thresholds and read-back checks that catch silent
+      failures and prevent irreversible damage, including sync-conflict awareness.
+
+sources:
+  - name: kepano-skills
+    type: git-repo
+    url: https://github.com/kepano/obsidian-skills
+    cursor: 3ccff5338ea7
+    analyzed: '2026-10-22'
+    domains_covered:
+      - access-routing
+      - bounded-retrieval
+      - link-integrity
+      - note-and-metadata-editing
+      - vault-conventions
+      - structured-formats
+      - ingestion
+      - safety-and-verification
+    coverage:
+      at: 3ccff5338ea7
+      read:
+        - skills/obsidian-cli/SKILL.md
+        - skills/obsidian-markdown/SKILL.md
+        - skills/obsidian-markdown/references/PROPERTIES.md
+        - skills/defuddle/SKILL.md
+        - skills/knap/SKILL.md
+        - skills/obsidian-bases/SKILL.md (line ranges)
+        - skills/json-canvas/SKILL.md (line ranges)
+        - README.md
+      not_read:
+        - path: skills/obsidian-bases/references/FUNCTIONS_REFERENCE.md
+          reason: syntax table
+          sizes only: null
+        - path: skills/json-canvas/references/EXAMPLES.md
+          reason: examples
+          sizes only: null
+        - path: skills/obsidian-markdown/references/CALLOUTS.md
+          reason: generic syntax
+  - name: jackal-cli-skills
+    type: git-repo
+    url: https://github.com/jackal092927/obsidian-official-cli-skills
+    cursor: ab6533943454
+    analyzed: '2026-10-22'
+    domains_covered:
+      - access-routing
+      - bounded-retrieval
+      - link-integrity
+      - note-and-metadata-editing
+      - vault-conventions
+      - structured-formats
+      - ingestion
+      - safety-and-verification
+    coverage:
+      at: ab6533943454
+      read:
+        - plugins/obsidian-cli/skills/obsidian-cli/SKILL.md
+        - README.md
+        - HIGH_RISK_REPORT.md
+        - reports/obsidian-cli-command-matrix.csv (header and about 30 rows)
+      not_read:
+        - path: reports/raw/
+          reason: 9 raw captures; matrix and report describe them
+  - name: pablo-cli-skill
+    type: git-repo
+    url: https://github.com/pablo-mano/Obsidian-CLI-skill
+    cursor: d7782314eadf
+    analyzed: '2026-10-22'
+    domains_covered:
+      - access-routing
+      - bounded-retrieval
+      - link-integrity
+      - note-and-metadata-editing
+      - vault-conventions
+      - structured-formats
+      - ingestion
+      - safety-and-verification
+    coverage:
+      at: d7782314eadf
+      read:
+        - skills/obsidian-cli/SKILL.md
+        - skills/obsidian-cli/references/command-reference.md
+        - eval/eval_set.json (first 30 lines)
+        - README.md (grep hits)
+      not_read:
+        - path: plugins/obsidian-cli/
+          reason: mirror copy
+          diffed not read: null
+        - path: .github/workflows/
+          reason: PR assistants
+          outside the goal: null
+  - name: roasbeef-plugin
+    type: git-repo
+    url: https://github.com/Roasbeef/obsidian-claude-code
+    cursor: 03a22a8b563d
+    analyzed: '2026-10-22'
+    domains_covered:
+      - access-routing
+      - bounded-retrieval
+      - link-integrity
+      - note-and-metadata-editing
+      - vault-conventions
+      - structured-formats
+      - ingestion
+      - safety-and-verification
+    coverage:
+      at: 03a22a8b563d
+      read:
+        - skills/vault-search/SKILL.md
+        - skills/vault-search/scripts/index.py (ranges)
+        - skills/vault-search/scripts/search.py (ranges)
+        - src/agent/ObsidianMcpServer.ts
+        - src/utils/permissions.ts (lines 1-60)
+        - CLAUDE.md (grep hits)
+      not_read:
+        - path: src/views/
+          reason: Obsidian plugin UI
+          outside the goal: null
+        - path: src/settings/
+          reason: Obsidian plugin UI
+          outside the goal: null
+        - path: docs/
+          reason: roadmap and SDK reference
+          outside the goal: null
+        - path: tests/
+          reason: plugin tests
+          not for the skill scripts: null
+
+intake: []

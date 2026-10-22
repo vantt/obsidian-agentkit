@@ -1,0 +1,76 @@
+# Lessons whose primary domain is "ingestion". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: defuddle-token-saver
+    domains:
+      - ingestion
+      - bounded-retrieval
+    layer: content
+    what: >-
+      Use defuddle instead of WebFetch for standard web pages because it strips navigation,
+      ads and clutter; always pass `--md`, and `-p` for a single property.
+    notable: >-
+      Smallest skill in the set (41 lines, 208 tokens) and the only one aimed at token cost
+      of ingested content. Install is a global `npm install -g`. A commit about skipping .md
+      URLs touched this file but the current text has no such rule, so some guidance may
+      have been lost.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/defuddle/SKILL.md#L8
+      - kepano-skills@3ccff5338ea7:skills/defuddle/SKILL.md#L14
+    contrast: new
+    score:
+      relevance: 2
+      facts:
+        - a
+        - b
+        - d
+      impact: 3
+      evidence: 1
+      effort: 1
+      why: >-
+        a: raw HTML into context blows tokens for job 13. b: no host clipping rule. d: one
+        command. One source.
+    final_score: 6
+    keywords:
+      - defuddle
+      - web clip
+      - '--md'
+    decision: {state: candidate}
+
+  - key: knap-render-dry-run
+    domains:
+      - ingestion
+      - safety-and-verification
+    layer: content
+    what: >-
+      knap renders Markdown templates from JSON or CSV with `validate`, `batch --dry-run`
+      that lists output paths without writing, `--overwrite` required for existing files,
+      duplicate output names as errors, and a `yaml_property` filter that quotes and indents
+      frontmatter correctly.
+    notable: >-
+      Dry-run plus overwrite guard is the pattern the goal wants for bulk writes, but it
+      applies to generated files from data, not edits to existing notes. The yaml_property
+      filter addresses the same quoting problem as the property-set trap. Needs Node 20+.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/knap/SKILL.md#L68
+      - kepano-skills@3ccff5338ea7:skills/knap/SKILL.md#L100
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 2
+      why: >-
+        a: bulk generation overwrites notes or emits invalid frontmatter. b: host has no
+        bulk-write dry-run. One source; scope is generation, adjacent to the goal.
+    final_score: 1
+    keywords:
+      - knap
+      - dry-run
+      - yaml_property
+    decision: {state: candidate}

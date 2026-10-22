@@ -1,0 +1,87 @@
+# Lessons whose primary domain is "vault-conventions". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: daily-note-commands-and-prepend
+    domains:
+      - vault-conventions
+      - note-and-metadata-editing
+    layer: content
+    what: >-
+      `daily:append`, `daily:prepend`, `daily:path`, `daily:read`; prepend lands after the
+      frontmatter; `daily` creates the note from the configured template.
+    notable: >-
+      Covers job 5 through the CLI. Jackal's matrix excluded daily:append from testing
+      because it mutates the real daily note, yet its skill recommends it, so the 'missing
+      note' and 'duplicate on rerun' cases of scenario test 5 are untested anywhere.
+    where:
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L116-L129
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L62-L64
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L53
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+      impact: 3
+      evidence: 3
+      effort: 1
+      why: >-
+        a: daily note in the wrong folder or duplicated (failures_it_prevents). b: no host
+        rule for job 5. c: every daily append. Three sources list the commands, none tested
+        the edge cases.
+    final_score: 27
+    keywords:
+      - daily:append
+      - daily:path
+      - daily:prepend
+    decision: {state: candidate}
+
+  - key: conventions-ignored-or-hardcoded
+    domains:
+      - vault-conventions
+      - note-and-metadata-editing
+    layer: content
+    what: >-
+      None of the four repos reads app.json, daily-notes.json, types.json or the template
+      settings; pablo says daily-note folder and format come from plugin settings the agent
+      does not read, and roasbeef hard-codes the author's frontmatter columns and the
+      Templates folder.
+    notable: >-
+      The vault profile (about 30 lines generated from .obsidian/*.json) is the biggest
+      unmet need in the goal and has no prior art here. Closest ideas: jackal's
+      `template:read resolve` for rendering a template, and roasbeef's folder exclusion
+      list. Both treat conventions as input to a command, neither discovers them.
+    where:
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L129
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L127-L132
+      - roasbeef-plugin@03a22a8b563d:skills/vault-search/SKILL.md#L89-L92
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 3
+      effort: 2
+      why: >-
+        a: wrong folder, filename, date or link style (failures_it_prevents). b: no source
+        and no host profile. c: three sources show the omission or hard-coding. e: new notes
+        look right and sit in the wrong place. Evidence is convergence on the gap.
+    final_score: 18
+    keywords:
+      - app.json
+      - daily-notes.json
+      - types.json
+      - vault profile
+    decision: {state: candidate}

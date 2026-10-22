@@ -1,0 +1,123 @@
+# Lessons whose primary domain is "link-integrity". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: link-graph-commands
+    domains:
+      - link-integrity
+      - bounded-retrieval
+    layer: content
+    what: >-
+      Index-backed commands for backlinks (with counts), outgoing links, unresolved links,
+      orphans and dead ends.
+    notable: >-
+      These answer jobs 3 and 14 completely where grep cannot (aliases, headings, embeds,
+      shortest-path links). Pablo defines orphans as no incoming or outgoing links, which
+      looks off against Obsidian's no-incoming definition; verify before quoting. No source
+      warns that a grep fallback is approximate.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L103-L111
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L267-L274
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L57
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - d
+      impact: 4
+      evidence: 3
+      effort: 1
+      why: >-
+        a: grep backlinks miss alias, heading and embed forms and report none as fact
+        (scenario test 1). b: no host rule. c: every link question. d: a command is the
+        check. Three sources list them.
+    final_score: 36
+    keywords:
+      - backlinks
+      - unresolved
+      - orphans
+      - deadends
+    decision: {state: candidate}
+
+  - key: rename-link-update-unstated
+    domains:
+      - link-integrity
+      - safety-and-verification
+    layer: content
+    what: >-
+      Kepano says wikilinks are safe because Obsidian tracks renames; pablo documents rename
+      (filename only) and move (full path with .md); jackal lists move. None says whether
+      CLI move or rename updates links, or warns that a file-level mv breaks them.
+    notable: >-
+      The highest-damage silent failure in the goal (link-graph damage) has no stated rule
+      in any source. Kepano's claim holds only for renames done inside Obsidian and its
+      skill never warns against mv. Host must route rename and move through the CLI and
+      prove the link update with scenario test 2 before trusting it.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-markdown/SKILL.md#L19
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L69-L76
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L103-L110
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L52
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 3
+      effort: 2
+      why: >-
+        a: mv or an untested CLI rename leaves unresolved links (failures_it_prevents). b:
+        no source or host rule. c: three sources omit it. e: breakage is silent and spreads.
+        Evidence is convergence on the omission.
+    final_score: 18
+    keywords:
+      - rename
+      - move
+      - update links
+      - mv
+    decision: {state: candidate}
+
+  - key: link-forms-and-style
+    domains:
+      - link-integrity
+      - structured-formats
+    layer: content
+    what: >-
+      Kepano documents wikilink alias, heading, block and embed forms and says to use
+      wikilinks inside the vault and Markdown links for external URLs only.
+    notable: >-
+      Syntax is knowledge the model already has. The missing piece is detecting the vault's
+      own style (useMarkdownLinks, newLinkFormat in app.json), which nothing here reads.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-markdown/SKILL.md#L24-L43
+    contrast: new
+    score:
+      relevance: 1
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 1
+      why: >-
+        peripheral: model already knows link syntax and the goal excludes teaching generic
+        Markdown. a: wrong link style in a vault configured otherwise. b: no host style
+        detection. One source.
+    final_score: 2
+    keywords:
+      - wikilink
+      - alias
+      - embed
+    decision: {state: candidate}

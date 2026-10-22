@@ -1,0 +1,199 @@
+# Lessons whose primary domain is "note-and-metadata-editing". Written by distill.mjs: edit freely, then run
+# `distill.mjs format`. final_score = relevance × impact × evidence / effort (impact = number of
+# facts); ranked lessons come first by final_score, then unranked ones by key.
+lessons:
+
+  - key: append-over-overwrite-guard
+    domains:
+      - note-and-metadata-editing
+      - safety-and-verification
+    layer: content
+    what: >-
+      Jackal says `create` without `overwrite` will not replace an existing file and to
+      prefer append and prepend; kepano's own example is `create ... silent overwrite`;
+      roasbeef's create_note refuses an existing path but returns plain text with no error
+      flag.
+    notable: >-
+      Three different stances on the same guard. Kepano normalises overwrite in a plain
+      example, jackal documents the safe default but tested it only for a fresh file,
+      roasbeef enforces it but reports success-shaped output. Host rule: never pass
+      overwrite without user confirmation, and check the response text.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L142-L145
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L25
+      - roasbeef-plugin@03a22a8b563d:src/agent/ObsidianMcpServer.ts#L273-L281
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - d
+      impact: 4
+      evidence: 3
+      effort: 1
+      why: >-
+        a: overwrite destroys an existing note, which sync may then spread (data loss). b:
+        host has no guard yet. c: three sources show three stances. d: a guard is
+        enforceable in a wrapper. Three sources.
+    final_score: 36
+    keywords:
+      - overwrite
+      - append
+      - prepend
+      - guard
+    decision: {state: candidate}
+
+  - key: create-silent-no-ui
+    domains:
+      - note-and-metadata-editing
+      - access-routing
+    layer: content
+    what: >-
+      `create` without `silent` opens the note in Obsidian's UI; kepano and jackal both say
+      to add `silent`, and pablo's comments show `random` and `daily` open the UI.
+    notable: >-
+      UI side effect on the user's screen on every agent create. Easy to enforce through a
+      wrapper or a rule that every create carries silent. Kepano mentions the flag but only
+      as an option, not a default.
+    where:
+      - jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L56
+      - kepano-skills@3ccff5338ea7:skills/obsidian-cli/SKILL.md#L60
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L98-L100
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - d
+      impact: 4
+      evidence: 3
+      effort: 1
+      why: >-
+        a: windows open and focus is stolen (failures_it_prevents). b: kepano states it only
+        as an option. c: every create, daily, random. d: enforceable by a wrapper. Three
+        sources.
+    final_score: 36
+    keywords:
+      - silent
+      - create
+      - UI side effect
+    decision: {state: candidate}
+
+  - key: create-path-gotchas
+    domains:
+      - note-and-metadata-editing
+      - vault-conventions
+    layer: content
+    what: >-
+      `create` does not make parent folders; paths omit .md on create but `move` needs the
+      full path including .md; `create template=` may ignore `path=` and use the template's
+      folder; `template:insert` acts on the active file only.
+    notable: >-
+      Four separate ways a created note lands in the wrong place or fails, all silent or
+      late. Jackal also tells the agent to verify the real path after a template create.
+      Wrong-folder is a failure in the goal.
+    where:
+      - >-
+        jackal-cli-skills@ab6533943454:plugins/obsidian-cli/skills/obsidian-cli/SKILL.md#L57-L58
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L256-L257
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L309
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - c
+        - e
+      impact: 4
+      evidence: 2
+      effort: 1
+      why: >-
+        a: notes created in the wrong place or format. b: no host rule. c: four distinct
+        traps across two sources. e: the file exists elsewhere and nothing errors. Two
+        independent sources.
+    final_score: 24
+    keywords:
+      - mkdir
+      - template path
+      - no .md
+      - template:insert
+    decision: {state: candidate}
+
+  - key: property-set-list-trap
+    domains:
+      - note-and-metadata-editing
+      - safety-and-verification
+    layer: content
+    what: >-
+      `property:set` stores list values as a literal comma-separated string, not a YAML
+      array; the documented workarounds are a direct frontmatter edit or `eval`.
+    notable: >-
+      Corrupts the property type silently (scenario test 3 checks list, date and quoted
+      values). Pablo's own reference shows an example with `value=\"[project, alpha]\"` just
+      above the warning, so copying the example reproduces the trap. Rule for the host:
+      lists and dates go through a careful Edit of the YAML line, not property:set.
+    where:
+      - pablo-cli-skill@d7782314eadf:skills/obsidian-cli/SKILL.md#L264
+      - >-
+        pablo-cli-skill@d7782314eadf:skills/obsidian-cli/references/command-reference.md#L195-L201
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+        - e
+      impact: 3
+      evidence: 1
+      effort: 1
+      why: >-
+        a: property type drift and invalid list in frontmatter (failures_it_prevents). b:
+        kepano and jackal use property:set with no list warning. e: no error, wrong type
+        stored. One source.
+    final_score: 9
+    keywords:
+      - property:set
+      - list
+      - YAML array
+    decision: {state: candidate}
+
+  - key: properties-type-table
+    domains:
+      - note-and-metadata-editing
+      - vault-conventions
+    layer: content
+    what: >-
+      A property-type table (text, number, checkbox, date, datetime, list, links) with
+      reserved names tags, aliases, cssclasses, and the rule that link-valued properties
+      must be quoted.
+    notable: >-
+      Generic knowledge but compact (287 tokens) and it names the quoting trap. Does not tie
+      types to the vault's own .obsidian/types.json, which is where type drift is decided.
+    where:
+      - kepano-skills@3ccff5338ea7:skills/obsidian-markdown/references/PROPERTIES.md#L26-L34
+    contrast: new
+    score:
+      relevance: 3
+      facts:
+        - a
+        - b
+      impact: 2
+      evidence: 1
+      effort: 1
+      why: >-
+        a: unquoted link value or wrong type breaks the property. b: host has no property
+        rule. One source, generic.
+    final_score: 6
+    keywords:
+      - properties
+      - types
+      - quoting
+    decision: {state: candidate}
