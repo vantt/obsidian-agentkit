@@ -33,7 +33,11 @@ r.modalOpen = !/^No elements? found/.test(modal) && modal !== '' && !modal.start
 r.modalText = r.modalOpen ? modal.slice(0, 300) : '';
 if (r.modalOpen) sh('node', [path.join(repo, 'tests/showcase/shot.mjs'), path.join(OUT, 'obsidian-modal.png'), '.modal', '24']);
 
-// What changed in the copy.
+// What changed in the copy, against the baseline commit. Agents may commit (skill snapshots) or stage
+// (git mv); a mixed reset moves HEAD and the index back so every change shows up, while the files stay as the agent left them.
+const BASE = process.env.RESET_BASE || 'HEAD';
+r.agentCommits = Number(git('rev-list', '--count', `${BASE}..HEAD`).trim() || 0);
+sh('git', ['-C', DIR, 'reset', '-q', '--mixed', BASE]);
 const status = git('status', '--porcelain', '-uall').split('\n').filter(Boolean)
   .filter((l) => !/\.obsidian\/(workspace|plugins\/)/.test(l));
 fs.writeFileSync(path.join(OUT, 'status.txt'), status.join('\n') + '\n');

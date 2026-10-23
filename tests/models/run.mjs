@@ -39,12 +39,17 @@ const isOpenRouter = (m) => m.includes('/');
 const slug = (m) => m.replace(/[^a-z0-9.-]+/gi, '_');
 const realCli = () => fs.readFileSync(path.join(os.homedir(), '.local/state/obs-showcase/real-cli'), 'utf8').trim();
 const real = (...a) => sh(realCli(), [`vault=${VAULT}`, ...a], { cwd: '/mnt/c', timeout: 20000 }).stdout?.trim() ?? '';
-const testEnv = (runDir) => ({ ...process.env, OBS_TEST_VAULT: VAULT, OBS_TEST_DIR: DIR, SHOWCASE_RUN_DIR: runDir, RESET_UNRESOLVED: String(calibration().unresolved) });
+const testEnv = (runDir) => ({ ...process.env, OBS_TEST_VAULT: VAULT, OBS_TEST_DIR: DIR, SHOWCASE_RUN_DIR: runDir, RESET_UNRESOLVED: String(calibration().unresolved),
+  RESET_BASE: calibration().base, RESET_CLEAN_ALL: '1' });
 
 async function keyUsage() {
-  const r = await fetch('https://openrouter.ai/api/v1/key', { headers: { authorization: `Bearer ${or.OPENROUTER_API_KEY}` } });
-  if (!r.ok) throw new Error(`OpenRouter /key ${r.status}`);
-  return (await r.json()).data;
+  for (let i = 1; ; i++) { // a network blip here must not cost a run
+    try {
+      const r = await fetch('https://openrouter.ai/api/v1/key', { headers: { authorization: `Bearer ${or.OPENROUTER_API_KEY}` } });
+      if (!r.ok) throw new Error(`OpenRouter /key ${r.status}`);
+      return (await r.json()).data;
+    } catch (e) { if (i >= 5) throw e; await new Promise((r) => setTimeout(r, 5000 * i)); }
+  }
 }
 
 // Never send a real vault to a third-party model: the target must be the generated one.
@@ -194,6 +199,9 @@ if (cmd === 'preflight') {
   console.log(`calibration: ${fs.existsSync(path.join(STATE, 'calibration.json')) ? fs.readFileSync(path.join(STATE, 'calibration.json'), 'utf8').trim() : 'not yet'}`);
 } else if (cmd === 'calibrate') {
   guard();
+  // Start from the previous baseline, never from a commit an agent left behind.
+  const prevBase = fs.existsSync(path.join(STATE, "calibration.json")) ? JSON.parse(fs.readFileSync(path.join(STATE, "calibration.json"), "utf8")).base : null;
+  if (prevBase) sh("git", ["-C", DIR, "reset", "-q", "--hard", prevBase]);
   // Files Obsidian writes on first open (appearance.json, …) belong to the baseline, not to any agent.
   const own = sh('git', ['-C', DIR, 'status', '--porcelain', '--', '.obsidian']).stdout.split('\n').filter(Boolean).map((l) => l.slice(3))
     .filter((p) => !/workspace|plugins\//.test(p));
@@ -208,8 +216,9 @@ if (cmd === 'preflight') {
   }
   if (b !== '9' || stable < 5) die(`index did not settle (backlinks=${b}, unresolved=${u})`);
   fs.mkdirSync(STATE, { recursive: true });
-  fs.writeFileSync(path.join(STATE, 'calibration.json'), JSON.stringify({ vault: VAULT, unresolved: Number(u), at: new Date().toISOString() }));
-  console.log(`calibrated: backlinks=9 unresolved=${u}`);
+  const base = sh('git', ['-C', DIR, 'rev-parse', 'HEAD']).stdout.trim();
+  fs.writeFileSync(path.join(STATE, 'calibration.json'), JSON.stringify({ vault: VAULT, unresolved: Number(u), base, at: new Date().toISOString() }));
+  console.log(`calibrated: backlinks=9 unresolved=${u} base=${base.slice(0, 7)}`);
 } else if (cmd === 'one') {
   const [model, S, side, rep] = rest;
   if (!model || !SCENARIOS.includes(S) || !['with', 'without'].includes(side)) die('usage: one <model> <S1..S9> <with|without> <rep> [--round N]', 2);

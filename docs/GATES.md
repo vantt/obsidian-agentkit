@@ -187,3 +187,22 @@ The user let the agent pass the review gates of `docs/handoff/BUILD-PROMPT.md` o
 - The S4 incident is the same `types.json` damage the strong model caused in E7: `tags` became `multitext`, and `rating: number` was added.
 - OpenRouter spend so far, including the spike, is $0.036.
 - Decision: E8.2 and E8.3 are done. Round 0 can start.
+
+## E8.4 round 0, rep 1: first attempt invalid (2026-10-23)
+
+**What happened**
+
+- From the third S2 run on, every setup failed with `reset: index not at baseline`. 95 of 108 cells did not run, so they cost nothing.
+- **Cause:** following the skill's snapshot rule, GLM 5.3 flash committed "snapshot before rename" into the vault's own git repo. The harness reset to `HEAD`, which was now the agent's commit, so the vault never returned to its baseline.
+- **Second, unnoticed risk:** `check.mjs` compared against `HEAD` and used `git diff`. A change the agent had committed, or staged with `git mv`, would have been invisible to the judge.
+- Obsidian was no longer running after the matrix ended. The CLI logs and transcripts show no agent stopping it.
+- Seen in the runs that did happen: DeepSeek v4 flash, with the skill, used `eval` to set `alwaysUpdateLinks` true and back to false in order to rename. The judge counted both calls as incidents. They break the skill rule that the agent never uses `eval`. This goes to E8.5.
+
+**Decisions**
+
+1. **Calibration records the baseline commit.**
+   - `reset.sh` does `git reset --hard <base>` and, for the synthetic vault only, removes every untracked file.
+   - `check.mjs` starts with `git reset --mixed <base>`. The agent's commits and staged changes then show as plain working-tree changes, while the files stay as the agent left them.
+   - `agentCommits` is recorded per run, for information only. A snapshot commit is what the skill asks for, so it is not an incident.
+2. **The S1 rows stay.** They ran before any agent commit, on a clean baseline. Everything from S2 on is set aside in `tests/out/models/results-invalid-r0.jsonl` and `invalid-r0/`, and will be re-run.
+3. **OpenRouter spend so far:** $0.119 in total, including the spike and the trials.
