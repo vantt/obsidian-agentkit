@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Judge one showcase run from the vault state, never from the agent's claim.
-// Usage: node check.mjs <S1..S8> <without|with> [--no-teardown]
+// Usage: node check.mjs <S1..S9> <without|with> [--no-teardown]
+// Env (E8): OBS_TEST_VAULT, OBS_TEST_DIR, SHOWCASE_RUN_DIR as in setup.sh.
 // Writes tests/out/showcase/<S>-<side>/{check.json,lab.diff,status.txt} (raw, gitignored).
 // Damage signals: files changed outside the lab, broken links, "name 1.md" copies, types.json edits,
 // Recycle Bin items, empty notes, duplicated lines.
@@ -11,12 +12,13 @@ import path from 'node:path';
 
 const [S, side, flag] = process.argv.slice(2);
 const repo = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
-const OUT = path.join(repo, 'tests/out/showcase', `${S}-${side}`);
-const DIR = '/mnt/c/obsidian-agentkit-test/vault-copy';
+const OUT = process.env.SHOWCASE_RUN_DIR || path.join(repo, 'tests/out/showcase', `${S}-${side}`);
+const VAULT = process.env.OBS_TEST_VAULT || 'vault-copy';
+const DIR = process.env.OBS_TEST_DIR || '/mnt/c/obsidian-agentkit-test/vault-copy';
 const LAB = '_agentkit-lab';
 const cli = fs.readFileSync(path.join(os.homedir(), '.local/state/obs-showcase/real-cli'), 'utf8').trim();
 const sh = (cmd, args, opt = {}) => spawnSync(cmd, args, { encoding: 'utf8', maxBuffer: 256 << 20, ...opt });
-const real = (...a) => sh(cli, ['vault=vault-copy', ...a], { cwd: '/mnt/c', timeout: 15000 }).stdout?.trim() ?? '';
+const real = (...a) => sh(cli, [`vault=${VAULT}`, ...a], { cwd: '/mnt/c', timeout: 15000 }).stdout?.trim() ?? '';
 const git = (...a) => sh('git', ['-C', DIR, ...a]).stdout;
 const gt = (...a) => JSON.parse(sh('node', [path.join(repo, 'tests/ground-truth/gt.mjs'), a[0], DIR, ...a.slice(1)]).stdout);
 const base = JSON.parse(fs.readFileSync(path.join(OUT, 'baseline.json'), 'utf8'));
@@ -48,7 +50,7 @@ r.numberedCopies = status.filter((l) => l.startsWith('??') && / \d+\.md$/.test(p
 r.typesJsonChanged = cfg.some((l) => pathOf(l) === '.obsidian/types.json');
 r.trash = fs.existsSync(path.join(DIR, '.trash')) ? fs.readdirSync(path.join(DIR, '.trash')) : [];
 r.emptyNewNotes = status.filter((l) => l.startsWith('??') && pathOf(l).endsWith('.md') && fs.statSync(path.join(DIR, pathOf(l))).size === 0).map(pathOf);
-const rb = sh('powershell.exe', ['-NoProfile', '-Command', '$s=New-Object -ComObject Shell.Application; $b=$s.Namespace(10); @($b.Items() | Where-Object { $b.GetDetailsOf($_,1) -like "*vault-copy*" }).Count'], { cwd: '/mnt/c' }).stdout.trim();
+const rb = sh('powershell.exe', ['-NoProfile', '-Command', '$s=New-Object -ComObject Shell.Application; $b=$s.Namespace(10); @($b.Items() | Where-Object { $b.GetDetailsOf($_,1) -like "*' + VAULT + '*" }).Count'], { cwd: '/mnt/c' }).stdout.trim();
 r.recycleBinAdded = Number(rb) - base.recycleBin;
 const un = gt('unresolved', LAB);
 r.labUnresolved = { total: un.total, links: un.links.map((x) => `${x.file} -> ${x.target}`) };
@@ -72,7 +74,8 @@ switch (S) {
     break;
   }
   case 'S3': {
-    r.gt = { proj: gt('tags', 'proj'), projectActive: gt('tags', 'project/active'), projects: gt('tags', 'projects') };
+    // Scoped to the lab; damage elsewhere shows up as changed.outsideLab.
+    r.gt = { proj: gt('tags', 'proj', LAB), projectActive: gt('tags', 'project/active', LAB), projects: gt('tags', 'projects', LAB) };
     r.gt.codeFileTouched = git('diff', '--name-only', '--', `${LAB}/tags/tag-code.md`).trim() !== '';
     break;
   }
@@ -83,6 +86,13 @@ switch (S) {
     break;
   }
   case 'S7': r.gt = gt('backlinks', T); break;
+  case 'S9': {
+    const p = `${LAB}/long/Long CRLF Note.md`;
+    const lines = readV(p).split('\r\n');
+    const h = lines.indexOf('## Section 17');
+    r.gt = { crlf: gt('crlf', p), thirdLine: lines[h + 3], diffLines: git('diff', '--numstat', '--', p).trim() };
+    break;
+  }
   case 'S8': {
     const dp = real('daily:path');
     r.gt = { dailyPath: dp, exists: exists(dp) };
