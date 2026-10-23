@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 15 / 44 việc xong (34%)**
+**Toàn project: 16 / 55 việc xong (29%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -17,6 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E5.1, E5.2 |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM qua OpenRouter; Haiku; Gemini, Codex kiểm sau) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 1/11 ░░░░░░░░░░ 9% | — | E8.2 (runner), E8.3 (cần user mở vault tổng hợp) |
 
 Ký hiệu trạng thái:
 - ✅ Done: xong, có bằng chứng.
@@ -32,7 +33,9 @@ Ký hiệu trạng thái:
 
 ## Đang làm
 
-_Trống._
+| ID | Việc | Ghi chú |
+|---|---|---|
+| E8.2 | Harness cho model nhỏ | `cc-run.sh` chạy được cả 6 model; còn runner và đọc transcript. Key OpenRouter hết hạn 2026-10-30 |
 
 ## Cần user
 
@@ -45,6 +48,7 @@ Các việc này agent không tự làm được:
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
 | E5.6 | Dọn repo | Đồng ý commit việc dời thư mục distillery, và quyết định có commit `docs/handoff/` không |
+| E8.3 | Vault tổng hợp | Mở vault tổng hợp trong Obsidian (không gửi nội dung vault thật tới model bên thứ ba) |
 | E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
 
 ## Backlog chi tiết
@@ -95,6 +99,17 @@ Các việc này agent không tự làm được:
 | E7.6 | Kho "aha moment" | E7 | P2 | ✅ | Agent | [STORIES.md](showcase/STORIES.md), 9 hook |
 | E7.7 | Bản nháp bài viết và kịch bản video | E7 | P2 | ✅ | Agent | [POST.md](showcase/POST.md), [VIDEO-SCRIPT.md](showcase/VIDEO-SCRIPT.md) |
 | E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
+| E8.1 | Chốt ma trận: model, giá, tình huống, ngân sách | E8 | P2 | ✅ | User + agent | 4 model OpenRouter, trần $40, Claude qua gói ([GATES.md](GATES.md) mục E8.1/E8.2) |
+| E8.2 | Harness: Claude Code headless; Claude qua gói, DeepSeek/GLM qua endpoint Anthropic của OpenRouter; dự phòng vòng lặp tối giản | E8 | P2 | 🔄 | Agent | `tests/models/cc-run.sh`; cả 6 model chạy được (Claude bằng token của gói) |
+| E8.3 | Vault tổng hợp, ground truth, guard chặn vault thật | E8 | P2 | ⬜ | Agent + user | User mở vault trong Obsidian |
+| E8.4 | Vòng 0: đo skill v1 trên 2 DeepSeek, 2 GLM, Haiku, model mạnh; có/không skill, 3 lượt | E8 | P2 | ⬜ | Agent | Sau E8.1–E8.3 |
+| E8.5 | Phân loại lỗi, xếp hạng việc cần sửa | E8 | P2 | ⬜ | Agent | — |
+| E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ⬜ | Agent | — |
+| E8.7 | Viết lại SKILL.md và output bridge cho model rẻ | E8 | P2 | ⬜ | Agent | — |
+| E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ⬜ | Agent | — |
+| E8.9 | Báo cáo chứng minh H1–H4 và biểu đồ | E8 | P2 | ⬜ | Agent | — |
+| E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | P2 | ⬜ | Agent | — |
+| E8.11 | Kiểm sau: Gemini Flash và Codex (1 lượt, xác nhận "tương tự") | E8 | P3 | ⬜ | Agent | Sau E8.10 |
 
 ## Cách cập nhật board
 

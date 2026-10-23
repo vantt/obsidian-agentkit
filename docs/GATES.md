@@ -97,3 +97,45 @@ The user let the agent pass the review gates of `docs/handoff/BUILD-PROMPT.md` o
    - *Token estimates:* they count bridge output and Read lines, not output from the agent's own `grep`/`cat`. This undercounts cases 1, 2, 7 and 8b.
    - *Sample size:* single runs, so variance between sessions is unknown.
 3. **The pre-authorised gate decision (user, 2026-10-22) is applied:** the agent accepts these gaps and reports them for review rather than blocking. They are what the user should look at first.
+
+## E8.1 and E8.2 spike: small-model matrix and harness (2026-10-23)
+
+**Decisions by the user**
+
+1. **Models under test, through OpenRouter:** `deepseek/deepseek-v4.1-flash`, `deepseek/deepseek-v4-flash`, `z-ai/glm-5.3-flash`, `z-ai/glm-4.7-flash`. Budget cap $40; the OpenRouter key also has a $50 limit on its side and **expires 2026-10-30**.
+2. **Claude models (Haiku, the strong reference) run on the Claude Code subscription**, not OpenRouter.
+3. **thehive was tried and dropped.** The key had only two models and no cheaper variants. It has no Anthropic-style endpoint, so it needs a proxy. It returned 429 after about 70 quick requests.
+4. **Gemini Flash and Codex are checked later (E8.11),** assuming they behave like the models above.
+
+**Spike findings (measured)**
+
+1. **OpenRouter `POST /api/v1/messages` (Anthropic style) works for all four models,** with either `x-api-key` or `Authorization: Bearer`. Every model made a correct `tool_use` call and answered correctly after the `tool_result`. Each response carries `usage.cost` in USD.
+2. **`claude -p` reaches all four models** with `ANTHROPIC_BASE_URL=https://openrouter.ai/api`, `ANTHROPIC_API_KEY=<key>` and every model slot pinned to the model under test. All four answered a one-tool task correctly in 2 turns.
+   - Claude Code logs `claude-code:unrecognized_model` on stderr and assumes a 200k context. This is harmless.
+   - Claude Code's own `total_cost_usd` uses Anthropic prices, so it is wrong for these models (it reported $0.099 for a run that cost under $0.001). Cost comes from OpenRouter instead.
+3. **`--bare` leaves only 3 tools (Bash, Edit, Read);** without it there are 20. The subscription run showed 28 tools, because some tools depend on the account type. A plain run's system prompt is about 47k input tokens.
+4. **`--tools Bash Read Edit Write` gives every model the same four tools** and cuts a one-tool task to about 7k input tokens.
+5. **A fresh `CLAUDE_CONFIG_DIR` loads none of the user's plugins, hooks, MCP servers or memory;** only the built-in plugins remain. A workdir outside `~/projects` avoids the parent `CLAUDE.md`.
+6. **The subscription cannot be used from a fresh config dir with the user's existing login.**
+   - The CLI's stored OAuth session was expired ("OAuth session expired and could not be refreshed").
+   - Copying `~/.claude/.credentials.json` is not acceptable, because a token refresh could log out the user's own sessions.
+7. **`claude -p` stream-json output carries timestamps and per-message usage,** and no session file is written in the fresh config dir. The runner keeps the stream-json output as the transcript.
+
+**Decisions and reasons**
+
+1. **One harness for all models: `tests/models/cc-run.sh`.**
+   - It uses a fresh config dir, the same four tools via `--tools`, `bypassPermissions`, and a workdir outside `~/projects`.
+   - Only the model and the auth differ between runs.
+   - Why: E8 compares models, so everything else must be equal. Fixing the tools also removes about 40k tokens of irrelevant tool descriptions, which matters most for small models.
+   - Trade-off: this is not the stock Claude Code tool set that E7 used, so E8 numbers are not directly comparable with E7. The strong model is re-run under E8's harness as the reference.
+2. **Claude auth: a long-lived token from `claude setup-token`,** stored as `CLAUDE_CODE_OAUTH_TOKEN` in `~/.config/obsidian-agentkit/claude.env`. The user must run this once, interactively.
+3. **Cost per run is the change in OpenRouter `GET /api/v1/key` `usage` before and after the run.** Runs are sequential, so the change belongs to that run alone. Claude runs record their tokens; USD for them is computed from Anthropic list prices.
+4. **No proxy and no fallback agent loop are needed** for the four OpenRouter models. The fallback stays in the plan in case a model breaks on real scenarios.
+
+**Follow-up, same day: the subscription path works.**
+
+- The user ran `claude setup-token` and stored the token in `~/.config/obsidian-agentkit/claude.env`; the file has mode 600 and is outside the repo.
+- `cc-run.sh haiku` and `cc-run.sh sonnet` both answered the one-tool test correctly in 2 turns.
+- Both runs had the same environment as the OpenRouter runs: the same four tools, the same two built-in plugins, no MCP, and `apiKeySource: none`, which means the token was used and no API key.
+- Only the requested Claude model appears in `modelUsage`, so no background calls went to another model.
+- Input was about 11–13k tokens, against about 7k for the OpenRouter models on the same task. Claude Code sends a somewhat longer prompt to Claude models. E8.9 reports this as a known difference; it does not favour the small models.
