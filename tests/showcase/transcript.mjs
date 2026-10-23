@@ -39,8 +39,9 @@ if (!answer) {
 }
 
 // Skill load = reading SKILL.md or references/, by the Read tool or by cat in Bash (not bridge calls).
-const isSkillRead = (s) => (s.tool === 'Read' && /skills\/obsidian-connect\//.test(s.input.file_path || ''))
-  || (s.tool === 'Bash' && /skills\/obsidian-connect\/(SKILL\.md|references\/)/.test(s.input.command || '') && !/obs\.mjs/.test(s.input.command || ''));
+// Matches the repo copy (E7) and E8's frozen copies (…/skill-r<N>/obsidian-connect/).
+const isSkillRead = (s) => (s.tool === 'Read' && /obsidian-connect\//.test(s.input.file_path || ''))
+  || (s.tool === 'Bash' && /obsidian-connect\/(SKILL\.md|references\/)/.test(s.input.command || '') && !/obs\.mjs/.test(s.input.command || ''));
 const u = [...usage.values()];
 const ctx = (x) => (x.input_tokens || 0) + (x.cache_read_input_tokens || 0) + (x.cache_creation_input_tokens || 0);
 const metrics = {

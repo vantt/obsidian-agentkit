@@ -139,3 +139,51 @@ The user let the agent pass the review gates of `docs/handoff/BUILD-PROMPT.md` o
 - Both runs had the same environment as the OpenRouter runs: the same four tools, the same two built-in plugins, no MCP, and `apiKeySource: none`, which means the token was used and no API key.
 - Only the requested Claude model appears in `modelUsage`, so no background calls went to another model.
 - Input was about 11–13k tokens, against about 7k for the OpenRouter models on the same task. Claude Code sends a somewhat longer prompt to Claude models. E8.9 reports this as a known difference; it does not favour the small models.
+
+## E8.2 and E8.3: runner, judge, synthetic vault (2026-10-23)
+
+**Built**
+
+- `tests/models/gen-synth-vault.mjs` writes the synthetic vault `vault-synth` at `C:\obsidian-agentkit-test\vault-synth`.
+  - 1,790 generated notes plus the `_agentkit-lab/` fixture, with a git repo.
+  - A `.e8-synthetic` marker file holds the S6 answer key.
+  - The user opened the vault in Obsidian. Calibration found backlinks 9 and unresolved 35, which matches the file-only ground truth.
+- `tests/models/run.mjs` runs the tests: `preflight`, `calibrate`, `one`, and a resumable `matrix`.
+- `tests/models/judge.mjs` gives the automatic verdict. Re-run on the 16 E7 runs, it reproduces all six incidents counted by hand.
+- `setup.sh`, `check.mjs` and `reset.sh` take the vault from env, defaulting to `vault-copy`. S9 was added.
+
+**Problems met in the first end-to-end runs, and decisions**
+
+1. **Every OpenRouter run through Claude Code got 429 "rate-limited upstream"; direct API calls did not.**
+   - Found with a logging proxy and request replay: Claude Code's tool search adds a `DeferredToolPlaceholder` tool with `defer_loading: true`.
+   - With that tool in the request, OpenRouter routes only to providers that support it, and those were rate-limited. Removing just that tool gave 200.
+   - Decision: `cc-run.sh` sets `ENABLE_TOOL_SEARCH=false` for every model. With four fixed tools there is nothing to defer, and every model keeps the same setup.
+2. **Provider errors must not count as model failures.**
+   - The judge had read the "429" in "API Error: Request rejected (429)" as the agent's answer to S1.
+   - Decision: the judge refuses to judge an answer that is an API error. The runner logs the attempt to `errors.jsonl`, waits, resets and retries, up to 3 attempts. After that it writes `error.json` and no verdict, so a later matrix pass retries the run.
+3. **Obsidian wrote `.obsidian/appearance.json` when the vault was first opened, and the judge counted it as a config incident.**
+   - Decision: `calibrate` commits the files Obsidian writes on first open into the vault's baseline.
+4. **Streamed per-message token usage is all zeros through OpenRouter.** The `result` line has the real totals.
+   - Decision: every model's tokens come from `result.usage`, so Claude and OpenRouter runs are counted the same way.
+   - Per-call context size (E7's `contextGrowth`) is not available for E8.
+5. **The skill-read measure missed E8's frozen skill copies,** because the regex expected `skills/obsidian-connect/`. The regex now matches any `obsidian-connect/` path.
+6. **Obsidian updated itself to CLI 1.14.5 during E8.**
+   - The skill was tested on 1.14.4. The bridge's version check accepts any 1.14.x, and the first agent noticed the new version without trouble.
+   - E8 runs record the version actually used. A probe re-run on 1.14.5 belongs to E5.3.
+
+**Trial runs after the fixes (round 99, kept out of the results)**
+
+| Model | Run | Result | Tool calls | Input / output tokens | Time | Cost |
+|---|---|---|---:|---:|---:|---:|
+| `z-ai/glm-5.3-flash` | S1 with | pass | 3 | 24k / 1.9k | 33 s | $0.0004 |
+| `deepseek/deepseek-v4.1-flash` | S1 with | pass | 6 | 46k / 2.3k | 30 s | $0.0017 |
+| `deepseek/deepseek-v4-flash` | S1 with | pass | 3 | 23k / 0.6k | 41 s | $0.0025 |
+| `z-ai/glm-4.7-flash` | S1 with | pass | 3 | 23k / 0.7k | 23 s | $0.0003 |
+| Haiku 5.5 (subscription) | S1 with | pass | 3 | 26k / 1.0k | 12 s | — |
+| Sonnet 5.5 (subscription) | S1 with | pass | 2 | 24k / 0.5k | 13 s | — |
+| `z-ai/glm-5.3-flash` | S4 without | goal met, 1 incident | 8 | 58k / 1.1k | 178 s | $0.0044 |
+| `deepseek/deepseek-v4-flash` | S8 with, 2 sessions | pass | 9 | 79k / 2.2k | 39 s | $0.0045 |
+
+- The S4 incident is the same `types.json` damage the strong model caused in E7: `tags` became `multitext`, and `rating: number` was added.
+- OpenRouter spend so far, including the spike, is $0.036.
+- Decision: E8.2 and E8.3 are done. Round 0 can start.

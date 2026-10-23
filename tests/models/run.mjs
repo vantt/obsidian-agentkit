@@ -115,9 +115,20 @@ async function session(model, S, side, runDir, skill, keep) {
   const lines = fs.existsSync(path.join(runDir, 'transcript.jsonl')) ? fs.readFileSync(path.join(runDir, 'transcript.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return {}; } }) : [];
   const res = lines.find((d) => d.type === 'result');
   if (res?.result) fs.writeFileSync(path.join(runDir, 'answer.txt'), res.result);
+  // Through OpenRouter the streamed per-message usage is all zeros; the result line carries the real totals.
+  // Use them for every model so Claude and OpenRouter runs are counted the same way.
+  const mf = path.join(runDir, 'metrics.json');
+  if (res?.usage && fs.existsSync(mf)) {
+    const m = JSON.parse(fs.readFileSync(mf, 'utf8')); const u = res.usage;
+    Object.assign(m, { inputTokensTotal: (u.input_tokens || 0) + (u.cache_read_input_tokens || 0) + (u.cache_creation_input_tokens || 0),
+      cacheReadTokens: u.cache_read_input_tokens || 0, outputTokensTotal: u.output_tokens || 0, thinkingTokens: u.output_tokens_details?.thinking_tokens ?? null,
+      modelCalls: m.modelCalls, numTurns: res.num_turns, tokenSource: 'result.usage', models: Object.keys(res.modelUsage || {}) });
+    fs.writeFileSync(mf, JSON.stringify(m, null, 1));
+  }
   const ck = sh('node', [path.join(repo, 'tests/showcase/check.mjs'), S, side], { env });
   if (ck.status !== 0) throw new Error(`check failed: ${ck.stderr}`);
-  return { exit: run.status, signal: run.signal, timedOut: run.signal === 'SIGTERM', wall, cost, resultError: res?.is_error ?? null, turns: res?.num_turns ?? null };
+  const apiError = /^API Error/.test(res?.result || '') ? res.result.slice(0, 200) : null;
+  return { exit: run.status, signal: run.signal, timedOut: run.signal === 'SIGTERM', wall, cost, resultError: res?.is_error ?? null, apiError, turns: res?.num_turns ?? null };
 }
 
 async function one(model, S, side, rep, round) {
@@ -125,13 +136,26 @@ async function one(model, S, side, rep, round) {
   if (fs.existsSync(path.join(runDir, 'verdict.json'))) { console.log(`skip ${runDir} (done)`); return null; }
   const left = await budgetLeft();
   if (left <= 0) die(`budget reached (E8_BUDGET_USD=${or.E8_BUDGET_USD})`, 8);
+  fs.mkdirSync(OUT, { recursive: true });
   const skill = skillCopy(round);
-  const s1 = await session(model, S, side, runDir, skill, false);
-  const sessions = [s1]; const dirs = [runDir];
-  if (S === 'S8') { // second session on the same vault state, same prompt
-    const d2 = `${runDir}-session2`;
-    sessions.push(await session(model, S, `${side}2`, d2, skill, true));
-    dirs.push(d2);
+  let sessions, dirs, spent = 0;
+  // A provider error (429, 5xx) says nothing about the model or the skill: wait, reset, run again.
+  for (let attempt = 1; ; attempt++) {
+    fs.rmSync(runDir, { recursive: true, force: true }); fs.rmSync(`${runDir}-session2`, { recursive: true, force: true });
+    sessions = [await session(model, S, side, runDir, skill, false)]; dirs = [runDir];
+    if (S === 'S8' && !sessions[0].apiError) { // second session on the same vault state, same prompt
+      const d2 = `${runDir}-session2`;
+      sessions.push(await session(model, S, `${side}2`, d2, skill, true));
+      dirs.push(d2);
+    }
+    spent += sessions.reduce((a, s) => a + (s.cost || 0), 0);
+    const err = sessions.find((s) => s.apiError)?.apiError;
+    if (!err) break;
+    const row = { round, model, scenario: S, side, rep, attempt, date: new Date().toISOString(), result: 'error', error: err, costUsd: spent };
+    fs.appendFileSync(path.join(OUT, 'errors.jsonl'), JSON.stringify(row) + '\n');
+    console.log(`${model} ${S} ${side} #${rep}: provider error (attempt ${attempt}): ${err}`);
+    if (attempt >= 3) { fs.writeFileSync(path.join(runDir, 'error.json'), JSON.stringify(row, null, 1)); return null; }
+    await new Promise((r) => setTimeout(r, 60000 * attempt));
   }
   const j = sh('node', [path.join(here, 'judge.mjs'), ...dirs], { env: testEnv(runDir) });
   if (j.status !== 0) throw new Error(`judge failed: ${j.stderr}`);
@@ -142,14 +166,15 @@ async function one(model, S, side, rep, round) {
     round, model, scenario: S, side, rep, date: new Date().toISOString(), skillRev: side === 'with' ? skill.rev : null,
     result: v.result, incidents: v.incidents.length, incidentList: v.incidents, reasons: v.reasons,
     toolCalls: sum('toolCalls'), toolErrors: sum('toolErrors'), modelCalls: sum('modelCalls'),
-    inputTokensTotal: sum('inputTokensTotal'), outputTokensTotal: sum('outputTokensTotal'), taskOutputBytes: sum('taskOutputBytes'),
+    inputTokensTotal: sum('inputTokensTotal'), cacheReadTokens: sum('cacheReadTokens'), outputTokensTotal: sum('outputTokensTotal'), thinkingTokens: sum('thinkingTokens'),
+    taskOutputBytes: sum('taskOutputBytes'), skillLoadBytes: sum('skillLoadBytes'), modelsSeen: [...new Set(m.flatMap((x) => x.models || []))],
     wallSeconds: sessions.reduce((a, s) => a + s.wall, 0),
     costUsd: sessions.every((s) => s.cost !== null) ? sessions.reduce((a, s) => a + s.cost, 0) : null,
+    costIncludingRetries: isOpenRouter(model) ? spent : null,
     costSource: isOpenRouter(model) ? 'openrouter-key-usage' : 'tokens-x-list-price (computed in report)',
     timedOut: sessions.some((s) => s.timedOut), agentError: sessions.some((s) => s.resultError || (s.exit !== 0 && !s.timedOut)),
     runDir: path.relative(repo, runDir),
   };
-  fs.mkdirSync(OUT, { recursive: true });
   fs.appendFileSync(path.join(OUT, 'results.jsonl'), JSON.stringify(row) + '\n');
   console.log(`${model} ${S} ${side} #${rep}: ${row.result}, ${row.incidents} incident(s), ${row.toolCalls} calls, ${row.wallSeconds}s, $${row.costUsd?.toFixed(4) ?? '?'}`);
   return row;
@@ -169,6 +194,10 @@ if (cmd === 'preflight') {
   console.log(`calibration: ${fs.existsSync(path.join(STATE, 'calibration.json')) ? fs.readFileSync(path.join(STATE, 'calibration.json'), 'utf8').trim() : 'not yet'}`);
 } else if (cmd === 'calibrate') {
   guard();
+  // Files Obsidian writes on first open (appearance.json, …) belong to the baseline, not to any agent.
+  const own = sh('git', ['-C', DIR, 'status', '--porcelain', '--', '.obsidian']).stdout.split('\n').filter(Boolean).map((l) => l.slice(3))
+    .filter((p) => !/workspace|plugins\//.test(p));
+  if (own.length) { sh('git', ['-C', DIR, 'add', '--', ...own]); sh('git', ['-C', DIR, 'commit', '-qm', `obsidian first-open files: ${own.join(', ')}`]); console.log(`committed app-written files: ${own.join(', ')}`); }
   sh('git', ['-C', DIR, 'checkout', '-q', '--', '.']); sh('git', ['-C', DIR, 'clean', '-fdq', '--', '_agentkit-lab']);
   real('reload');
   let b = '', u = '', stable = 0, prev = '';

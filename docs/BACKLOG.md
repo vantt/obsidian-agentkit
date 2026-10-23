@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 16 / 55 việc xong (29%)**
+**Toàn project: 18 / 55 việc xong (32%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E5.1, E5.2 |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
-| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM qua OpenRouter; Haiku; Gemini, Codex kiểm sau) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 1/11 ░░░░░░░░░░ 9% | — | E8.2, E8.3: chờ user mở `vault-synth` trong Obsidian |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM qua OpenRouter; Haiku; Gemini, Codex kiểm sau) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 3/11 ██░░░░░░░░ 27% | — | E8.4: vòng 0 (360 phiên) |
 
 Ký hiệu trạng thái:
 - ✅ Done: xong, có bằng chứng.
@@ -35,8 +35,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E8.2 | Harness cho model nhỏ | `run.mjs`, `judge.mjs` xong; chờ chạy thử đầu cuối. Key OpenRouter hết hạn 2026-10-30 |
-| E8.3 | Vault tổng hợp | Đã tạo `vault-synth`; chờ user mở trong Obsidian |
+| E8.4 | Vòng 0: đo skill v1 | Sẵn sàng chạy. Key OpenRouter hết hạn 2026-10-30 |
 
 ## Cần user
 
@@ -49,7 +48,6 @@ Các việc này agent không tự làm được:
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
 | E5.6 | Dọn repo | Đồng ý commit việc dời thư mục distillery, và quyết định có commit `docs/handoff/` không |
-| E8.3 | Vault tổng hợp | Mở `C:\obsidian-agentkit-test\vault-synth` trong Obsidian (Open folder as vault), đóng hộp thoại nếu có. Vault chỉ chứa nội dung sinh tự động |
 | E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
 
 ## Backlog chi tiết
@@ -101,8 +99,8 @@ Các việc này agent không tự làm được:
 | E7.7 | Bản nháp bài viết và kịch bản video | E7 | P2 | ✅ | Agent | [POST.md](showcase/POST.md), [VIDEO-SCRIPT.md](showcase/VIDEO-SCRIPT.md) |
 | E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
 | E8.1 | Chốt ma trận: model, giá, tình huống, ngân sách | E8 | P2 | ✅ | User + agent | 4 model OpenRouter, trần $40, Claude qua gói ([GATES.md](GATES.md) mục E8.1/E8.2) |
-| E8.2 | Harness: Claude Code headless; Claude qua gói, DeepSeek/GLM qua endpoint Anthropic của OpenRouter; dự phòng vòng lặp tối giản | E8 | P2 | 🔄 | Agent | `cc-run.sh`, `run.mjs`, `judge.mjs`; cả 6 model chạy được; chờ chạy thử đầu cuối |
-| E8.3 | Vault tổng hợp, ground truth, guard chặn vault thật | E8 | P2 | 🔄 | Agent + user | `gen-synth-vault.mjs`, vault đã tạo; chờ user mở trong Obsidian |
+| E8.2 | Harness: Claude Code headless; Claude qua gói, DeepSeek/GLM qua endpoint Anthropic của OpenRouter; dự phòng vòng lặp tối giản | E8 | P2 | ✅ | Agent | `cc-run.sh`, `run.mjs`, `judge.mjs`; chạy thử đầu cuối pass trên 6 model ([GATES.md](GATES.md) mục E8.2/E8.3) |
+| E8.3 | Vault tổng hợp, ground truth, guard chặn vault thật | E8 | P2 | ✅ | Agent + user | `gen-synth-vault.mjs`; `vault-synth` mở trong Obsidian, calibrate khớp ground truth |
 | E8.4 | Vòng 0: đo skill v1 trên 2 DeepSeek, 2 GLM, Haiku, model mạnh; có/không skill, 3 lượt | E8 | P2 | ⬜ | Agent | Sau E8.1–E8.3 |
 | E8.5 | Phân loại lỗi, xếp hạng việc cần sửa | E8 | P2 | ⬜ | Agent | — |
 | E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ⬜ | Agent | — |

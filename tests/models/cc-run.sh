@@ -14,6 +14,9 @@ STATE="${E8_STATE:-$HOME/.local/state/obs-e8}"
 export CLAUDE_CONFIG_DIR="$STATE/claude-config"
 mkdir -p "$CLAUDE_CONFIG_DIR"
 export DISABLE_TELEMETRY=1 DISABLE_ERROR_REPORTING=1 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+# Tool search adds a `defer_loading` placeholder tool; OpenRouter then routes only to the few providers that
+# support it, and those were rate-limited (GATES, E8.2). With four fixed tools there is nothing to defer.
+export ENABLE_TOOL_SEARCH=false
 unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL
 
 case "$M" in

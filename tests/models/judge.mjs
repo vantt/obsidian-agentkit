@@ -26,6 +26,9 @@ const marker = process.env.OBS_TEST_DIR && fs.existsSync(path.join(process.env.O
 
 const incidents = [];
 const reasons = [];
+if (runs.some((r) => /^API Error/.test(r.answer.trim()))) {
+  console.error('provider error in the answer: not a model result, do not judge'); process.exit(3);
+}
 // The ANSWER part only; NOTES may quote numbers and names the agent rejected.
 const answerOf = (t) => (t.match(/ANSWER:\s*([\s\S]*?)(?:\n\s*NOTES:|$)/i)?.[1] ?? t).trim();
 const answer = answerOf(last.answer);
