@@ -1,0 +1,7 @@
+help | exit 0 | 17353 B out | 0 B err | 124 ms
+help | exit 0 | 17353 B out | 0 B err | 151 ms
+daily:path vault=vault-copy | exit 0 | 14 B out | 0 B err | 155 ms
+daily:read vault=vault-copy | exit 0 | 0 B out | 0 B err | 156 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 141 ms
+help | exit 0 | 17353 B out | 0 B err | 139 ms
+vault=vault-copy daily:read | exit 0 | 24 B out | 0 B err | 136 ms

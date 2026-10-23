@@ -1,0 +1,27 @@
+{
+ "version": {
+  "calls": 1,
+  "outBytes": 26,
+  "maxOut": 26
+ },
+ "vault": {
+  "calls": 1,
+  "outBytes": 37,
+  "maxOut": 37
+ },
+ "eval": {
+  "calls": 1,
+  "outBytes": 45,
+  "maxOut": 45
+ },
+ "search": {
+  "calls": 7,
+  "outBytes": 606,
+  "maxOut": 352
+ },
+ "search:context": {
+  "calls": 3,
+  "outBytes": 3140,
+  "maxOut": 2243
+ }
+}

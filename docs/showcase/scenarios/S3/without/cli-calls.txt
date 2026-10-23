@@ -1,0 +1,11 @@
+help | exit 0 | 17353 B out | 0 B err | 134 ms
+help | exit 0 | 17353 B out | 0 B err | 144 ms
+help | exit 0 | 17353 B out | 0 B err | 122 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 173 ms
+vault=vault-copy tags counts | exit 0 | 2078 B out | 0 B err | 186 ms
+vault=vault-copy tag name=proj verbose | exit 0 | 168 B out | 0 B err | 181 ms
+vault=vault-copy tag name=project/active verbose | exit 0 | 40 B out | 0 B err | 2950 ms
+vault=vault-copy tag name=proj/sub verbose | exit 0 | 43 B out | 0 B err | 146 ms
+vault=vault-copy tag name=proj verbose | exit 0 | 8 B out | 0 B err | 161 ms
+vault=vault-copy tag name=project/active verbose | exit 0 | 178 B out | 0 B err | 149 ms
+vault=vault-copy tags counts | exit 0 | 2107 B out | 0 B err | 152 ms

@@ -1,0 +1,39 @@
+diff --git a/_agentkit-lab/props/Property Note.md b/_agentkit-lab/props/Property Note.md
+index bf43478..04e5162 100644
+--- a/_agentkit-lab/props/Property Note.md	
++++ b/_agentkit-lab/props/Property Note.md	
+@@ -6,7 +6,7 @@ due: 2026-02-01T09:30
+ rating: 4
+ done: false
+ tags:
+-  - proj
++  - project/active
+   - fixture
+ related:
+   - "[[Target Note]]"
+diff --git a/_agentkit-lab/tags/tag-body.md b/_agentkit-lab/tags/tag-body.md
+index c4fbb54..964d713 100644
+--- a/_agentkit-lab/tags/tag-body.md
++++ b/_agentkit-lab/tags/tag-body.md
+@@ -1 +1 @@
+-Work on #proj today. Also #proj/sub and #projects stay apart.
++Work on #project/active today. Also #proj/sub and #projects stay apart.
+diff --git a/_agentkit-lab/tags/tag-frontmatter.md b/_agentkit-lab/tags/tag-frontmatter.md
+index 4f55d7d..a99d718 100644
+--- a/_agentkit-lab/tags/tag-frontmatter.md
++++ b/_agentkit-lab/tags/tag-frontmatter.md
+@@ -1,4 +1,4 @@
+ ---
+-tags: [proj, other]
++tags: [project/active, other]
+ ---
+ Front matter tag only.
+diff --git a/_agentkit-lab/tiếng việt/Kế hoạch dự án.md b/_agentkit-lab/tiếng việt/Kế hoạch dự án.md
+index 5152232..9b7a191 100644
+--- a/_agentkit-lab/tiếng việt/Kế hoạch dự án.md	
++++ b/_agentkit-lab/tiếng việt/Kế hoạch dự án.md	
+@@ -1,3 +1,3 @@
+ # Kế hoạch
+ 
+-- [ ] Viết báo cáo #proj
++- [ ] Viết báo cáo #project/active

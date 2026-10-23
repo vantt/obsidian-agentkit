@@ -1,0 +1,19 @@
+diff --git a/_agentkit-lab/Target Note.md b/_agentkit-lab/Target Note.md
+deleted file mode 100644
+index aa2c7b8..0000000
+--- a/_agentkit-lab/Target Note.md	
++++ /dev/null
+@@ -1,13 +0,0 @@
+----
+-aliases:
+-  - TN Alias
+-tags:
+-  - fixture
+----
+-# Target Note
+-
+-## Section A
+-Body of section A. ^blk1
+-
+-## Section B
+-Body of section B.

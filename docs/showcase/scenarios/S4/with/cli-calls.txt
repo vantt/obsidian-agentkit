@@ -1,0 +1,5 @@
+version | exit 0 | 26 B out | 0 B err | 160 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 165 ms
+vault=vault-copy eval code=['alwaysUpdateLinks','trashOption'].map(k=>k+'='+app.vault.getConfig(k)).join(' ') | exit 0 | 45 B out | 0 B err | 160 ms
+vault=vault-copy properties path=_agentkit-lab/props/Property Note.md format=json | exit 0 | 254 B out | 0 B err | 191 ms
+vault=vault-copy properties path=_agentkit-lab/props/Property Note.md format=json | exit 0 | 266 B out | 0 B err | 274 ms

@@ -1,0 +1,37 @@
+{
+ "help": {
+  "calls": 2,
+  "outBytes": 34706,
+  "maxOut": 17353
+ },
+ "search": {
+  "calls": 13,
+  "outBytes": 9777,
+  "maxOut": 2114
+ },
+ "files": {
+  "calls": 3,
+  "outBytes": 14738,
+  "maxOut": 13660
+ },
+ "tags": {
+  "calls": 1,
+  "outBytes": 2078,
+  "maxOut": 2078
+ },
+ "search:context": {
+  "calls": 13,
+  "outBytes": 77670,
+  "maxOut": 64111
+ },
+ "read": {
+  "calls": 8,
+  "outBytes": 13055,
+  "maxOut": 4795
+ },
+ "backlinks": {
+  "calls": 1,
+  "outBytes": 20,
+  "maxOut": 20
+ }
+}

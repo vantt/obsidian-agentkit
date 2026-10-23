@@ -1,0 +1,10 @@
+ANSWER: Đã đổi tag `#proj` thành `#project/active` trong cả 4 ghi chú dùng nó: `_agentkit-lab/props/Property Note.md`, `_agentkit-lab/tags/tag-frontmatter.md`, `_agentkit-lab/tags/tag-body.md` và `_agentkit-lab/tiếng việt/Kế hoạch dự án.md`. Obsidian giờ thấy `#project/active` ở 4 tệp và không còn tệp nào gắn đúng `#proj`. Tôi giữ nguyên `#proj/sub` và `#projects` vì đó là tag riêng.
+
+NOTES:
+- Cách làm: dùng `obsidian tags` và `obsidian tag name=proj verbose` để tìm các tệp dùng tag. Tag nằm ở 2 dạng frontmatter (danh sách khối `  - proj` và danh sách cùng dòng `tags: [proj, other]`) và 2 tag trong nội dung (`#proj`, một cái nằm trong dòng task).
+- Tôi sửa trực tiếp văn bản trong các tệp .md qua `/mnt/c/obsidian-agentkit-test/vault-copy`, vì CLI không có lệnh đổi tên tag. Cách này giữ đúng định dạng frontmatter hiện có. Mỗi tệp chỉ đổi một dòng.
+- Kiểm tra lại: `obsidian tag name=project/active` cho 4 tệp. `#proj` vẫn được đếm 1 nhưng không có tệp nào, vì nó chỉ là tag cha ngầm của `#proj/sub`.
+- Điều tôi tự quyết: `#proj/sub` là tag con và tôi giữ nguyên. Lý do: người dùng chỉ nhắc `#proj`, và chính tệp fixture ghi "#proj/sub and #projects stay apart". Nếu muốn đổi cả nhánh con, cần đổi `#proj/sub` thành `#project/active/sub` (1 chỗ, trong tag-body.md).
+- Không đụng các tag gần giống `#projects`, `#prj`, `#ProjectLITchat`.
+- Bản sao lưu thư mục `_agentkit-lab` trước khi sửa: /tmp/claude-1000/-home-<user>-projects-obsidian-agentkit/fc4295bc-0bb7-403d-942c-812325fee777/scratchpad/backup-lab
+- Không có gì hỏng.

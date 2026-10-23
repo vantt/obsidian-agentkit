@@ -1,0 +1,44 @@
+{
+ "scenario": "S8",
+ "side": "with",
+ "time": "2026-10-22T18:38:06.683Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 0,
+  "config": [],
+  "daily": [
+   "2026-10-23.md"
+  ],
+  "outsideLab": 0
+ },
+ "diffStat": "",
+ "untrackedLab": [],
+ "numberedCopies": [],
+ "typesJsonChanged": false,
+ "trash": [],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 2,
+  "links": [
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta"
+  ]
+ },
+ "labUnresolvedAdded": 0,
+ "cli": {
+  "calls": 6,
+  "finished": 6,
+  "outBytes": 183,
+  "maxOut": 45,
+  "unfinished": []
+ },
+ "gt": {
+  "dailyPath": "2026-10-23.md",
+  "exists": true,
+  "bytes": 20,
+  "occurrences": 1,
+  "content": "\n- [ ] gọi ngân hàng"
+ }
+}

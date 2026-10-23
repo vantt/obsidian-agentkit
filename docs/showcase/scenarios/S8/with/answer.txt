@@ -1,0 +1,11 @@
+ANSWER: Đã thêm dòng `- [ ] gọi ngân hàng` vào daily note hôm nay, `2026-10-23.md`, ở thư mục gốc của vault `vault-copy`. Note này chưa có trước đó nên Obsidian đã tạo mới, và dòng việc cần làm hiện nằm trong đó.
+
+NOTES:
+- **Ngày:** Shell WSL chạy theo giờ UTC nên báo 2026-10-22. Nhưng giờ địa phương của máy Windows (UTC+7) đã sang 2026-10-23 01:36. Tôi lấy ngày 2026-10-23 theo `daily:path` của Obsidian, vì đó là "hôm nay" của người dùng.
+- **Các bước đã làm (theo skill):**
+  - Preflight OK: CLI 1.14.4 khớp bản đã test, `alwaysUpdateLinks=true`.
+  - Profile vault: daily note nằm ở thư mục gốc, định dạng YYYY-MM-DD, không dùng template.
+  - Chạy `daily:path` rồi `--abs` thì biết file chưa tồn tại, nên không có dòng trùng.
+  - Chạy `daily:append` (exit 0, "Added to: 2026-10-23.md").
+- **Kiểm tra lại:** grep thấy đúng 1 dòng. Tiếng Việt có dấu được lưu đúng UTF-8.
+- **Một điểm nhỏ:** Obsidian ghi vào note mới một dòng trống ở đầu file, trước dòng việc cần làm. Tôi để nguyên, không sửa.

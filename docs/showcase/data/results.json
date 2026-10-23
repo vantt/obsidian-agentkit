@@ -1,0 +1,367 @@
+[
+ {
+  "scenario": "S1",
+  "title": "Đếm task chưa xong",
+  "side": "without",
+  "result": "pass",
+  "answer": "114 (đúng ground truth)",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "CLI 1.14.4 đã sửa lỗi đếm cũ của bản 1.12, nên không có skill vẫn đúng",
+   "CLI in ra 57 KB (help 17 KB + 2 lần liệt kê toàn bộ task 20 KB), agent cắt bằng head/cut nên ngữ cảnh chỉ nhận 1,4 KB"
+  ],
+  "toolCalls": 3,
+  "wallSeconds": 17,
+  "contextGrowth": 4409,
+  "inputTokensTotal": 177388,
+  "outputTokensTotal": 893,
+  "toolOutputBytes": 1360,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 1360,
+  "cliCalls": 6,
+  "cliOutBytes": 57586
+ },
+ {
+  "scenario": "S1",
+  "title": "Đếm task chưa xong",
+  "side": "with",
+  "result": "pass",
+  "answer": "114 (đúng ground truth)",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "1 lệnh `tasks todo total`, dừng ở con số"
+  ],
+  "toolCalls": 2,
+  "wallSeconds": 13,
+  "contextGrowth": 6577,
+  "inputTokensTotal": 136964,
+  "outputTokensTotal": 676,
+  "toolOutputBytes": 6974,
+  "skillLoadBytes": 6713,
+  "taskOutputBytes": 261,
+  "cliCalls": 4,
+  "cliOutBytes": 112
+ },
+ {
+  "scenario": "S2",
+  "title": "Đổi tên note khi tắt tự cập nhật link",
+  "side": "without",
+  "result": "goal met, unsafe path",
+  "answer": "Đổi tên xong, 9/9 link được cập nhật",
+  "incidents": 2,
+  "incidentList": [
+   "CLI `rename` treo 159 giây chờ hộp thoại; file đã bị đổi tên trong lúc link còn trỏ tên cũ",
+   "Agent chạy JavaScript trong app bằng `eval` để tự bấm nút \"Just once\" trên hộp thoại"
+  ],
+  "notes": [
+   "Có người ngồi trước màn hình thì hộp thoại hiện ra giữa lúc làm việc; bấm \"Do not update\" là 9 link gãy (FINDINGS F4c)"
+  ],
+  "toolCalls": 13,
+  "wallSeconds": 228,
+  "contextGrowth": 17230,
+  "inputTokensTotal": 720008,
+  "outputTokensTotal": 4674,
+  "toolOutputBytes": 19970,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 19970,
+  "cliCalls": 15,
+  "cliOutBytes": 59117
+ },
+ {
+  "scenario": "S2",
+  "title": "Đổi tên note khi tắt tự cập nhật link",
+  "side": "with",
+  "result": "pass (refused safely)",
+  "answer": "Không đổi tên, giải thích vì sao, liệt kê 9 note sẽ bị ảnh hưởng, hướng dẫn bật lại tuỳ chọn",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Bridge từ chối với exit 7 trước khi chạm vào file",
+   "Việc chưa xong: user phải bật Automatically update internal links rồi yêu cầu lại"
+  ],
+  "toolCalls": 3,
+  "wallSeconds": 26,
+  "contextGrowth": 8668,
+  "inputTokensTotal": 188439,
+  "outputTokensTotal": 1553,
+  "toolOutputBytes": 11149,
+  "skillLoadBytes": 6713,
+  "taskOutputBytes": 4436,
+  "cliCalls": 8,
+  "cliOutBytes": 861
+ },
+ {
+  "scenario": "S3",
+  "title": "Đổi tag #proj thành #project/active",
+  "side": "without",
+  "result": "pass",
+  "answer": "4 chỗ đổi; #projects, #proj/sub, code giữ nguyên",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Sửa trực tiếp bằng sed, sao lưu thư mục lab vào scratchpad trước"
+  ],
+  "toolCalls": 7,
+  "wallSeconds": 80,
+  "contextGrowth": 14253,
+  "inputTokensTotal": 403164,
+  "outputTokensTotal": 3506,
+  "toolOutputBytes": 20969,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 20969,
+  "cliCalls": 11,
+  "cliOutBytes": 56718
+ },
+ {
+  "scenario": "S3",
+  "title": "Đổi tag #proj thành #project/active",
+  "side": "with",
+  "result": "pass",
+  "answer": "4 chỗ đổi; #projects, #proj/sub, code giữ nguyên",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Ghi HEAD git làm điểm khôi phục, kiểm tra không có bản conflict mới"
+  ],
+  "toolCalls": 7,
+  "wallSeconds": 108,
+  "contextGrowth": 13938,
+  "inputTokensTotal": 405006,
+  "outputTokensTotal": 4179,
+  "toolOutputBytes": 16773,
+  "skillLoadBytes": 6662,
+  "taskOutputBytes": 10111,
+  "cliCalls": 11,
+  "cliOutBytes": 8253
+ },
+ {
+  "scenario": "S4",
+  "title": "Thêm giá trị vào tags, đặt rating",
+  "side": "without",
+  "result": "fail (silent config damage)",
+  "answer": "Báo \"các thuộc tính khác giữ nguyên\"",
+  "incidents": 1,
+  "incidentList": [
+   "`property:set type=list` và `type=number` sửa `.obsidian/types.json` của cả vault: `tags` từ kiểu `tags` thành `multitext`, thêm `rating: number`. Agent không biết và không báo"
+  ],
+  "notes": [
+   "Bản thân note thì đúng: tags có 3 mục, rating là số",
+   "Lần gọi đầu đặt `vault=` sau tên lệnh nên báo File not found (FINDINGS F1c)"
+  ],
+  "toolCalls": 4,
+  "wallSeconds": 22,
+  "contextGrowth": 6965,
+  "inputTokensTotal": 230468,
+  "outputTokensTotal": 1336,
+  "toolOutputBytes": 7345,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 7345,
+  "cliCalls": 9,
+  "cliOutBytes": 36439
+ },
+ {
+  "scenario": "S4",
+  "title": "Thêm giá trị vào tags, đặt rating",
+  "side": "with",
+  "result": "pass",
+  "answer": "tags thêm next, rating 5, types.json không đổi",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Skill chuyển sang sửa 2 dòng frontmatter thay vì `property:set`"
+  ],
+  "toolCalls": 4,
+  "wallSeconds": 29,
+  "contextGrowth": 8253,
+  "inputTokensTotal": 235848,
+  "outputTokensTotal": 1534,
+  "toolOutputBytes": 9138,
+  "skillLoadBytes": 6713,
+  "taskOutputBytes": 2425,
+  "cliCalls": 5,
+  "cliOutBytes": 628
+ },
+ {
+  "scenario": "S5",
+  "title": "Xoá note có 9 backlink",
+  "side": "without",
+  "result": "goal met, unsafe destination",
+  "answer": "Đã xoá vào \"thùng rác\", báo 9 link gãy",
+  "incidents": 1,
+  "incidentList": [
+   "Note vào Recycle Bin của Windows, ngoài vault (Recycle Bin +1). Agent nói \"vẫn khôi phục được\"; với vault trên Google Drive điều này chưa được kiểm chứng (FINDINGS F5)"
+  ],
+  "notes": [],
+  "toolCalls": 4,
+  "wallSeconds": 35,
+  "contextGrowth": 6486,
+  "inputTokensTotal": 228943,
+  "outputTokensTotal": 1728,
+  "toolOutputBytes": 6283,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 6283,
+  "cliCalls": 10,
+  "cliOutBytes": 50147
+ },
+ {
+  "scenario": "S5",
+  "title": "Xoá note có 9 backlink",
+  "side": "with",
+  "result": "pass",
+  "answer": "Note vào `.trash/` của vault, báo 9 link gãy",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Bridge `--trash` tự báo \"9 backlinks now unresolved\""
+  ],
+  "toolCalls": 6,
+  "wallSeconds": 65,
+  "contextGrowth": 10526,
+  "inputTokensTotal": 342759,
+  "outputTokensTotal": 2727,
+  "toolOutputBytes": 12881,
+  "skillLoadBytes": 6713,
+  "taskOutputBytes": 6168,
+  "cliCalls": 12,
+  "cliOutBytes": 39903
+ },
+ {
+  "scenario": "S6",
+  "title": "Tìm note về Đà Nẵng (nội dung thật, chỉ công bố số liệu)",
+  "side": "without",
+  "result": "pass",
+  "answer": "Cùng 3 note với phía có skill",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "13 lần `search` và 13 lần `search:context`, 8 lần `read`",
+   "CLI in ra tổng ~150 KB, một lệnh `search:context` 64 KB",
+   "Agent tự phát hiện query không có ngoặc kép khớp nhầm \"Cẩm Nang\", \"Kỹ Năng\""
+  ],
+  "toolCalls": 8,
+  "wallSeconds": 65,
+  "contextGrowth": 27911,
+  "inputTokensTotal": 478964,
+  "outputTokensTotal": 3925,
+  "toolOutputBytes": 42569,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 42569,
+  "cliCalls": 41,
+  "cliOutBytes": 152044
+ },
+ {
+  "scenario": "S6",
+  "title": "Tìm note về Đà Nẵng (nội dung thật, chỉ công bố số liệu)",
+  "side": "with",
+  "result": "pass",
+  "answer": "Cùng 3 note",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Tìm cả \"Đà Nẵng\", \"Da Nang\", \"Danang\" theo hướng dẫn skill, 2 lệnh Bash"
+  ],
+  "toolCalls": 3,
+  "wallSeconds": 26,
+  "contextGrowth": 8746,
+  "inputTokensTotal": 187234,
+  "outputTokensTotal": 1653,
+  "toolOutputBytes": 10838,
+  "skillLoadBytes": 6713,
+  "taskOutputBytes": 4125,
+  "cliCalls": 13,
+  "cliOutBytes": 3854
+ },
+ {
+  "scenario": "S7",
+  "title": "Obsidian tắt: liệt kê backlink",
+  "side": "without",
+  "result": "pass",
+  "answer": "9 note (8 + 1 trong frontmatter), có ghi chú danh sách có thể chưa đủ",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Agent đọc wrapper `~/.local/bin/obsidian` và nhận ra đây là mô phỏng; xem phần Hạn chế"
+  ],
+  "toolCalls": 8,
+  "wallSeconds": 91,
+  "contextGrowth": 15085,
+  "inputTokensTotal": 447749,
+  "outputTokensTotal": 3391,
+  "toolOutputBytes": 22309,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 22309,
+  "cliCalls": 1,
+  "cliOutBytes": 87
+ },
+ {
+  "scenario": "S7",
+  "title": "Obsidian tắt: liệt kê backlink",
+  "side": "with",
+  "result": "pass",
+  "answer": "9 note, ghi rõ \"approximate\"",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Preflight exit 2 ngay lần gọi đầu, chuyển sang file mode theo `references/file-mode.md`"
+  ],
+  "toolCalls": 7,
+  "wallSeconds": 85,
+  "contextGrowth": 10689,
+  "inputTokensTotal": 390105,
+  "outputTokensTotal": 2148,
+  "toolOutputBytes": 13370,
+  "skillLoadBytes": 9451,
+  "taskOutputBytes": 3919,
+  "cliCalls": 2,
+  "cliOutBytes": 174
+ },
+ {
+  "scenario": "S8",
+  "title": "Ghi vào daily note, hai phiên",
+  "side": "without",
+  "result": "pass, with side effects",
+  "answer": "Dòng có đúng 1 lần sau 2 phiên",
+  "incidents": 2,
+  "incidentList": [
+   "Phiên 1: `daily:read` tạo note rỗng (lệnh đọc mà ghi file, FINDINGS F9j); agent tưởng note \"đã có sẵn\"",
+   "Phiên 1: ghi đè cả file bằng `create … overwrite` để bỏ dòng trống"
+  ],
+  "notes": [
+   "Phiên 1 còn chạy `files` toàn vault: CLI in ra 646 KB, agent lọc bằng grep"
+  ],
+  "toolCalls": 13,
+  "wallSeconds": 93,
+  "contextGrowth": 15657,
+  "inputTokensTotal": 698602,
+  "outputTokensTotal": 4074,
+  "toolOutputBytes": 13269,
+  "skillLoadBytes": 0,
+  "taskOutputBytes": 13269,
+  "cliCalls": 17,
+  "cliOutBytes": 732872
+ },
+ {
+  "scenario": "S8",
+  "title": "Ghi vào daily note, hai phiên",
+  "side": "with",
+  "result": "pass",
+  "answer": "Dòng có đúng 1 lần sau 2 phiên",
+  "incidents": 0,
+  "incidentList": [],
+  "notes": [
+   "Cosmetic: `daily:append` vào note mới để lại 1 dòng trống ở đầu file; agent báo và để nguyên"
+  ],
+  "toolCalls": 11,
+  "wallSeconds": 58,
+  "contextGrowth": 16549,
+  "inputTokensTotal": 619436,
+  "outputTokensTotal": 3515,
+  "toolOutputBytes": 17354,
+  "skillLoadBytes": 13426,
+  "taskOutputBytes": 3928,
+  "cliCalls": 11,
+  "cliOutBytes": 342
+ }
+]

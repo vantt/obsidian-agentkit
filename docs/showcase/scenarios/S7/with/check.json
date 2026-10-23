@@ -1,0 +1,77 @@
+{
+ "scenario": "S7",
+ "side": "with",
+ "time": "2026-10-22T18:28:45.342Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 0,
+  "config": [],
+  "daily": [],
+  "outsideLab": 0
+ },
+ "diffStat": "",
+ "untrackedLab": [],
+ "numberedCopies": [],
+ "typesJsonChanged": false,
+ "trash": [],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 2,
+  "links": [
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta"
+  ]
+ },
+ "labUnresolvedAdded": 0,
+ "cli": {
+  "calls": 2,
+  "finished": 2,
+  "outBytes": 174,
+  "maxOut": 0,
+  "unfinished": []
+ },
+ "gt": {
+  "target": "_agentkit-lab/Target Note.md",
+  "total": 9,
+  "files": [
+   {
+    "file": "_agentkit-lab/other folder/ref-other-folder.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/props/Property Note.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/refs/deeper/ref-markdown.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/refs/ref-alias-display.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/refs/ref-block.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/refs/ref-embed.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/refs/ref-heading.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/refs/ref-wikilink.md",
+    "count": 1
+   },
+   {
+    "file": "_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md",
+    "count": 1
+   }
+  ]
+ }
+}

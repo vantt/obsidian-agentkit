@@ -1,0 +1,11 @@
+ANSWER: Đã xoá note `_agentkit-lab/Target Note.md`. Note được chuyển vào thùng rác của vault (`.trash/Target Note.md`), không bị xoá vĩnh viễn, nên bạn vẫn khôi phục được. Lưu ý: 9 note khác có link tới note này, và các link đó giờ bị gãy (unresolved). Đó là `other folder/ref-other-folder.md`, `props/Property Note.md`, `refs/deeper/ref-markdown.md`, `refs/ref-alias-display.md`, `refs/ref-block.md`, `refs/ref-embed.md`, `refs/ref-heading.md`, `refs/ref-wikilink.md` và `tiếng việt/Ghi chú tiếng Việt.md`, tất cả đều nằm trong `_agentkit-lab/`. Tôi không sửa các link đó. Nếu muốn, tôi có thể gỡ hoặc đổi hướng chúng.
+
+NOTES:
+- Tôi làm theo SKILL.md (obsidian-connect) và references/bulk-edit.md, vì skill bắt buộc dùng giao thức dry-run, xác nhận và snapshot khi chuyển note vào thùng rác.
+- Preflight: env=wsl, CLI 1.14.4 (match=yes), alwaysUpdateLinks=true, vault ở /mnt/c/obsidian-agentkit-test/vault-copy.
+- Dry-run: file tồn tại (134B, có frontmatter alias "TN Alias" và tag fixture). `backlinks` trả về 9 file. Trước khi xoá có 87 link unresolved.
+- Tự quyết định: tôi vẫn xoá dù note có 9 backlink, vì người dùng đã yêu cầu và phê duyệt rõ ràng, và thao tác vào thùng rác thì khôi phục được. Tôi không tự sửa các link gãy, vì việc đó nằm ngoài yêu cầu.
+- Snapshot: vault là một git repo và working tree sạch, nên tôi không tạo commit. Điểm khôi phục là HEAD aa078c1d777949bf644c23015331e71ad3d5cc99, ngoài ra bản copy vẫn còn trong `.trash/`.
+- Đã chạy `obs --trash path="_agentkit-lab/Target Note.md"`, exit 0, bridge báo "9 backlinks now unresolved". Đã kiểm tra: file gốc không còn, `.trash/Target Note.md` có mặt (134B).
+- Điều bất ngờ: `unresolved total` ngay sau khi xoá vẫn báo 87, vì index cập nhật chậm. Kiểm tra lại sau khoảng 3 giây thì ra 89. Tăng 2 vì có 2 dạng link khác nhau: "Target Note" (8 nguồn) và "../../Target Note" (1 nguồn), tổng cộng đủ 9 nguồn khớp với danh sách backlink.
+- Các file có tên chứa "conflict" đều đã có từ trước (.obsidian/*conflict 2025-07-14*.json và một số note Evernote), không có file conflict mới. Tôi không dùng CLI `delete` và không dùng `rm`.

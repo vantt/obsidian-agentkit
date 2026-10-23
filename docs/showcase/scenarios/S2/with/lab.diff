@@ -1,0 +1,12 @@
+diff --git a/.obsidian/app.json b/.obsidian/app.json
+index a8d17fd..1cb9ae6 100644
+--- a/.obsidian/app.json
++++ b/.obsidian/app.json
+@@ -1,5 +1,5 @@
+ {
+-  "alwaysUpdateLinks": true,
++  "alwaysUpdateLinks": false,
+   "showLineNumber": true,
+   "spellcheck": true
+ }
+\ No newline at end of file

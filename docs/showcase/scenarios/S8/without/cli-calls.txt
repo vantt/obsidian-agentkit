@@ -1,0 +1,10 @@
+help | exit 0 | 17353 B out | 0 B err | 204 ms
+help | exit 0 | 17353 B out | 0 B err | 137 ms
+vault=vault-copy daily:path | exit 0 | 14 B out | 0 B err | 149 ms
+vault=vault-copy daily:read | exit 0 | 0 B out | 0 B err | 275 ms
+vault=vault-copy vault | exit 0 | 97 B out | 0 B err | 137 ms
+vault=vault-copy files | exit 0 | 645823 B out | 0 B err | 181 ms
+vault=vault-copy daily:append content=- [ ] gọi ngân hàng | exit 0 | 24 B out | 0 B err | 155 ms
+vault=vault-copy daily:read | exit 0 | 25 B out | 0 B err | 125 ms
+vault=vault-copy create path=2026-10-23.md content=- [ ] gọi ngân hàng\n overwrite | exit 0 | 25 B out | 0 B err | 169 ms
+vault=vault-copy tasks daily | exit 0 | 24 B out | 0 B err | 144 ms

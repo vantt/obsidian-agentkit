@@ -1,0 +1,11 @@
+version | exit 0 | 26 B out | 0 B err | 173 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 148 ms
+vault=vault-copy eval code=['alwaysUpdateLinks','trashOption'].map(k=>k+'='+app.vault.getConfig(k)).join(' ') | exit 0 | 45 B out | 0 B err | 153 ms
+vault=vault-copy tag name=proj verbose | exit 0 | 168 B out | 0 B err | 188 ms
+vault=vault-copy tag name=project/active total | exit 0 | 40 B out | 0 B err | 158 ms
+vault=vault-copy tags counts sort=count format=json | exit 0 | 7743 B out | 0 B err | 172 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 177 ms
+vault=vault-copy tag name=project/active total | exit 0 | 2 B out | 0 B err | 169 ms
+vault=vault-copy tag name=project/active verbose | exit 0 | 178 B out | 0 B err | 143 ms
+vault=vault-copy tag name=proj verbose | exit 0 | 8 B out | 0 B err | 170 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 151 ms

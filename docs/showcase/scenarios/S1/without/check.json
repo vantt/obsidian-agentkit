@@ -1,0 +1,42 @@
+{
+ "scenario": "S1",
+ "side": "without",
+ "time": "2026-10-22T17:40:42.875Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 0,
+  "config": [],
+  "daily": [],
+  "outsideLab": 0
+ },
+ "diffStat": "",
+ "untrackedLab": [],
+ "numberedCopies": [],
+ "typesJsonChanged": false,
+ "trash": [],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 2,
+  "links": [
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta"
+  ]
+ },
+ "labUnresolvedAdded": 0,
+ "cli": {
+  "calls": 6,
+  "finished": 6,
+  "outBytes": 57586,
+  "maxOut": 20111,
+  "unfinished": []
+ },
+ "gt": {
+  "open": 114,
+  "done": 33,
+  "other": 0,
+  "total": 147,
+  "files": 19
+ }
+}

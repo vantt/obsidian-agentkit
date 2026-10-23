@@ -2,11 +2,11 @@
 
 Bảng quản lý công việc, trạng thái và tiến độ của toàn project. Mỗi epic có một plan chi tiết trong [`docs/plans/`](plans/); mỗi việc có ID (`E2.3`) trỏ tới dòng tương ứng trong plan đó.
 
-**Cập nhật lần cuối:** 2026-10-22 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4)
+**Cập nhật lần cuối:** 2026-10-23 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4)
 
 ## Tổng quan tiến độ
 
-**Toàn project: 7 / 44 việc xong (15%)**
+**Toàn project: 15 / 44 việc xong (34%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -16,7 +16,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E5.1, E5.2 |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
-| E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ⬜ Todo | P2 | 0/8 ░░░░░░░░░░ 0% | — | E7.1 chốt tình huống, E7.2 chạy không có skill |
+| E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 
 Ký hiệu trạng thái:
 - ✅ Done: xong, có bằng chứng.
@@ -45,7 +45,7 @@ Các việc này agent không tự làm được:
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
 | E5.6 | Dọn repo | Đồng ý commit việc dời thư mục distillery, và quyết định có commit `docs/handoff/` không |
-| E7.5, E7.7, E7.8 | Video, bài viết | Ghi màn hình theo kịch bản, duyệt tư liệu trước khi đăng |
+| E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
 
 ## Backlog chi tiết
 
@@ -87,14 +87,14 @@ Các việc này agent không tự làm được:
 | E6.4 | Viết `references/plugins.md` | E6 | P2 | ⬜ | Agent | Sau E6.1–E6.3 |
 | E6.5 | Fixture và kịch bản test cho plugin | E6 | P2 | ⬜ | Agent | Sau E6.4 |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |
-| E7.1 | Chốt tình huống diễn tập | E7 | P2 | ⬜ | Agent | Đề xuất 8 tình huống S1–S8 trong plan |
-| E7.2 | Chạy không có skill | E7 | P2 | ⬜ | Agent | Trên bản sao vault, reset giữa mỗi lần |
-| E7.3 | Chạy có skill | E7 | P2 | ⬜ | Agent | Dùng lại RESULTS nếu trùng |
-| E7.4 | Bảng so sánh và biểu đồ | E7 | P2 | ⬜ | Agent | `docs/showcase/COMPARISON.md` |
-| E7.5 | Ảnh, diff, quay terminal | E7 | P2 | ⬜ | Agent + user | Chỉ dùng fixture tổng hợp |
-| E7.6 | Kho "aha moment" | E7 | P2 | ⬜ | Agent | `docs/showcase/STORIES.md` |
-| E7.7 | Bản nháp bài viết và kịch bản video | E7 | P2 | ⬜ | Agent + user | `POST.md`, `VIDEO-SCRIPT.md` |
-| E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ⬜ | Agent + user | Không có tên note hoặc đường dẫn thật |
+| E7.1 | Chốt tình huống diễn tập | E7 | P2 | ✅ | Agent | Plan E7, mục "Kịch bản đã chốt"; `tests/showcase/prompt.mjs` |
+| E7.2 | Chạy không có skill | E7 | P2 | ✅ | Agent | 9 phiên, `docs/showcase/scenarios/*/without*/` |
+| E7.3 | Chạy có skill | E7 | P2 | ✅ | Agent | 9 phiên chạy mới, `docs/showcase/scenarios/*/with*/` |
+| E7.4 | Bảng so sánh và biểu đồ | E7 | P2 | ✅ | Agent | [COMPARISON.md](showcase/COMPARISON.md): 6 sự cố → 0, CLI 1,1 MB → 54 KB |
+| E7.5 | Ảnh, diff, quay terminal | E7 | P2 | ✅ | Agent | `docs/showcase/assets/`: 7 ảnh Obsidian, 1 diff, 5 bản quay terminal |
+| E7.6 | Kho "aha moment" | E7 | P2 | ✅ | Agent | [STORIES.md](showcase/STORIES.md), 9 hook |
+| E7.7 | Bản nháp bài viết và kịch bản video | E7 | P2 | ✅ | Agent | [POST.md](showcase/POST.md), [VIDEO-SCRIPT.md](showcase/VIDEO-SCRIPT.md) |
+| E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
 
 ## Cách cập nhật board
 

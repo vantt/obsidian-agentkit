@@ -1,0 +1,2 @@
+version | exit 1 | 0 B out | 87 B err | 2 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Note.md format=json | exit 1 | 0 B out | 87 B err | 2 ms

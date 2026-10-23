@@ -1,0 +1,49 @@
+{
+ "scenario": "S5",
+ "side": "with",
+ "time": "2026-10-22T18:13:57.431Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 1,
+  "config": [],
+  "daily": [],
+  "outsideLab": 0
+ },
+ "diffStat": "_agentkit-lab/Target Note.md | 13 -------------\n 1 file changed, 13 deletions(-)",
+ "untrackedLab": [],
+ "numberedCopies": [],
+ "typesJsonChanged": false,
+ "trash": [
+  "Target Note.md"
+ ],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 10,
+  "links": [
+   "_agentkit-lab/other folder/ref-other-folder.md -> Target Note",
+   "_agentkit-lab/props/Property Note.md -> Target Note",
+   "_agentkit-lab/refs/ref-alias-display.md -> Target Note",
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-block.md -> Target Note",
+   "_agentkit-lab/refs/ref-embed.md -> Target Note",
+   "_agentkit-lab/refs/ref-heading.md -> Target Note",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta",
+   "_agentkit-lab/refs/ref-wikilink.md -> Target Note",
+   "_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md -> Target Note"
+  ]
+ },
+ "labUnresolvedAdded": 8,
+ "cli": {
+  "calls": 12,
+  "finished": 12,
+  "outBytes": 39903,
+  "maxOut": 19787,
+  "unfinished": []
+ },
+ "gt": {
+  "targetExists": false,
+  "renamedExists": false
+ }
+}

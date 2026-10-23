@@ -1,0 +1,18 @@
+ANSWER: Mình đã xoá note `_agentkit-lab/Target Note.md`. Note được chuyển vào thùng rác nên bạn vẫn khôi phục được nếu cần. Lưu ý là có 9 note khác đang link tới nó, và các link này giờ đã bị gãy (trỏ tới note không còn tồn tại):
+- `_agentkit-lab/other folder/ref-other-folder.md`
+- `_agentkit-lab/props/Property Note.md`
+- `_agentkit-lab/refs/deeper/ref-markdown.md`
+- `_agentkit-lab/refs/ref-alias-display.md`
+- `_agentkit-lab/refs/ref-block.md`
+- `_agentkit-lab/refs/ref-embed.md`
+- `_agentkit-lab/refs/ref-heading.md`
+- `_agentkit-lab/refs/ref-wikilink.md`
+- `_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md`
+Mình không sửa các note này. Nếu bạn muốn, mình có thể gỡ hoặc đổi các link đó.
+
+NOTES: Mình làm mọi thao tác bằng Obsidian CLI trên vault `vault-copy`.
+- Trước khi xoá, mình đọc note: có frontmatter (alias "TN Alias", tag "fixture"), hai heading Section A/B và block ^blk1. Mình cũng kiểm tra backlinks và thấy 9 file trỏ tới note. Các link này có nhiều dạng: wikilink, alias, embed, heading, block, link Markdown dạng tương đối và một link trong frontmatter.
+- Mình chạy `obsidian delete path="_agentkit-lab/Target Note.md"` không kèm `permanent`, nên note vào thùng rác và khôi phục được. Kết quả trả về là "Moved to trash".
+- Sau khi xoá, `obsidian file` báo không tìm thấy note. Số link chưa có đích tăng từ 87 lên 89, gồm hai mục mới: "Target Note" (8 nguồn) và "../../Target Note" (từ `refs/deeper/ref-markdown.md`).
+- Điều mình tự quyết: các link gãy không thuộc phạm vi yêu cầu (bạn chỉ yêu cầu xoá note), và sửa 9 file đó là thay đổi lớn hơn nhiều so với điều bạn đã duyệt. Vì vậy mình để nguyên các file đó và chỉ báo lại cho bạn.
+- Không có lỗi nào xảy ra.

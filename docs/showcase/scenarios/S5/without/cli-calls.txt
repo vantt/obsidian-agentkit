@@ -1,0 +1,10 @@
+help | exit 0 | 17353 B out | 0 B err | 146 ms
+help | exit 0 | 17353 B out | 0 B err | 164 ms
+vault=vault-copy file path=_agentkit-lab/Target Note.md | exit 0 | 118 B out | 0 B err | 155 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Note.md counts | exit 0 | 373 B out | 0 B err | 168 ms
+vault=vault-copy read path=_agentkit-lab/Target Note.md | exit 0 | 134 B out | 0 B err | 177 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 141 ms
+vault=vault-copy delete path=_agentkit-lab/Target Note.md | exit 0 | 45 B out | 0 B err | 246 ms
+vault=vault-copy file path=_agentkit-lab/Target Note.md | exit 0 | 54 B out | 0 B err | 154 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 215 ms
+vault=vault-copy unresolved verbose | exit 0 | 14711 B out | 0 B err | 167 ms

@@ -1,0 +1,27 @@
+ANSWER: Có 8 note link tới `_agentkit-lab/Target Note.md`:
+1. `_agentkit-lab/refs/ref-wikilink.md`: `[[Target Note]]`
+2. `_agentkit-lab/refs/ref-alias-display.md`: `[[Target Note|shown text]]`
+3. `_agentkit-lab/refs/ref-heading.md`: `[[Target Note#Section A]]`
+4. `_agentkit-lab/refs/ref-block.md`: `[[Target Note#^blk1]]`
+5. `_agentkit-lab/refs/ref-embed.md`: `![[Target Note]]` (đây là embed)
+6. `_agentkit-lab/refs/deeper/ref-markdown.md`: Markdown link `[target](../../Target%20Note.md)`
+7. `_agentkit-lab/other folder/ref-other-folder.md`: `[[Target Note#Section B|B]]`
+8. `_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md`: `[[Target Note]]`
+
+Thêm 1 note link qua frontmatter: `_agentkit-lab/props/Property Note.md`, trong property `related: "[[Target Note]]"`. Obsidian tính link trong property là link thật, nên nếu tính cả loại này thì tổng là 9 note.
+
+Không tính 2 note sau:
+- `_agentkit-lab/refs/ref-code-block.md`: `[[Target Note]]` chỉ nằm trong code block và inline code, nên không phải link.
+- `_agentkit-lab/refs/ref-alias-name.md`: `[[TN Alias]]`. "TN Alias" là alias của Target Note, nhưng Obsidian không dẫn link qua alias. Link này là link hỏng, không trỏ tới note.
+
+Danh sách có thể chưa đủ. Obsidian không chạy nên tôi không lấy được danh sách backlink từ chính Obsidian. Thay vào đó tôi tìm văn bản trong các file .md, .canvas và .base. Cách này không bắt được link viết theo kiểu lạ, ví dụ đường dẫn mã hoá khác hay link tới chính file .md với chữ hoa/thường khác. Nó cũng không bắt được link do plugin tạo ra (Dataview, Excalidraw…) hay nằm trong file loại khác. Ngoài thư mục `_agentkit-lab` thì không note nào nhắc tới "Target Note".
+
+NOTES:
+- `obsidian help` báo lỗi "The CLI is unable to find Obsidian. Please make sure Obsidian is running". Tôi không thử khởi động Obsidian. Tôi tìm đường dẫn vault trong `obsidian.json` của Windows: `C:\obsidian-agentkit-test\vault-copy`, tức `/mnt/c/obsidian-agentkit-test/vault-copy` trên WSL.
+- Tôi tự quyết các điểm sau:
+  - Vault chỉ có một file tên "Target Note", nên mọi `[[Target Note]]` đều trỏ tới `_agentkit-lab/Target Note.md`.
+  - Embed vẫn tính là link.
+  - Link trong frontmatter tôi liệt kê riêng.
+  - Link alias tên trần (`[[TN Alias]]`) và text trong code tôi không tính.
+- Tôi chỉ đọc vault, không sửa gì. Tôi cũng không đọc gì trong `/home/<user>/projects/obsidian-agentkit`.
+- Điều bất ngờ: lệnh `obsidian` thực ra là một script bọc (`~/.local/bin/obsidian`). Script này cố ý báo "Obsidian không chạy" khi `CLOSED=1`, nên lỗi này có thể là chủ ý của bài test.

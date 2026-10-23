@@ -1,0 +1,6 @@
+version | exit 0 | 26 B out | 0 B err | 212 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 140 ms
+vault=vault-copy eval code=['alwaysUpdateLinks','trashOption'].map(k=>k+'='+app.vault.getConfig(k)).join(' ') | exit 0 | 45 B out | 0 B err | 151 ms
+vault=vault-copy daily:path | exit 0 | 14 B out | 0 B err | 144 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 139 ms
+vault=vault-copy daily:append content=- [ ] gọi ngân hàng | exit 0 | 24 B out | 0 B err | 248 ms

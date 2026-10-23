@@ -1,0 +1,12 @@
+version | exit 0 | 26 B out | 0 B err | 152 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 157 ms
+vault=vault-copy eval code=['alwaysUpdateLinks','trashOption'].map(k=>k+'='+app.vault.getConfig(k)).join(' ') | exit 0 | 45 B out | 0 B err | 141 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Note.md format=json | exit 0 | 565 B out | 0 B err | 159 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 172 ms
+vault=vault-copy file path=_agentkit-lab/Target Note.md | exit 0 | 118 B out | 0 B err | 172 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Note.md total | exit 0 | 2 B out | 0 B err | 162 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 175 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 158 ms
+vault=vault-copy unresolved verbose format=json | exit 0 | 19277 B out | 0 B err | 171 ms
+vault=vault-copy unresolved total | exit 0 | 3 B out | 0 B err | 134 ms
+vault=vault-copy unresolved verbose format=json | exit 0 | 19787 B out | 0 B err | 141 ms

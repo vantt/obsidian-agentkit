@@ -1,0 +1,11 @@
+ANSWER: Đã đổi tên `_agentkit-lab/Target Note.md` thành `_agentkit-lab/Target Renamed.md`. Obsidian đã cập nhật cả 9 liên kết trỏ tới note này trong 9 file: wikilink thường, link có heading, link có block, link có text hiển thị, embed, link trong properties, link từ thư mục khác, link trong note tiếng Việt và link dạng Markdown. Hiện vẫn đủ 9 backlink và không có link nào bị hỏng. Có 2 chỗ tôi cố ý giữ nguyên: tiêu đề `# Target Note` bên trong note, và chữ `[[Target Note]]` trong `refs/ref-code-block.md`. Chữ đó nằm trong code block và inline code nên không phải link thật.
+
+NOTES:
+- Đã làm: Tôi chạy `obsidian vault=vault-copy rename path="_agentkit-lab/Target Note.md" name="Target Renamed"`. Trước đó tôi chụp lại danh sách tham chiếu: có 9 backlink, và `.obsidian/app.json` đặt `alwaysUpdateLinks: false`.
+- Sự cố: File được đổi tên ngay, nhưng lệnh CLI bị treo hơn 120 giây. Lý do là Obsidian mở hộp thoại "Update links — This will affect 9 links in 9 files" (Always update / Just once / Do not update) và chờ có người bấm. Tôi xem DOM bằng `dev:dom` thì thấy hộp thoại này. Không có ai để hỏi nên tôi tự quyết bấm "Just once" bằng `obsidian eval`. Lựa chọn này cập nhật link cho lần đổi tên này mà không đổi cài đặt của vault. Sau đó lệnh CLI chạy xong với kết quả "Renamed: ... -> ...", và hộp thoại đã đóng.
+- Đã kiểm tra:
+  - Lệnh `backlinks` cho `Target Renamed.md` trả về đúng 9 file như trước.
+  - Grep không còn link thật nào trỏ tới "Target Note".
+  - `[[TN Alias]]` vẫn trỏ tới note vì alias trong frontmatter vẫn còn.
+- Điều bất ngờ: Link Markdown trong `refs/deeper/ref-markdown.md` đổi từ `../../Target%20Note.md` thành `Target%20Renamed.md`. Đây không còn là đường dẫn tương đối đúng so với vị trí của file, có lẽ do định dạng link mới của vault là "shortest path". Obsidian vẫn hiểu link này (nó vẫn có trong backlinks), nhưng công cụ ngoài Obsidian sẽ không tìm thấy file. Tôi để nguyên, không sửa tay.
+- Quyết định: Tôi giữ tiêu đề H1 `# Target Note` trong note vì yêu cầu chỉ là đổi tên file.

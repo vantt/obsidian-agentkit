@@ -1,0 +1,20 @@
+{
+ "source": "transcript.jsonl",
+ "toolCalls": 7,
+ "byTool": {
+  "Bash": 7
+ },
+ "toolErrors": 1,
+ "timeouts": 0,
+ "toolOutputBytes": 16773,
+ "skillLoadBytes": 6662,
+ "modelCalls": 8,
+ "contextFirst": 41433,
+ "contextLast": 55371,
+ "inputTokensTotal": 405006,
+ "outputTokensTotal": 4179,
+ "wallSeconds": 108,
+ "taskOutputBytes": 10111,
+ "taskOutputTokensEst": 2528,
+ "contextGrowth": 13938
+}

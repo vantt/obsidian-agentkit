@@ -1,0 +1,5 @@
+version | exit 0 | 26 B out | 0 B err | 143 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 124 ms
+vault=vault-copy eval code=['alwaysUpdateLinks','trashOption'].map(k=>k+'='+app.vault.getConfig(k)).join(' ') | exit 0 | 45 B out | 0 B err | 150 ms
+vault=vault-copy daily:path | exit 0 | 14 B out | 0 B err | 117 ms
+vault=vault-copy vault info=path | exit 0 | 37 B out | 0 B err | 137 ms

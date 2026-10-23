@@ -1,0 +1,6 @@
+ANSWER: Daily note hôm nay (`2026-10-23.md`) đã có sẵn dòng `- [ ] gọi ngân hàng`, nên tôi không thêm lần nữa để tránh bị trùng. Hiện note chỉ có đúng dòng này.
+
+NOTES:
+- **Ngày:** đồng hồ WSL đang là 2026-10-22 18:32 UTC, còn Windows (nơi Obsidian chạy) là 2026-10-23 01:32 +07:00. `obsidian vault=vault-copy daily:path` trả về `2026-10-23.md` (nằm ở thư mục gốc của vault; không có file `daily-notes.json`, nên plugin dùng cài đặt mặc định). Tôi lấy ngày 23/10 theo giờ địa phương của người dùng, vì đó là "hôm nay" với họ và cũng là ngày Obsidian dùng.
+- **Điều bất ngờ:** file `C:\obsidian-agentkit-test\vault-copy\2026-10-23.md` đã tồn tại, nặng 24 byte. File này được tạo khoảng 2 phút trước khi tôi bắt đầu, và git của vault báo nó chưa được theo dõi. Nội dung của nó (tôi đã kiểm tra bằng `od -c` và `obsidian daily:read`) đúng là `- [ ] gọi ngân hàng\n`. Có lẽ một lần chạy trước đã thêm dòng này.
+- **Quyết định:** chạy `daily:append` sẽ tạo ra một task trùng, nên tôi coi yêu cầu đã được đáp ứng và không ghi gì vào vault. Tôi không thay đổi file nào.

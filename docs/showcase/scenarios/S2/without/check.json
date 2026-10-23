@@ -1,0 +1,44 @@
+{
+ "scenario": "S2",
+ "side": "without",
+ "time": "2026-10-22T17:48:43.570Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 11,
+  "config": [
+   ".obsidian/app.json"
+  ],
+  "daily": [],
+  "outsideLab": 0
+ },
+ "diffStat": ".obsidian/app.json                             |  2 +-\n _agentkit-lab/Target Note.md                   | 13 -------------\n _agentkit-lab/other folder/ref-other-folder.md |  2 +-\n _agentkit-lab/props/Property Note.md           |  2 +-\n _agentkit-lab/refs/deeper/ref-markdown.md      |  2 +-\n _agentkit-lab/refs/ref-alias-display.md        |  2 +-\n _agentkit-lab/refs/ref-block.md                |  2 +-\n _agentkit-lab/refs/ref-embed.md                |  2 +-\n _agentkit-lab/refs/ref-heading.md              |  2 +-\n _agentkit-lab/refs/ref-wikilink.md             |  2 +-\n _agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md |  2 +-\n 11 files changed, 10 insertions(+), 23 deletions(-)",
+ "untrackedLab": [
+  "_agentkit-lab/Target Renamed.md"
+ ],
+ "numberedCopies": [],
+ "typesJsonChanged": false,
+ "trash": [],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 2,
+  "links": [
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta"
+  ]
+ },
+ "labUnresolvedAdded": 0,
+ "cli": {
+  "calls": 15,
+  "finished": 15,
+  "outBytes": 59117,
+  "maxOut": 17353,
+  "unfinished": []
+ },
+ "gt": {
+  "targetExists": false,
+  "renamedExists": true,
+  "backlinksToRenamed": 9
+ }
+}

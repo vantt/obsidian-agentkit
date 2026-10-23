@@ -1,0 +1,68 @@
+{
+ "scenario": "S3",
+ "side": "without",
+ "time": "2026-10-22T17:55:35.807Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 4,
+  "config": [],
+  "daily": [],
+  "outsideLab": 0
+ },
+ "diffStat": "_agentkit-lab/props/Property Note.md       | 2 +-\n _agentkit-lab/tags/tag-body.md             | 2 +-\n _agentkit-lab/tags/tag-frontmatter.md      | 2 +-\n _agentkit-lab/tiếng việt/Kế hoạch dự án.md | 2 +-\n 4 files changed, 4 insertions(+), 4 deletions(-)",
+ "untrackedLab": [],
+ "numberedCopies": [],
+ "typesJsonChanged": false,
+ "trash": [],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 2,
+  "links": [
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta"
+  ]
+ },
+ "labUnresolvedAdded": 0,
+ "cli": {
+  "calls": 11,
+  "finished": 11,
+  "outBytes": 56718,
+  "maxOut": 17353,
+  "unfinished": []
+ },
+ "gt": {
+  "proj": {
+   "tag": "proj",
+   "body": 0,
+   "frontmatter": 0,
+   "bodyAt": [],
+   "frontmatterIn": []
+  },
+  "projectActive": {
+   "tag": "project/active",
+   "body": 2,
+   "frontmatter": 2,
+   "bodyAt": [
+    "_agentkit-lab/tags/tag-body.md:1",
+    "_agentkit-lab/tiếng việt/Kế hoạch dự án.md:3"
+   ],
+   "frontmatterIn": [
+    "_agentkit-lab/props/Property Note.md",
+    "_agentkit-lab/tags/tag-frontmatter.md"
+   ]
+  },
+  "projects": {
+   "tag": "projects",
+   "body": 2,
+   "frontmatter": 0,
+   "bodyAt": [
+    "_agentkit-lab/tags/tag-body.md:1",
+    "_agentkit-lab/tags/tag-projects.md:1"
+   ],
+   "frontmatterIn": []
+  },
+  "codeFileTouched": false
+ }
+}

@@ -1,0 +1,9 @@
+help | exit 0 | 17353 B out | 0 B err | 146 ms
+read vault=vault-copy path=_agentkit-lab/props/Property Note.md | exit 0 | 62 B out | 0 B err | 130 ms
+help | exit 0 | 17353 B out | 0 B err | 145 ms
+vault=vault-copy files folder=_agentkit-lab | exit 0 | 934 B out | 0 B err | 154 ms
+vault=vault-copy read path=_agentkit-lab/props/Property Note.md | exit 0 | 216 B out | 0 B err | 166 ms
+vault=vault-copy properties path=_agentkit-lab/props/Property Note.md format=json | exit 0 | 254 B out | 0 B err | 167 ms
+vault=vault-copy property:set path=_agentkit-lab/props/Property Note.md name=tags type=list value=proj,fixture,next | exit 0 | 28 B out | 0 B err | 194 ms
+vault=vault-copy property:set path=_agentkit-lab/props/Property Note.md name=rating type=number value=5 | exit 0 | 14 B out | 0 B err | 184 ms
+vault=vault-copy read path=_agentkit-lab/props/Property Note.md | exit 0 | 225 B out | 0 B err | 142 ms

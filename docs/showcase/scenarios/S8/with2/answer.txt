@@ -1,0 +1,7 @@
+ANSWER: Daily note hôm nay (`2026-10-23.md`, ở thư mục gốc vault) đã có sẵn dòng `- [ ] gọi ngân hàng` (dòng 2), nên tôi không thêm lần nữa để tránh bị trùng. Tôi không sửa gì trong vault.
+
+NOTES:
+- Tôi làm theo SKILL.md của obsidian-connect. `obs --preflight` báo CLI 1.14.4 khớp bản đã test (`match=yes`), `alwaysUpdateLinks=true`. Profile cho thấy daily note nằm ở thư mục gốc (đã tồn tại), định dạng `YYYY-MM-DD`, không có template.
+- `obs daily:path` trả về `2026-10-23.md`, còn đồng hồ WSL đang là 2026-10-22 18:38 UTC. Windows đang là thứ Sáu 23/10/2026, 1:38 sáng (UTC+7). Tôi lấy ngày mà Obsidian chọn, tức giờ địa phương của người dùng: "hôm nay" là 2026-10-23.
+- `obs --abs` cho ra `/mnt/c/obsidian-agentkit-test/vault-copy/2026-10-23.md`. File đã có trước khi tôi làm, dài 24 byte. Kiểm tra bằng grep thì dòng `- [ ] gọi ngân hàng` đã nằm ở dòng 2, sau một dòng trống. Theo quy tắc "nếu đã có thì báo lại, không append", tôi không chạy `daily:append`.
+- Tôi không gọi `daily:read`, và không file nào bị tạo mới hay chỉnh sửa.

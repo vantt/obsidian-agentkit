@@ -1,0 +1,77 @@
+{
+ "scenario": "S4",
+ "side": "without",
+ "time": "2026-10-22T18:05:18.976Z",
+ "modalOpen": false,
+ "modalText": "",
+ "changed": {
+  "lab": 1,
+  "config": [
+   ".obsidian/types.json"
+  ],
+  "daily": [],
+  "outsideLab": 0
+ },
+ "diffStat": ".obsidian/types.json                 | 5 +++--\n _agentkit-lab/props/Property Note.md | 3 ++-\n 2 files changed, 5 insertions(+), 3 deletions(-)",
+ "untrackedLab": [],
+ "numberedCopies": [],
+ "typesJsonChanged": true,
+ "trash": [],
+ "emptyNewNotes": [],
+ "recycleBinAdded": 0,
+ "labUnresolved": {
+  "total": 2,
+  "links": [
+   "_agentkit-lab/refs/ref-alias-name.md -> TN Alias",
+   "_agentkit-lab/refs/ref-unresolved.md -> Missing Note Zeta"
+  ]
+ },
+ "labUnresolvedAdded": 0,
+ "cli": {
+  "calls": 9,
+  "finished": 9,
+  "outBytes": 36439,
+  "maxOut": 17353,
+  "unfinished": []
+ },
+ "gt": {
+  "yaml": {
+   "valid": true,
+   "keys": {
+    "title": "string",
+    "status": "string",
+    "created": "string",
+    "due": "string",
+    "rating": "number",
+    "done": "boolean",
+    "tags": "list",
+    "related": "list"
+   },
+   "values": {
+    "title": "Quoted: value with colon",
+    "status": "draft",
+    "created": "2026-01-15",
+    "due": "2026-02-01T09:30",
+    "rating": 5,
+    "done": false,
+    "tags": [
+     "proj",
+     "fixture",
+     "next"
+    ],
+    "related": [
+     "[[Target Note]]",
+     "plain item"
+    ]
+   }
+  },
+  "frontmatter": "---\ntitle: \"Quoted: value with colon\"\nstatus: draft\ncreated: 2026-01-15\ndue: 2026-02-01T09:30\nrating: 5\ndone: false\ntags:\n  - proj\n  - fixture\n  - next\nrelated:\n  - \"[[Target Note]]\"\n  - plain item",
+  "typesJsonDiff": [
+   "-    \"tags\": \"tags\",",
+   "+    \"tags\": \"multitext\",",
+   "-    \"TQ_show_urgency\": \"checkbox\"",
+   "+    \"TQ_show_urgency\": \"checkbox\",",
+   "+    \"rating\": \"number\""
+  ]
+ }
+}

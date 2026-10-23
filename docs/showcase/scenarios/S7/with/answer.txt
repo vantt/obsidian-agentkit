@@ -1,0 +1,23 @@
+ANSWER: Obsidian is not running, so I could not use Obsidian's link index. I searched the note files directly instead, which means this list is approximate.
+
+Notes that link to `_agentkit-lab/Target Note.md` (9 notes):
+1. `_agentkit-lab/refs/ref-wikilink.md`: plain link `[[Target Note]]`
+2. `_agentkit-lab/refs/ref-alias-display.md`: link with display text `[[Target Note|shown text]]`
+3. `_agentkit-lab/refs/ref-heading.md`: link to a heading `[[Target Note#Section A]]`
+4. `_agentkit-lab/refs/ref-block.md`: link to a block `[[Target Note#^blk1]]`
+5. `_agentkit-lab/refs/ref-embed.md`: embed `![[Target Note]]`
+6. `_agentkit-lab/refs/deeper/ref-markdown.md`: Markdown link `[target](../../Target%20Note.md)`
+7. `_agentkit-lab/other folder/ref-other-folder.md`: `[[Target Note#Section B|B]]`
+8. `_agentkit-lab/props/Property Note.md`: link in the frontmatter (a `"[[Target Note]]"` list item)
+9. `_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md`: `[[Target Note]]`
+
+Not counted:
+- `_agentkit-lab/refs/ref-code-block.md` has `[[Target Note]]` only inside a code block and inline code. Obsidian does not treat those as links.
+- `_agentkit-lab/refs/ref-alias-name.md` has `[[TN Alias]]`, which is an alias of Target Note. Obsidian does not turn a link by alias name into a real link, so it shows as an unresolved link, not a backlink.
+
+The list may be incomplete:
+- Without Obsidian I searched the files with grep, which does not resolve links the way Obsidian does. It can miss links written as an unusual relative path or with a different spelling or encoding.
+- Notes that change after this search are not included.
+- For an exact list, open Obsidian and run the backlinks check again.
+
+NOTES: The skill's preflight returned exit 2 ("Obsidian is not running"), so I followed the skill's file-only fallback (`references/file-mode.md`). I found the vault path in `obsidian.json` (`C:\obsidian-agentkit-test\vault-copy`). I grepped all `.md` and `.canvas` files for `Target Note` and `Target%20Note`, and also for the alias `TN Alias` taken from the note's frontmatter. There were no hits in `.canvas` files and no other note named Target Note in the vault. I checked the code-block hits by hand and left them out. Nothing in the vault was changed.

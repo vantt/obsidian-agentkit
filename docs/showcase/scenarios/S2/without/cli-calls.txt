@@ -1,0 +1,15 @@
+help | exit 0 | 17353 B out | 0 B err | 183 ms
+help | exit 0 | 17353 B out | 0 B err | 166 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Note.md counts | exit 0 | 373 B out | 0 B err | 157 ms
+vault=vault-copy files folder=_agentkit-lab | exit 0 | 934 B out | 0 B err | 163 ms
+vault=vault-copy vault | exit 0 | 97 B out | 0 B err | 160 ms
+vault=vault-copy files folder=_agentkit-lab | exit 0 | 934 B out | 0 B err | 135 ms
+vault=vault-copy search query=Target Note | exit 0 | 3689 B out | 0 B err | 321 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Renamed.md counts | exit 0 | 20 B out | 0 B err | 163 ms
+vault=vault-copy commands filter=app | exit 0 | 391 B out | 0 B err | 170 ms
+help | exit 0 | 17353 B out | 0 B err | 154 ms
+vault=vault-copy dev:dom selector=.modal-container text | exit 0 | 144 B out | 0 B err | 174 ms
+vault=vault-copy eval code=const b=[...document.querySelectorAll(".modal-container button")].find(x=>x.textContent.trim()==="Just once"); if(b){b.click();"clicked"}else{"not found"} | exit 0 | 11 B out | 0 B err | 175 ms
+vault=vault-copy rename path=_agentkit-lab/Target Note.md name=Target Renamed | exit 0 | 73 B out | 0 B err | 158834 ms
+vault=vault-copy backlinks path=_agentkit-lab/Target Renamed.md counts | exit 0 | 373 B out | 0 B err | 172 ms
+vault=vault-copy dev:dom selector=.modal-container total | exit 0 | 19 B out | 0 B err | 164 ms

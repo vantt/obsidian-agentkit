@@ -1,0 +1,41 @@
+diff --git a/.obsidian/types.json b/.obsidian/types.json
+index 472293f..e623c73 100644
+--- a/.obsidian/types.json
++++ b/.obsidian/types.json
+@@ -2,7 +2,7 @@
+   "types": {
+     "aliases": "aliases",
+     "cssclasses": "multitext",
+-    "tags": "tags",
++    "tags": "multitext",
+     "TQ_explain": "checkbox",
+     "TQ_extra_instructions": "text",
+     "TQ_short_mode": "checkbox",
+@@ -23,6 +23,7 @@
+     "TQ_show_tags": "checkbox",
+     "TQ_show_task_count": "checkbox",
+     "TQ_show_tree": "checkbox",
+-    "TQ_show_urgency": "checkbox"
++    "TQ_show_urgency": "checkbox",
++    "rating": "number"
+   }
+ }
+\ No newline at end of file
+diff --git a/_agentkit-lab/props/Property Note.md b/_agentkit-lab/props/Property Note.md
+index bf43478..8c829f5 100644
+--- a/_agentkit-lab/props/Property Note.md	
++++ b/_agentkit-lab/props/Property Note.md	
+@@ -3,11 +3,12 @@ title: "Quoted: value with colon"
+ status: draft
+ created: 2026-01-15
+ due: 2026-02-01T09:30
+-rating: 4
++rating: 5
+ done: false
+ tags:
+   - proj
+   - fixture
++  - next
+ related:
+   - "[[Target Note]]"
+   - plain item

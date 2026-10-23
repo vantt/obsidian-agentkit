@@ -1,0 +1,105 @@
+diff --git a/.obsidian/app.json b/.obsidian/app.json
+index a8d17fd..1cb9ae6 100644
+--- a/.obsidian/app.json
++++ b/.obsidian/app.json
+@@ -1,5 +1,5 @@
+ {
+-  "alwaysUpdateLinks": true,
++  "alwaysUpdateLinks": false,
+   "showLineNumber": true,
+   "spellcheck": true
+ }
+\ No newline at end of file
+diff --git a/_agentkit-lab/Target Note.md b/_agentkit-lab/Target Note.md
+deleted file mode 100644
+index aa2c7b8..0000000
+--- a/_agentkit-lab/Target Note.md	
++++ /dev/null
+@@ -1,13 +0,0 @@
+----
+-aliases:
+-  - TN Alias
+-tags:
+-  - fixture
+----
+-# Target Note
+-
+-## Section A
+-Body of section A. ^blk1
+-
+-## Section B
+-Body of section B.
+diff --git a/_agentkit-lab/other folder/ref-other-folder.md b/_agentkit-lab/other folder/ref-other-folder.md
+index a969aa8..d64be79 100644
+--- a/_agentkit-lab/other folder/ref-other-folder.md	
++++ b/_agentkit-lab/other folder/ref-other-folder.md	
+@@ -1 +1 @@
+-From another folder: [[Target Note#Section B|B]]
++From another folder: [[Target Renamed#Section B|B]]
+diff --git a/_agentkit-lab/props/Property Note.md b/_agentkit-lab/props/Property Note.md
+index bf43478..908151e 100644
+--- a/_agentkit-lab/props/Property Note.md	
++++ b/_agentkit-lab/props/Property Note.md	
+@@ -9,7 +9,7 @@ tags:
+   - proj
+   - fixture
+ related:
+-  - "[[Target Note]]"
++  - "[[Target Renamed]]"
+   - plain item
+ ---
+ # Property Note
+diff --git a/_agentkit-lab/refs/deeper/ref-markdown.md b/_agentkit-lab/refs/deeper/ref-markdown.md
+index 341e18e..df0d7a4 100644
+--- a/_agentkit-lab/refs/deeper/ref-markdown.md
++++ b/_agentkit-lab/refs/deeper/ref-markdown.md
+@@ -1 +1 @@
+-Markdown link: [target](../../Target%20Note.md)
++Markdown link: [target](Target%20Renamed.md)
+diff --git a/_agentkit-lab/refs/ref-alias-display.md b/_agentkit-lab/refs/ref-alias-display.md
+index b0ff587..8c8f626 100644
+--- a/_agentkit-lab/refs/ref-alias-display.md
++++ b/_agentkit-lab/refs/ref-alias-display.md
+@@ -1 +1 @@
+-Display text: [[Target Note|shown text]]
++Display text: [[Target Renamed|shown text]]
+diff --git a/_agentkit-lab/refs/ref-block.md b/_agentkit-lab/refs/ref-block.md
+index def220b..775acf7 100644
+--- a/_agentkit-lab/refs/ref-block.md
++++ b/_agentkit-lab/refs/ref-block.md
+@@ -1 +1 @@
+-Block: [[Target Note#^blk1]]
++Block: [[Target Renamed#^blk1]]
+diff --git a/_agentkit-lab/refs/ref-embed.md b/_agentkit-lab/refs/ref-embed.md
+index cf17a27..b94ca58 100644
+--- a/_agentkit-lab/refs/ref-embed.md
++++ b/_agentkit-lab/refs/ref-embed.md
+@@ -1,3 +1,3 @@
+ Embed:
+ 
+-![[Target Note]]
++![[Target Renamed]]
+diff --git a/_agentkit-lab/refs/ref-heading.md b/_agentkit-lab/refs/ref-heading.md
+index 3075e25..14481a7 100644
+--- a/_agentkit-lab/refs/ref-heading.md
++++ b/_agentkit-lab/refs/ref-heading.md
+@@ -1 +1 @@
+-Heading: [[Target Note#Section A]]
++Heading: [[Target Renamed#Section A]]
+diff --git a/_agentkit-lab/refs/ref-wikilink.md b/_agentkit-lab/refs/ref-wikilink.md
+index 6f585e6..e2552de 100644
+--- a/_agentkit-lab/refs/ref-wikilink.md
++++ b/_agentkit-lab/refs/ref-wikilink.md
+@@ -1 +1 @@
+-Plain link: [[Target Note]]
++Plain link: [[Target Renamed]]
+diff --git a/_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md b/_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md
+index cc28146..50995bc 100644
+--- a/_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md	
++++ b/_agentkit-lab/tiếng việt/Ghi chú tiếng Việt.md	
+@@ -1,4 +1,4 @@
+ # Ghi chú
+ 
+ Đường dẫn có dấu: Nguyễn, Đà Nẵng, thử nghiệm.
+-Link: [[Target Note]]
++Link: [[Target Renamed]]

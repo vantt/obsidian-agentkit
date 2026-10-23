@@ -1,0 +1,22 @@
+{
+ "without": {
+  "incidents": 6,
+  "toolCalls": 60,
+  "wallSeconds": 631,
+  "contextGrowth": 107996,
+  "inputTokensTotal": 3385286,
+  "taskOutputBytes": 134074,
+  "cliCalls": 110,
+  "cliOutBytes": 1145010
+ },
+ "with": {
+  "incidents": 0,
+  "toolCalls": 43,
+  "wallSeconds": 410,
+  "contextGrowth": 83946,
+  "inputTokensTotal": 2505791,
+  "taskOutputBytes": 35373,
+  "cliCalls": 66,
+  "cliOutBytes": 54127
+ }
+}

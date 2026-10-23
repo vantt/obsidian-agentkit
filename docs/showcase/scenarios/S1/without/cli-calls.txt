@@ -1,0 +1,6 @@
+help | exit 0 | 17353 B out | 0 B err | 177 ms
+vault=vault-copy tasks todo total | exit 0 | 4 B out | 0 B err | 167 ms
+vault=vault-copy tasks done total | exit 0 | 3 B out | 0 B err | 178 ms
+vault=vault-copy tasks total | exit 0 | 4 B out | 0 B err | 164 ms
+vault=vault-copy tasks format=tsv | exit 0 | 20111 B out | 0 B err | 188 ms
+vault=vault-copy tasks format=tsv | exit 0 | 20111 B out | 0 B err | 248 ms

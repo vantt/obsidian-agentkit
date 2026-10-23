@@ -1,0 +1,7 @@
+ANSWER: Đã thêm dòng `- [ ] gọi ngân hàng` vào daily note hôm nay (`2026-10-23.md` ở thư mục gốc của vault `vault-copy`). Obsidian hiện nhận đây là một task chưa hoàn thành.
+
+NOTES:
+- Tôi dùng `obsidian daily:path` để tìm daily note. Lệnh trả về `2026-10-23.md`. Đồng hồ WSL đang chỉ 22/10 18:30 theo giờ UTC, còn Windows chỉ 23/10 01:30 theo giờ +07:00. Tôi chọn ngày 23/10 vì đó là ngày theo giờ địa phương của người dùng, và cũng là file Obsidian tự xác định là daily note hôm nay. Vault không có file `.obsidian/daily-notes.json`, nên daily note dùng thiết lập mặc định: lưu ở thư mục gốc, tên file dạng YYYY-MM-DD.
+- File `2026-10-23.md` đã có sẵn nhưng trống (0 byte). Không có nội dung cũ nào bị thay đổi hay mất.
+- Lệnh `daily:append` có một điểm bất ngờ: với file trống, nó chèn thêm một dòng trống ở đầu (`\n- [ ] gọi ngân hàng`). Tôi đã ghi lại file bằng `obsidian create path=2026-10-23.md overwrite` để bỏ dòng trống đó. Việc ghi đè này an toàn vì file trước đó trống. Nội dung cuối cùng chỉ còn `- [ ] gọi ngân hàng` cùng ký tự xuống dòng ở cuối, mã hóa UTF-8, dấu tiếng Việt hiển thị đúng.
+- Kiểm tra lại: kết quả byte-level (`xxd`) và `obsidian tasks daily` đều có đúng một task `- [ ] gọi ngân hàng`.

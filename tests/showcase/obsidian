@@ -1,0 +1,26 @@
+#!/bin/bash
+# Raw Obsidian CLI exactly as installed, plus a call log for the showcase runs.
+# Installed as `obsidian` on PATH by install.sh; the agent under test never sees the log.
+# State (written by setup.sh): ~/.local/state/obs-showcase/current.env with
+#   CLI_LOG=<jsonl path>   one line per call: args, exit, stdout/stderr bytes, ms
+#   CLOSED=1               behave like Obsidian is not running (measured in FINDINGS F1a)
+STATE="$HOME/.local/state/obs-showcase"
+[ -f "$STATE/current.env" ] && . "$STATE/current.env"
+REAL="$(cat "$STATE/real-cli" 2>/dev/null)"
+log() { [ -n "${CLI_LOG:-}" ] && printf '%s\n' "$1" >> "$CLI_LOG"; }
+args_json=$(printf '%s\0' "$@" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(JSON.stringify(s.split("\0").slice(0,-1))))')
+t0=$(date +%s%3N)
+log "{\"ev\":\"start\",\"t\":$t0,\"args\":$args_json}"
+if [ "${CLOSED:-0}" = 1 ]; then
+  msg='The CLI is unable to find Obsidian. Please make sure Obsidian is running and try again.'
+  echo "$msg" >&2
+  log "{\"ev\":\"end\",\"t\":$(date +%s%3N),\"args\":$args_json,\"exit\":1,\"out\":0,\"err\":${#msg},\"ms\":$(( $(date +%s%3N) - t0 ))}"
+  exit 1
+fi
+out=$(mktemp); err=$(mktemp)
+"$REAL" "$@" >"$out" 2>"$err"
+code=$?
+cat "$out"; cat "$err" >&2
+log "{\"ev\":\"end\",\"t\":$(date +%s%3N),\"args\":$args_json,\"exit\":$code,\"out\":$(stat -c %s "$out"),\"err\":$(stat -c %s "$err"),\"ms\":$(( $(date +%s%3N) - t0 ))}"
+rm -f "$out" "$err"
+exit $code
