@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 18 / 61 việc xong (29%)**
+**Toàn project: 19 / 61 việc xong (31%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | ⬜ Todo | P1 | 0/6 ░░░░░░░░░░ 0% | — | E2.5, E2.6 (agent làm được ngay) |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | ⏸ Chờ | P1 | 0/6 ░░░░░░░░░░ 0% | E2.2, E2.3 | Chờ thư mục test trên Drive |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
-| E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E5.1, E5.2 |
+| E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 3/11 ██░░░░░░░░ 27% | — | E8.4: vòng 0 (360 phiên) |
@@ -48,7 +48,6 @@ Các việc này agent không tự làm được:
 | E2.2, E2.3 | Test trên Google Drive | Tạo thư mục test trong Drive, mở thành vault riêng |
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
-| E5.6 | Dọn repo | Đồng ý commit việc dời thư mục distillery (`docs/handoff/` đã commit, user chốt 2026-10-24) |
 | E7.8 | Kiểm tra quyền riêng tư trước khi đăng | E7 | P1 | ✅ | Agent + user | Quét sạch, user duyệt 2026-10-23 ([PRIVACY.md](showcase/PRIVACY.md)) |
 
 ## Backlog chi tiết
@@ -84,7 +83,7 @@ Các việc này agent không tự làm được:
 | E5.3 | Checklist khi Obsidian cập nhật | E5 | P2 | ⬜ | Agent | — |
 | E5.4 | Nhắc chạy probe định kỳ | E5 | P3 | ⬜ | Agent | — |
 | E5.5 | P18 tự dọn Thùng rác | E5 | P3 | ⬜ | Agent | — |
-| E5.6 | Dọn repo (distillery, handoff) | E5 | P2 | ⏸ | User | `docs/handoff/` đã commit 2026-10-24; còn chờ quyết định về distillery |
+| E5.6 | Dọn repo (distillery, handoff) | E5 | P2 | ✅ | User + agent | User chốt 2026-10-24: commit `docs/handoff/` và việc dời `docs/research/distillery` sang `docs/distillery`; chỉ `/upstreams/` không track |
 | E6.1 | Đo task của plugin Tasks qua CLI | E6 | P2 | ⬜ | Agent | — |
 | E6.2 | Đo Templater qua `--create` | E6 | P2 | ⬜ | Agent | — |
 | E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P2 | ⬜ | Agent | — |

@@ -65,7 +65,6 @@ The bench is done when:
    - Ask all questions once, up front, then run to completion.
    - Pass your own gates, and write each one into `docs/GATES.md`: problem, decision, reason.
    - Commit and push to `main` after each phase. End commit messages with the `Co-Authored-By` line the environment gives you.
-   - Do not commit the staged move of `docs/research/distillery` (it waits for the user, E5.6).
 
 ## 4. What to build
 
@@ -223,4 +222,4 @@ All of these are in `docs/GATES.md`. Put each into `bench/TROUBLESHOOTING.md` an
 - [ ] `HISTORY.md` holds E8 plus one live batch, and `compare` works between them.
 - [ ] Offline unit tests pass (`npm test` in `tests/` or `bench/`).
 - [ ] Every gate is in `docs/GATES.md`. Every harness problem is in `bench/TROUBLESHOOTING.md`.
-- [ ] All committed and pushed, without secrets and without the distillery move.
+- [ ] All committed and pushed, without secrets.
