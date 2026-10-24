@@ -105,9 +105,13 @@ async function session(model, S, side, runDir, skill, keep) {
   fs.rmSync(work, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
   const before = isOpenRouter(model) ? (await keyUsage()).usage : null;
   const t0 = Date.now();
+  // No pipes to the agent's process tree: cc-run.sh writes its own files and kills the session it started.
   const run = sh(path.join(here, 'cc-run.sh'), [model, work, path.join(runDir, 'prompt.txt'), path.join(runDir, 'transcript.jsonl')],
-    { env: { ...process.env, E8_STATE: STATE }, timeout: RUN_TIMEOUT_S * 1000, killSignal: 'SIGTERM' });
-  const wall = Math.round((Date.now() - t0) / 1000);
+    { env: { ...process.env, E8_STATE: STATE, E8_TIMEOUT_S: String(RUN_TIMEOUT_S) }, stdio: 'ignore', timeout: (RUN_TIMEOUT_S + 120) * 1000, killSignal: 'SIGKILL' });
+  const errFile = path.join(runDir, 'transcript.jsonl.stderr');
+  run.stderr = fs.existsSync(errFile) ? fs.readFileSync(errFile, 'utf8') : '';
+  if (/cc-run: timeout/.test(run.stderr)) run.signal = 'SIGTERM';
+  let wall = Math.round((Date.now() - t0) / 1000);
   fs.writeFileSync(path.join(runDir, 'cc-stderr.txt'), (run.stderr || '').split('\n').filter((l) => !/unrecognized_model/.test(l)).join('\n'));
   let cost = null;
   if (before !== null) {
@@ -139,6 +143,8 @@ async function session(model, S, side, runDir, skill, keep) {
   const ck = sh('node', [path.join(repo, 'tests/showcase/check.mjs'), S, side], { env });
   if (ck.status !== 0) throw new Error(`check failed: ${ck.stderr}`);
   const apiError = /^API Error/.test(res?.result || '') ? res.result.slice(0, 200) : null;
+  // Agent time from Claude Code itself; the runner's own clock also counts cost polling and leftovers.
+  if (res?.duration_ms) wall = Math.round(res.duration_ms / 1000);
   return { exit: run.status, signal: run.signal, timedOut: run.signal === 'SIGTERM', wall, cost, resultError: res?.is_error ?? null, apiError, turns: res?.num_turns ?? null };
 }
 

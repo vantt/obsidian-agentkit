@@ -20,6 +20,8 @@ export DISABLE_TELEMETRY=1 DISABLE_ERROR_REPORTING=1 CLAUDE_CODE_DISABLE_NONESSE
 # Tool search adds a `defer_loading` placeholder tool; OpenRouter then routes only to the few providers that
 # support it, and those were rate-limited (GATES, E8.2). With four fixed tools there is nothing to defer.
 export ENABLE_TOOL_SEARCH=false
+# Background Bash tasks keep `claude -p` alive until they finish (one S5 run waited ~2 h): no background tasks.
+export CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1
 unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL
 
 case "$M" in
@@ -35,5 +37,22 @@ case "$M" in
 esac
 
 cd "$WORK"
-exec claude -p "$(cat "$PROMPT")" --model "$M" --output-format stream-json --verbose \
-  --permission-mode bypassPermissions --tools Bash Read Edit Write "$@" < /dev/null > "$OUT"
+# Own session for the agent: commands it pushes to the background outlive `claude -p` and would keep
+# running (and hold pipes) after the session ends. Kill the whole session on exit or after E8_TIMEOUT_S.
+setsid claude -p "$(cat "$PROMPT")" --model "$M" --output-format stream-json --verbose \
+  --permission-mode bypassPermissions --tools Bash Read Edit Write "$@" < /dev/null > "$OUT" 2> "$OUT.stderr" &
+pid=$!
+( sleep "${E8_TIMEOUT_S:-900}"; echo "cc-run: timeout after ${E8_TIMEOUT_S:-900}s" >> "$OUT.stderr"; pkill -TERM -s "$pid"; sleep 10; pkill -KILL -s "$pid" ) &
+watchdog=$!
+# `claude -p` also waits for its background tasks before it exits: once the result line is out, the
+# session is over, so stop it there.
+rc=0
+while kill -0 "$pid" 2>/dev/null; do
+  if grep -q '"type":"result"' "$OUT" 2>/dev/null; then sleep 3; break; fi
+  sleep 2
+done
+wait "$pid" 2>/dev/null || rc=$?
+grep -q '"type":"result"' "$OUT" 2>/dev/null && rc=0
+pkill -P "$watchdog" 2>/dev/null; kill "$watchdog" 2>/dev/null
+pkill -KILL -s "$pid" 2>/dev/null || true
+exit "$rc"
