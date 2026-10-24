@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E5.1, E5.2 |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
-| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM qua OpenRouter; Haiku; Gemini, Codex kiểm sau) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 3/11 ██░░░░░░░░ 27% | — | E8.4: vòng 0 (360 phiên) |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 3/11 ██░░░░░░░░ 27% | — | E8.4: vòng 0 (360 phiên) |
 
 Ký hiệu trạng thái:
 - ✅ Done: xong, có bằng chứng.
@@ -108,7 +108,7 @@ Các việc này agent không tự làm được:
 | E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ⬜ | Agent | — |
 | E8.9 | Báo cáo chứng minh H1–H4 và biểu đồ | E8 | P2 | ⬜ | Agent | — |
 | E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | P2 | ⬜ | Agent | — |
-| E8.11 | Kiểm sau: Gemini Flash và Codex (1 lượt, xác nhận "tương tự") | E8 | P3 | ⬜ | Agent | Sau E8.10 |
+| E8.11 | Kiểm sau: Codex CLI (Gemini, OpenAI đã vào vòng 0) | E8 | P3 | ⬜ | Agent | Sau E8.10 |
 
 ## Cách cập nhật board
 

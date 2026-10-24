@@ -34,8 +34,11 @@ Nếu sau 3 vòng tối ưu vẫn có model không đạt H1, báo cáo ghi rõ 
   | Nhỏ hơn | `z-ai/glm-4.7-flash` (bản trước, context 200k) | 0,061 / 0,40 | OpenRouter | Đợt chính |
   | Rẻ | Claude Haiku 5.5 | 0,10 / 0,50 (giá OpenRouter, chỉ để tính USD) | Gói Claude Code hiện tại | Đợt chính |
   | Mốc so sánh | Model mạnh đã dùng ở E7 | giá niêm yết | Gói Claude Code hiện tại | Đợt chính |
-  | Rẻ | Gemini Flash-Lite / Flash | 0,10–0,75 / 0,40–3,75 | OpenRouter | Kiểm sau (E8.11) |
-  | Rẻ | Codex / model OpenAI rẻ | — | OpenRouter hoặc Codex CLI | Kiểm sau (E8.11), giả định tương đương Haiku |
+  | Rẻ | `google/gemini-3.5-flash-lite` | 0,30 / 2,50 | OpenRouter | Thêm vào vòng 0 (user, 2026-10-24) |
+  | Rẻ hơn | `google/gemini-2.5-flash-lite` (bản trước) | 0,10 / 0,40 | OpenRouter | Thêm vào vòng 0 |
+  | Rẻ | `openai/gpt-6-luna` | 0,10 / 0,50 | OpenRouter | Thêm vào vòng 0 |
+  | Nhỏ hơn | `openai/gpt-oss-20b` (model mở ~20B) | 0,018 / 0,09 | OpenRouter | Thêm vào vòng 0 |
+  | — | Codex CLI | — | Codex CLI | Kiểm sau (E8.11), nếu cần thử harness khác |
 
   Quy tắc chọn: mỗi family một bản mới và một bản rẻ hoặc nhỏ hơn, để thấy được đường "nhỏ dần". Không dùng alias trôi (`~…-latest`) và bản `:batch` (không dùng được khi chạy tương tác). Bỏ ngoài: `glm-4.5-air` (đắt hơn `glm-4.7-flash`), DeepSeek V3.x (đắt hơn V4 flash).
 
@@ -78,7 +81,7 @@ Dùng lại cách đo E7 (`check.mjs`, `transcript.mjs`, wrapper `obsidian`), th
 | E8.8 | **Vòng 1 trở đi, đo lại** (phía có skill, 180 phiên mỗi vòng); lặp E8.5 → E8.7 tới khi đạt H1 hoặc hết 3 vòng. Mỗi vòng chạy lại model mạnh để chắc không bị tụt | `round-<n>.csv`; model mạnh không tụt pass; GATES ghi quyết định mỗi vòng | ⬜ | — |
 | E8.9 | **Báo cáo chứng minh:** H1–H4 đạt hay không, kèm số liệu và khoảng dao động. Biểu đồ: `$ / pass` theo giá model, pass có/không skill theo model, sự cố theo model, thời gian. Ghi rõ hạn chế | `docs/models/REPORT.md` cùng biểu đồ trong `docs/models/assets/`; `privacy-scan.mjs` sạch | ⬜ | — |
 | E8.10 | **Bộ test chạy lại được và khuyến nghị model.** `tests/models/` có README, cách tính điểm, `HISTORY.md` theo phiên bản skill × model (giống `tests/compat/`). SKILL.md metadata thêm `tested-models`. Cập nhật HOW-IT-WORKS | Chạy lại một lệnh ra cùng bảng điểm; khuyến nghị model mặc định trong README | ⬜ | — |
-| E8.11 | **Kiểm sau: Gemini Flash và Codex.** Chạy skill bản cuối, chỉ phía có skill, 1 lượt mỗi tình huống, để xác nhận giả định "tương tự". Codex: thử model OpenAI rẻ qua cùng harness; nếu cần, thêm một lượt bằng Codex CLI với cùng skill. Nếu một ô lệch so với DeepSeek/GLM/Haiku, chạy đủ 3 lượt cho ô đó và đưa vào báo cáo | Thêm dòng vào `HISTORY.md` và REPORT; giả định đúng hay sai ghi ở GATES | ⬜ | — |
+| E8.11 | **Kiểm sau: Codex CLI.** Gemini và OpenAI đã được kéo vào vòng 0 (user, 2026-10-24). Còn lại: chạy skill bản cuối bằng Codex CLI (harness khác) để xem kết quả có giữ được ngoài Claude Code không | Thêm dòng vào `HISTORY.md` và REPORT | ⬜ | — |
 
 ## Thứ tự
 E8.1 → E8.2 và E8.3 (song song) → E8.4 → E8.5 → E8.6 và E8.7 → E8.8 (lặp) → E8.9 → E8.10 → E8.11 (khi cần, rẻ).
