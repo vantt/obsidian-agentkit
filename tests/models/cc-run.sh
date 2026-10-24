@@ -3,7 +3,8 @@
 # Usage: cc-run.sh <model> <workdir> <prompt-file> <out.jsonl> [extra claude flags]
 #   <model>  an OpenRouter id (deepseek/..., z-ai/...) or a Claude alias (haiku, sonnet, opus)
 # Every model gets the same environment:
-#   - a fresh CLAUDE_CONFIG_DIR: no user plugins, hooks, MCP servers, memory or ~/.claude/CLAUDE.md;
+#   - a fresh, empty CLAUDE_CONFIG_DIR per session: no user plugins, hooks, MCP servers, ~/.claude/CLAUDE.md,
+#     and no memory carried over from an earlier session;
 #   - the same four tools (Bash, Read, Edit, Write);
 #   - a workdir outside ~/projects, so no project CLAUDE.md is picked up.
 # Secrets come from ~/.config/obsidian-agentkit/{openrouter,claude}.env and are never printed.
@@ -11,8 +12,10 @@ set -euo pipefail
 M="$1"; WORK="$2"; PROMPT="$3"; OUT="$4"; shift 4
 CFG="$HOME/.config/obsidian-agentkit"
 STATE="${E8_STATE:-$HOME/.local/state/obs-e8}"
+# A fresh config dir per session: Claude Code keeps auto-memory there, and one agent's memory
+# must never reach the next run (GATES, E8.4).
 export CLAUDE_CONFIG_DIR="$STATE/claude-config"
-mkdir -p "$CLAUDE_CONFIG_DIR"
+rm -rf "$CLAUDE_CONFIG_DIR"; mkdir -p "$CLAUDE_CONFIG_DIR"
 export DISABLE_TELEMETRY=1 DISABLE_ERROR_REPORTING=1 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 # Tool search adds a `defer_loading` placeholder tool; OpenRouter then routes only to the few providers that
 # support it, and those were rate-limited (GATES, E8.2). With four fixed tools there is nothing to defer.

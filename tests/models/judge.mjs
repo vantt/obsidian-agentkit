@@ -60,6 +60,20 @@ for (const r of runs) {
   }
 }
 
+// Skill rules broken on the way, even when the outcome is right (input for E8.5, not incidents).
+const ruleBreaks = [];
+for (const r of runs) {
+  const tf = path.join(r.dir, 'transcript.jsonl');
+  if (!fs.existsSync(tf)) continue;
+  const cmds = fs.readFileSync(tf, 'utf8').split('\n').filter(Boolean).flatMap((l) => { try { return JSON.parse(l).message?.content || []; } catch { return []; } })
+    .filter((b) => b.type === 'tool_use' && b.name === 'Bash').map((b) => b.input.command || '');
+  for (const c of cmds) {
+    if (/\b(git\s+)?mv\s+[^|;&]*\.md\b/.test(c)) ruleBreaks.push(`moved a note with mv: ${c.slice(0, 100)}`);
+    if (/\bsed\s+-i\b/.test(c) && /\.md\b|_agentkit-lab/.test(c)) ruleBreaks.push(`edited notes with sed -i: ${c.slice(0, 100)}`);
+    if (/(^|[\s;&|])obsidian\s+[^|;&]*\bdelete\b/.test(c)) ruleBreaks.push(`raw CLI delete: ${c.slice(0, 100)}`);
+  }
+}
+
 let result = 'fail';
 const g = c.gt || {};
 switch (S) {
@@ -126,6 +140,6 @@ switch (S) {
   default: reasons.push(`unknown scenario ${S}`);
 }
 
-const verdict = { scenario: S, side: c.side, result, incidents, reasons, ...(c.s6 ? { s6: c.s6 } : {}) };
+const verdict = { scenario: S, side: c.side, result, incidents, reasons, ruleBreaks: c.side.startsWith('with') && !c.side.startsWith('without') ? ruleBreaks : [], ...(c.s6 ? { s6: c.s6 } : {}) };
 fs.writeFileSync(path.join(last.dir, 'verdict.json'), JSON.stringify(verdict, null, 1));
 console.log(JSON.stringify(verdict));

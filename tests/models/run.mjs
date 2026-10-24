@@ -95,6 +95,11 @@ async function session(model, S, side, runDir, skill, keep) {
   const env = testEnv(runDir);
   const st = sh(path.join(repo, 'tests/showcase/setup.sh'), [S, side, ...(keep ? ['--keep'] : [])], { env });
   if (st.status !== 0) throw new Error(`setup failed: ${st.stderr || st.stdout}`);
+  // The bridge caches which CLI to call in the OS temp dir; a reboot clears it and the bridge then finds the
+  // real CLI, which bypasses the logging wrapper. Point it at the wrapper before every session.
+  const wrapper = path.join(os.homedir(), '.local/bin/obsidian');
+  if (!fs.existsSync(wrapper)) throw new Error('logging wrapper missing: run tests/showcase/install.sh');
+  fs.writeFileSync(path.join(os.tmpdir(), 'obsidian-connect-cli.json'), JSON.stringify({ env: 'wsl', cli: wrapper }));
   fs.writeFileSync(path.join(runDir, 'prompt.txt'), prompt(S, side, VAULT, skill.dir));
   const work = path.join(STATE, 'work');
   fs.rmSync(work, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
@@ -130,6 +135,7 @@ async function session(model, S, side, runDir, skill, keep) {
       modelCalls: m.modelCalls, numTurns: res.num_turns, tokenSource: 'result.usage', models: Object.keys(res.modelUsage || {}) });
     fs.writeFileSync(mf, JSON.stringify(m, null, 1));
   }
+  if (!fs.existsSync(path.join(runDir, 'cli.jsonl'))) fs.writeFileSync(path.join(runDir, 'cli.jsonl'), ''); // no CLI call at all
   const ck = sh('node', [path.join(repo, 'tests/showcase/check.mjs'), S, side], { env });
   if (ck.status !== 0) throw new Error(`check failed: ${ck.stderr}`);
   const apiError = /^API Error/.test(res?.result || '') ? res.result.slice(0, 200) : null;
@@ -169,7 +175,7 @@ async function one(model, S, side, rep, round) {
   const sum = (k) => m.reduce((a, x) => a + (x[k] || 0), 0);
   const row = {
     round, model, scenario: S, side, rep, date: new Date().toISOString(), skillRev: side === 'with' ? skill.rev : null,
-    result: v.result, incidents: v.incidents.length, incidentList: v.incidents, reasons: v.reasons,
+    result: v.result, incidents: v.incidents.length, incidentList: v.incidents, reasons: v.reasons, ruleBreaks: v.ruleBreaks,
     toolCalls: sum('toolCalls'), toolErrors: sum('toolErrors'), modelCalls: sum('modelCalls'),
     inputTokensTotal: sum('inputTokensTotal'), cacheReadTokens: sum('cacheReadTokens'), outputTokensTotal: sum('outputTokensTotal'), thinkingTokens: sum('thinkingTokens'),
     taskOutputBytes: sum('taskOutputBytes'), skillLoadBytes: sum('skillLoadBytes'), modelsSeen: [...new Set(m.flatMap((x) => x.models || []))],
