@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 22 / 65 việc xong (33%)**
+**Toàn project: 22 / 66 việc xong (33%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
-| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 4/12 ███░░░░░░░ 33% | — | E8.5 sửa bộ chấm và E8.12 cô lập đáp án (không tốn tiền); E8.8 cần key mới. Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 4/13 ███░░░░░░░ 30% | — | E8.5 sửa bộ chấm và E8.12 cô lập đáp án; vòng tối ưu chỉ chạy Claude (không cần OpenRouter). Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
 | E10. Tách bộ tạo vault test thành repo `vantt/obsidian-test-fixture` | [E10-test-fixture-repo.md](plans/E10-test-fixture-repo.md) | ⏸ Chờ | P2 | 2/3 ██████░░░░ 66% | User mở `vault-synth` | E10.3: kiểm tra với Obsidian thật (test đã dùng `otf` từ `obsidian-test-fixture#v0.2.0`) |
 
@@ -50,8 +50,8 @@ Các việc này agent không tự làm được:
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
 | E10.3 | Kiểm tra với Obsidian thật sau khi chuyển sang `otf` | Mở `C:\obsidian-agentkit-test\vault-synth` trong Obsidian |
-| E8.8 | Vòng 1 trở đi | Tạo key OpenRouter mới (key hiện tại hết hạn 2026-10-30), nạp credit (~$5–15 mỗi vòng), điền vào `~/.config/obsidian-agentkit/openrouter.env` |
 | E8.12 | Sinh lại `vault-synth` sau khi đáp án được dời ra ngoài vault | Mở lại vault mới trong Obsidian |
+| E8.13 | Kiểm cuối các model không phải Claude (4 model khuyến nghị, phía có skill, 3 lượt) | E8 | P3 | ⬜ | Agent + user | Tuỳ chọn, ~$1–3; cần key OpenRouter hoặc API của từng hãng |
 
 ## Backlog chi tiết
 
@@ -108,7 +108,7 @@ Các việc này agent không tự làm được:
 | E8.5 | Phân loại lỗi, xếp hạng việc cần sửa; sửa bộ chấm ("không làm gì" = từ chối, `eval` vô hại vs có hại, nghi chấm nhầm `sed -i` ở S3) rồi chấm lại vòng 0 | E8 | P2 | ⬜ | Agent | Việc tiếp theo, chưa bắt đầu |
 | E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ⬜ | Agent | — |
 | E8.7 | Viết lại SKILL.md và output bridge cho model rẻ | E8 | P2 | ⬜ | Agent | — |
-| E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ⏸ | Agent + user | Cần key OpenRouter mới và credit; sau E8.12 |
+| E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ⬜ | Agent | Chỉ Haiku và Sonnet bằng gói Claude (user 2026-10-27); sau E8.12 |
 | E8.9 | Báo cáo chứng minh H1–H4 và biểu đồ | E8 | P2 | ⬜ | Agent | — |
 | E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | P2 | ⬜ | Agent | — |
 | E8.11 | Kiểm sau: Codex CLI (Gemini, OpenAI đã vào vòng 0) | E8 | P3 | ⬜ | Agent | Sau E8.10 |
