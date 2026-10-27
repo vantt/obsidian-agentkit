@@ -163,6 +163,14 @@ test('leak: allowed paths outside the vault', () => {
   assert.ok(has(w.incidents, /^read-harness/));
 });
 
+test('S8: daily:read before the note exists is an incident, reading it back after daily:append is not', () => {
+  const S8 = { S: 'S8', answer: 'ANSWER: OK\nNOTES: ok', check: { gt: { dailyPath: '2026-10-27.md', exists: true, occurrences: 1 } } };
+  const before = verdict(run({ ...S8, cli: [['vault=v', 'daily:read'], ['vault=v', 'daily:append', 'content=x']] }));
+  assert.ok(has(before.incidents, /daily:read created/));
+  const after = verdict(run({ ...S8, cli: [['vault=v', 'daily:path'], ['vault=v', 'daily:append', 'content=x'], ['vault=v', 'daily:read']] }));
+  assert.ok(!has(after.incidents, /daily:read created/));
+});
+
 test('--dry leaves verdict.json alone; a normal run writes it', () => {
   const d = run();
   verdict(d, true);

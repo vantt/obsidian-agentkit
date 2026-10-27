@@ -447,3 +447,36 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
   - the `obsidian.json` schema and the WSL path conversion;
   - file-mode timing on about 1,800 notes.
 - **E8 round 1:** Haiku and Sonnet, with the skill, on the regenerated `vault-synth`, run in the sandbox.
+
+## E8.8 round 1: skill v2 on Claude, live run of the sandbox (2026-10-27)
+
+**Vault reset** (approved by the user):
+
+- Someone installed 5 community plugins into `vault-synth` on 2026-10-27, and `types.json` gained `up` and `down`. All of it was removed.
+- A stale `.git/index.lock` from 2026-10-25 was deleted.
+- The marker-only change was committed in the vault (`1a8a43f`). The answer key is now in `~/.local/state/obs-e8/answer-key.json`. It is byte-identical to the old marker, and the notes are unchanged.
+- The calibration base was moved to `1a8a43f`. The old file is kept as `calibration.r0.json`.
+- `calibrate`: backlinks 9 and unresolved 35, the same as round 0.
+
+**Live checks:**
+
+- `sandbox-check.sh haiku`: every probe OK. No secret was in the env, the transcript or the logs, and no real vault was listed (0/4).
+- `run.mjs one haiku S1 with 1 --round 1`: pass, 3 CLI calls, 10 s, through the sandbox and the key proxy.
+- **The Obsidian CLI updated itself to 1.15.0.** `probes.mjs --no-write` on `vault-synth` passed 16/16, with no flip from 1.14.4.
+- The write probes were not run, because they toggle vault settings that S2 depends on. They are still open under E8.6.
+
+**Round 1:** Haiku and Sonnet, with the skill, S1–S9, 3 reps.
+
+- 27/27 runs clean for each model.
+- Cost per run: Haiku $0.0020 (round 0: $0.0032); Sonnet $0.0190 (round 0: $0.0386).
+- Median tool calls: Haiku 6 → 5, Sonnet 4 → 3.
+- Details: [docs/models/ROUND-1.md](models/ROUND-1.md).
+
+**Judge fix:**
+
+- The first pass flagged every S8 run with "daily:read created the note".
+- The agents had read the note back with the guarded `obs daily:read` after `--daily-append-once` had created it.
+- Now `daily:read` in session 1 counts only if it runs before the note is created; a test covers it.
+- Re-judging round 0 with this rule changed one without-skill run (`gemini-3.5-flash-lite` S8), which is now clean.
+
+**H1 for Claude:** met on skill v2, with both models at 100% and no incidents.

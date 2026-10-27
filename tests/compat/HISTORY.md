@@ -9,3 +9,4 @@ Generated from `history/*.json` on every run of `tests/compat/probes.mjs`. Metho
 | 2026-10-22 12:30 | 1.14.4 | wsl | 1/1 (partial: P29) | 100% | none | — |
 | 2026-10-22 12:43 | 1.14.4 | wsl | 28/29 | 97.3% | P29:now FAIL | P29 |
 | 2026-10-22 12:49 | 1.14.4 | wsl | 29/29 | 100% | P29:now pass | — |
+| 2026-10-27 16:26 | 1.15.0 | wsl-synth | 16/16 (partial: P01 P02 P03 P04 P05 P06 P07 P08 P09 P10 P11 P12 P13 P25 P27 P28) | 100% | none | — |
