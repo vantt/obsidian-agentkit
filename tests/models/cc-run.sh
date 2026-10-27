@@ -9,7 +9,9 @@
 #   - a workdir outside ~/projects, so no project CLAUDE.md is picked up;
 #   - a bubblewrap sandbox (E8.12, off with E8_SANDBOX=0): $HOME is an empty tmpfs and /mnt/c shows only the
 #     vault and the Obsidian install, so the agent cannot read this repo, the answer key, other runs or secrets.
-#     Env from run.mjs: E8_VAULT_DIR (the vault, read-write), E8_SKILL_DIR (skill copy, read-only; with-skill only).
+#     Env from run.mjs: E8_VAULT_DIR (the vault, read-write), E8_SKILL_DIR (skill copy, read-only; with-skill only),
+#     E8_OBSIDIAN_JSON (the agent's obsidian.json, only the vault under test) bound read-only at E8_OBSIDIAN_JSON_AT
+#     (the WSL path of the real Windows %APPDATA%\obsidian\obsidian.json).
 # Secrets come from ~/.config/obsidian-agentkit/{openrouter,claude}.env and are never printed.
 set -euo pipefail
 M="$1"; WORK="$2"; PROMPT="$3"; OUT="$4"; shift 4
@@ -70,6 +72,11 @@ if [ "${E8_SANDBOX:-1}" != 0 ]; then
     while IFS= read -r t; do SANDBOX+=(--tmpfs "$t"); done < <(printf '%s\n' "${tops[@]}" | sort -u)
   fi
   ro "$(dirname "$REAL_CLI")"
+  # Obsidian's vault list: the real %APPDATA%\obsidian\obsidian.json names every vault of the user. The agent gets
+  # its own copy, listing only the vault under test, at the same path (tests/models/obsidian-json.mjs builds it).
+  OJ="${E8_OBSIDIAN_JSON:?cc-run: E8_OBSIDIAN_JSON not set (run.mjs sets it)}"; OJ_AT="${E8_OBSIDIAN_JSON_AT:?cc-run: E8_OBSIDIAN_JSON_AT not set}"
+  case "$OJ_AT" in /mnt/?/*) ;; *) echo "cc-run: E8_OBSIDIAN_JSON_AT must be on a Windows drive" >&2; exit 6 ;; esac
+  SANDBOX+=(--ro-bind "$OJ" "$OJ_AT")
   SANDBOX+=(--bind "$VAULT_DIR" "$VAULT_DIR")
   # $HOME: empty, plus the tools and this session's own folders.
   ro "$CLAUDE_BIN"; ro "$HOME/.local/bin/claude"; ro "$NODE_DIR"

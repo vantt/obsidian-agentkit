@@ -12,6 +12,8 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { MARKER } from './answer-key.mjs';
+import { writeAgentObsidianJson } from './obsidian-json.mjs';
 import { prompt } from './prompt.mjs';
 
 const here = path.dirname(new URL(import.meta.url).pathname);
@@ -54,7 +56,14 @@ async function keyUsage() {
 
 // Never send a real vault to a third-party model: the target must be the generated one.
 function guard() {
-  if (!fs.existsSync(path.join(DIR, '.e8-synthetic'))) die(`${DIR} has no .e8-synthetic marker; generate it with: otf generate --preset personal-vault --out <dir> --git --answers-out ~/.local/state/obs-e8/answer-key.json`, 7);
+  const markerFile = path.join(DIR, MARKER);
+  if (!fs.existsSync(markerFile)) die(`${DIR} has no ${MARKER} marker; generate it with: otf generate --preset personal-vault --out <dir> --git --answers-out ~/.local/state/obs-e8/answer-key.json`, 7);
+  // A marker from before obsidian-test-fixture 0.3.0 holds the S6 answer key inside the vault, where the agent
+  // reads it (E8.5). Such a vault is only good for re-judging old runs (answer-key.mjs still reads it).
+  let marker;
+  try { marker = JSON.parse(fs.readFileSync(markerFile, 'utf8')); } catch { die(`${markerFile} is not valid JSON`, 7); }
+  if (marker?.s6 !== undefined) die(`${markerFile} still holds the S6 answer key, which the agent under test can read. `
+    + 'Regenerate the vault with --answers-out: see docs/GATES.md, "Steps for the user to regenerate vault-synth (E8.12)".', 7);
   const p = real('vault', 'info=path');
   if (!p) die(`Obsidian does not answer for vault "${VAULT}" (is it open in Obsidian?)`, 2);
   const wsl = sh('wslpath', ['-u', p.replace(/\r/g, '')]).stdout.trim();
@@ -101,14 +110,18 @@ async function session(model, S, side, runDir, skill, keep) {
   if (!fs.existsSync(wrapper)) throw new Error('logging wrapper missing: run tests/showcase/install.sh');
   fs.writeFileSync(path.join(os.tmpdir(), 'obsidian-connect-cli.json'), JSON.stringify({ env: 'wsl', cli: wrapper }));
   fs.writeFileSync(path.join(runDir, 'prompt.txt'), prompt(S, side, VAULT, skill.dir));
+  // The agent's own obsidian.json, listing only this vault, bound over the real one in the sandbox (E8.12).
+  const agentObsJson = path.join(STATE, 'obsidian.json');
+  const obsJsonAt = writeAgentObsidianJson(DIR, agentObsJson);
   const work = path.join(STATE, 'work');
   fs.rmSync(work, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
   const before = isOpenRouter(model) ? (await keyUsage()).usage : null;
   const t0 = Date.now();
   // No pipes to the agent's process tree: cc-run.sh writes its own files and kills the session it started.
   const run = sh(path.join(here, 'cc-run.sh'), [model, work, path.join(runDir, 'prompt.txt'), path.join(runDir, 'transcript.jsonl')],
-    // cc-run.sh's sandbox binds only the vault and, on the with-skill side, the skill copy (E8.12).
-    { env: { ...process.env, E8_STATE: STATE, E8_TIMEOUT_S: String(RUN_TIMEOUT_S), E8_VAULT_DIR: DIR, E8_SKILL_DIR: /^with(?!out)/.test(side) ? skill.dir : '' }, stdio: 'ignore', timeout: (RUN_TIMEOUT_S + 120) * 1000, killSignal: 'SIGKILL' });
+    // cc-run.sh's sandbox binds only the vault, the agent's obsidian.json and, on the with-skill side, the skill copy (E8.12).
+    { env: { ...process.env, E8_STATE: STATE, E8_TIMEOUT_S: String(RUN_TIMEOUT_S), E8_VAULT_DIR: DIR, E8_SKILL_DIR: /^with(?!out)/.test(side) ? skill.dir : '',
+      E8_OBSIDIAN_JSON: agentObsJson, E8_OBSIDIAN_JSON_AT: obsJsonAt }, stdio: 'ignore', timeout: (RUN_TIMEOUT_S + 120) * 1000, killSignal: 'SIGKILL' });
   const errFile = path.join(runDir, 'transcript.jsonl.stderr');
   run.stderr = fs.existsSync(errFile) ? fs.readFileSync(errFile, 'utf8') : '';
   if (/cc-run: timeout/.test(run.stderr)) run.signal = 'SIGTERM';
@@ -207,6 +220,8 @@ if (cmd === 'preflight') {
   const wrapper = sh('bash', ['-c', 'command -v obsidian']).stdout.trim();
   console.log(`vault ${VAULT} at ${DIR}: synthetic, open in Obsidian`);
   console.log(`obsidian on PATH: ${wrapper || 'MISSING (run tests/showcase/install.sh)'}`);
+  try { writeAgentObsidianJson(DIR, path.join(STATE, 'obsidian.json')); console.log(`agent obsidian.json: ${Object.keys(JSON.parse(fs.readFileSync(path.join(STATE, 'obsidian.json'), 'utf8')).vaults).length} vault (the one under test)`); }
+  catch (e) { console.log(`agent obsidian.json: FAILED (${e.message})`); }
   console.log(`openrouter key: ${or.OPENROUTER_API_KEY ? 'set' : 'MISSING'}; claude token: ${readEnv(path.join(CFG, 'claude.env')).CLAUDE_CODE_OAUTH_TOKEN ? 'set' : 'MISSING'}`);
   if (or.OPENROUTER_API_KEY) { const u = await keyUsage(); console.log(`openrouter: spent $${u.usage.toFixed(4)}, key limit left $${u.limit_remaining}, expires ${u.expires_at}; E8 budget left $${(await budgetLeft()).toFixed(2)}`); }
   console.log(`calibration: ${fs.existsSync(path.join(STATE, 'calibration.json')) ? fs.readFileSync(path.join(STATE, 'calibration.json'), 'utf8').trim() : 'not yet'}`);
