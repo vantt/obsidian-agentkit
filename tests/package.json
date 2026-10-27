@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "obsidian-test-fixture": "github:vantt/obsidian-test-fixture#v0.2.0"
+    "obsidian-test-fixture": "github:vantt/obsidian-test-fixture#v0.3.0"
   }
 }

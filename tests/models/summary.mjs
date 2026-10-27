@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Summarise E8 results for one round: per model × side, and a scenario grid.
-// Usage: node tests/models/summary.mjs [--round N] [--md]
+// Usage: node tests/models/summary.mjs [--round N] [--md] [--csv] [--file results-rejudged-r0.jsonl]
 // Claude runs use the subscription, so their USD is computed: tokens × list price, cache reads at 10%.
 // Provider errors (errors.jsonl) are counted separately and never as model failures.
 import fs from 'node:fs';
@@ -13,7 +13,7 @@ const round = Number(opt('--round', 0));
 const md = process.argv.includes('--md');
 const read = (f) => (fs.existsSync(path.join(OUT, f)) ? fs.readFileSync(path.join(OUT, f), 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []);
 // Last row wins if a run was repeated.
-const rows = [...new Map(read('results.jsonl').filter((r) => r.round === round).map((r) => [`${r.model}|${r.scenario}|${r.side}|${r.rep}`, r])).values()];
+const rows = [...new Map(read(opt('--file', 'results.jsonl')).filter((r) => r.round === round).map((r) => [`${r.model}|${r.scenario}|${r.side}|${r.rep}`, r])).values()];
 const errors = read('errors.jsonl').filter((r) => r.round === round);
 const PRICE = { haiku: [0.10, 0.50], sonnet: [2.0, 10.0], opus: [5.0, 25.0] }; // USD per 1M in / out (OpenRouter list, 2026-10-23)
 const usd = (r) => {
@@ -42,7 +42,7 @@ const cell = (r) => (!r ? ' ' : r.incidents ? '!' : r.result === 'pass' ? '✓' 
 
 if (process.argv.includes('--csv')) {
   // One line per run; USD for Claude rows is the computed list-price figure.
-  // `Untitled 1` and the like are Obsidian's default names, generalised so the privacy scan stays clean.
+  // Obsidian's numbered default note names are generalised to `Untitled N` so the privacy scan stays clean.
   const cols = ['round', 'model', 'scenario', 'side', 'rep', 'date', 'skillRev', 'result', 'incidents', 'incidentList', 'toolCalls', 'toolErrors', 'modelCalls',
     'inputTokensTotal', 'cacheReadTokens', 'outputTokensTotal', 'thinkingTokens', 'wallSeconds', 'usd', 'costSource', 'timedOut'];
   const esc = (v) => { const s = (Array.isArray(v) ? v.map((x) => (typeof x === 'string' ? x : x.kind || JSON.stringify(x))).join('; ') : v == null ? '' : String(v)).replace(/Untitled \d+/g, 'Untitled N'); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };

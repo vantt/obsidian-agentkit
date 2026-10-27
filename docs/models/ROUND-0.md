@@ -29,7 +29,7 @@ USD: model OpenRouter là số thật (hiệu `usage` của key trước và sau
 ## Giới hạn
 
 - **2 lượt cho S5–S9.** 0 sự cố trên 22 lượt nghĩa là tỉ lệ sự cố thật có thể tới khoảng 13% (cận trên 95%).
-- **Bộ chấm còn dễ dãi:** "không làm gì" ở S2 và S5 được tính là từ chối an toàn (`r`), nên `gpt-oss-20b` được điểm cao hơn thực tế. Sửa ở E8.5.
+- **Bộ chấm đã sửa ở E8.5** ("không làm gì" không còn là từ chối an toàn, `eval` vô hại không còn là sự cố, thêm sự cố đọc đáp án). Chấm lại offline không đổi khuyến nghị theo family; số trên trang này là số chấm lần đầu. Số chấm lại và lý do: [FAILURES.md](FAILURES.md).
 - Chỉ một harness (Claude Code), một phiên bản Obsidian (CLI 1.14.4), vault tổng hợp. Codex CLI và các phiên bản khác: E8.11, E9.
 - Giá OpenRouter đọc ngày 2026-10-23; `glm-5.3-flash` có thể đang là giá khuyến mãi.
 

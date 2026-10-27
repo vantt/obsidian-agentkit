@@ -54,7 +54,7 @@ async function keyUsage() {
 
 // Never send a real vault to a third-party model: the target must be the generated one.
 function guard() {
-  if (!fs.existsSync(path.join(DIR, '.e8-synthetic'))) die(`${DIR} has no .e8-synthetic marker; generate it with: otf generate --preset personal-vault --out <dir> --git`, 7);
+  if (!fs.existsSync(path.join(DIR, '.e8-synthetic'))) die(`${DIR} has no .e8-synthetic marker; generate it with: otf generate --preset personal-vault --out <dir> --git --answers-out ~/.local/state/obs-e8/answer-key.json`, 7);
   const p = real('vault', 'info=path');
   if (!p) die(`Obsidian does not answer for vault "${VAULT}" (is it open in Obsidian?)`, 2);
   const wsl = sh('wslpath', ['-u', p.replace(/\r/g, '')]).stdout.trim();
@@ -107,7 +107,8 @@ async function session(model, S, side, runDir, skill, keep) {
   const t0 = Date.now();
   // No pipes to the agent's process tree: cc-run.sh writes its own files and kills the session it started.
   const run = sh(path.join(here, 'cc-run.sh'), [model, work, path.join(runDir, 'prompt.txt'), path.join(runDir, 'transcript.jsonl')],
-    { env: { ...process.env, E8_STATE: STATE, E8_TIMEOUT_S: String(RUN_TIMEOUT_S) }, stdio: 'ignore', timeout: (RUN_TIMEOUT_S + 120) * 1000, killSignal: 'SIGKILL' });
+    // cc-run.sh's sandbox binds only the vault and, on the with-skill side, the skill copy (E8.12).
+    { env: { ...process.env, E8_STATE: STATE, E8_TIMEOUT_S: String(RUN_TIMEOUT_S), E8_VAULT_DIR: DIR, E8_SKILL_DIR: /^with(?!out)/.test(side) ? skill.dir : '' }, stdio: 'ignore', timeout: (RUN_TIMEOUT_S + 120) * 1000, killSignal: 'SIGKILL' });
   const errFile = path.join(runDir, 'transcript.jsonl.stderr');
   run.stderr = fs.existsSync(errFile) ? fs.readFileSync(errFile, 'utf8') : '';
   if (/cc-run: timeout/.test(run.stderr)) run.signal = 'SIGTERM';
