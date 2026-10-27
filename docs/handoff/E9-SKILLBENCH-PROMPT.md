@@ -36,11 +36,10 @@ The bench is done when:
    | `tests/models/cc-run.sh` | Claude Code adapter: isolated config, 4 fixed tools, process-session kill, OpenRouter or subscription auth |
    | `tests/models/judge.mjs` | automatic verdict: `pass` / `refused-safely` / `fail`, incidents, rule breaks |
    | `tests/models/prompt.mjs` | the scenario prompts S1–S9 |
-   | `tests/models/gen-synth-vault.mjs` | synthetic vault (~1,800 notes plus fixture) and its `.e8-synthetic` marker and answer key |
    | `tests/models/summary.mjs` | per model × side table and scenario grid |
    | `tests/showcase/setup.sh`, `check.mjs`, `transcript.mjs`, `obsidian` (logging wrapper), `install.sh` | pre-state, vault-state checks, transcript metrics, CLI call log |
    | `tests/scenarios/reset.sh` | reset to the baseline commit and wait for the index |
-   | `tests/ground-truth/gt.mjs`, `tests/fixtures/gen-fixture.mjs` | file-only ground truth, hard-case fixture |
+   | `obsidian-test-fixture` (`tests/package.json`, path in `tests/otf.mjs`) | `otf generate --preset personal-vault` (synthetic vault, ~1,800 notes plus fixture, `.e8-synthetic` marker and answer key), `--preset hard-cases`; `otf truth` file-only ground truth. Use the package in `bench/` too; do not copy its code |
    | `tests/compat/` | the CLI probe suite with scored JSON history and `HISTORY.md` — **the model to copy** for history and scoring |
 
 5. `tests/compat/README.md` and `tests/compat/TROUBLESHOOTING.md`: how the user wants a re-runnable kit to look.
@@ -48,7 +47,7 @@ The bench is done when:
 ## 3. Hard constraints
 
 1. **Do not disturb the running E8 matrix.**
-   - Until `pgrep -af "run.mjs matrix"` prints nothing, do not edit or move anything under `tests/models/`, `tests/showcase/`, `tests/scenarios/`, `tests/ground-truth/` or `tests/fixtures/`. The runner re-reads those scripts on every run.
+   - Until `pgrep -af "run.mjs matrix"` prints nothing, do not edit or move anything under `tests/models/`, `tests/showcase/`, or `tests/scenarios/`. The runner re-reads those scripts on every run.
    - Until then, do not run anything against the vault `vault-synth` (`C:\obsidian-agentkit-test\vault-synth`), and do not touch `~/.local/state/obs-e8/` or `~/.local/state/obs-showcase/`.
    - Build the bench in a new directory, for example `bench/`, by copying the pieces it needs.
    - Live runs need their own synthetic vault, for example `vault-bench`, which the user must open in Obsidian. Ask for this once, up front.

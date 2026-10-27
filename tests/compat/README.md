@@ -23,12 +23,12 @@ The skill's trap list and guards are true for the CLI version in `SKILL.md` `met
 
 ## Setup (once)
 1. Make a **copy** of a vault (never the real one), open it in Obsidian as its own vault, then `git init` and commit. Git in the copy should track only text: `*.md`, `*.canvas`, `*.base`, `.obsidian/*.json`.
-2. Generate the fixture inside it and commit: `node tests/fixtures/gen-fixture.mjs <copy>/_agentkit-lab && git -C <copy> add -A && git -C <copy> commit -m fixture`.
+2. Generate the fixture inside it and commit: `node tests/node_modules/.bin/otf generate --preset hard-cases --out <copy>/_agentkit-lab && git -C <copy> add -A && git -C <copy> commit -m fixture`.
 3. In the copy, keep Settings > Files and links > "Automatically update internal links" **on**. The probes switch it off and back on themselves.
 
 ## Run
 ```
-cd tests && npm install            # yaml parser for ground truth
+cd tests && npm ci                 # obsidian-test-fixture: fixture generator and ground truth
 node tests/compat/probes.mjs --vault <copy name> --dir <copy local path> --env-label wsl
 ```
 - `--no-write`: run only the read-only probes (safe and fast, about 1 min).

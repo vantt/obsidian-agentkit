@@ -7,11 +7,12 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { OTF } from './otf.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const profile = path.join(here, '..', 'skills', 'obsidian-connect', 'scripts', 'profile.mjs');
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'oc-fixture-'));
-spawnSync(process.execPath, [path.join(here, 'fixtures', 'gen-fixture.mjs'), dir, '--standalone'], { encoding: 'utf8' });
+spawnSync(process.execPath, [OTF, 'generate', '--preset', 'hard-cases', '--out', dir, '--standalone'], { encoding: 'utf8' });
 const run = (vault) => spawnSync(process.execPath, [profile, vault], { encoding: 'utf8' });
 
 test('fixture profile reports the configured values with their source file', () => {

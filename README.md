@@ -12,7 +12,7 @@ Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately
   - `--preflight` runs in one call.
   - Guarded `--rename`/`--move` check links before and after; `--trash` and `--create` are guarded too.
 - `scripts/profile.mjs`: a vault profile of about 25 lines, built from `.obsidian/*.json` (link style, folders, daily notes, templates, property types).
-- `tests/`: bridge and profile unit tests (`node --test tests/*.test.mjs`), a size budget check, the synthetic fixture, file-only ground truth, scenario cases, and a scored [compatibility probe suite](tests/compat/README.md) for re-testing new CLI versions.
+- `tests/`: bridge and profile unit tests (`node --test tests/*.test.mjs`), a size budget check, the synthetic fixture and file-only ground truth (from [`obsidian-test-fixture`](https://github.com/vantt/obsidian-test-fixture); `cd tests && npm ci`), scenario cases, and a scored [compatibility probe suite](tests/compat/README.md) for re-testing new CLI versions.
 
 ## Install
 1. Copy or symlink `skills/obsidian-connect/` into your agent's skills folder (for Claude Code: `~/.claude/skills/obsidian-connect/`).

@@ -54,7 +54,7 @@ async function keyUsage() {
 
 // Never send a real vault to a third-party model: the target must be the generated one.
 function guard() {
-  if (!fs.existsSync(path.join(DIR, '.e8-synthetic'))) die(`${DIR} has no .e8-synthetic marker; generate it with gen-synth-vault.mjs`, 7);
+  if (!fs.existsSync(path.join(DIR, '.e8-synthetic'))) die(`${DIR} has no .e8-synthetic marker; generate it with: otf generate --preset personal-vault --out <dir> --git`, 7);
   const p = real('vault', 'info=path');
   if (!p) die(`Obsidian does not answer for vault "${VAULT}" (is it open in Obsidian?)`, 2);
   const wsl = sh('wslpath', ['-u', p.replace(/\r/g, '')]).stdout.trim();

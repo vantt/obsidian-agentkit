@@ -9,6 +9,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { OTF } from '../otf.mjs';
 
 const [S, side, flag] = process.argv.slice(2);
 const repo = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
@@ -20,7 +21,7 @@ const cli = fs.readFileSync(path.join(os.homedir(), '.local/state/obs-showcase/r
 const sh = (cmd, args, opt = {}) => spawnSync(cmd, args, { encoding: 'utf8', maxBuffer: 256 << 20, ...opt });
 const real = (...a) => sh(cli, [`vault=${VAULT}`, ...a], { cwd: '/mnt/c', timeout: 15000 }).stdout?.trim() ?? '';
 const git = (...a) => sh('git', ['-C', DIR, ...a]).stdout;
-const gt = (...a) => JSON.parse(sh('node', [path.join(repo, 'tests/ground-truth/gt.mjs'), a[0], DIR, ...a.slice(1)]).stdout);
+const gt = (...a) => JSON.parse(sh(process.execPath, [OTF, 'truth', a[0], DIR, ...a.slice(1)]).stdout);
 const base = JSON.parse(fs.readFileSync(path.join(OUT, 'baseline.json'), 'utf8'));
 const exists = (p) => fs.existsSync(path.join(DIR, p));
 const readV = (p) => fs.readFileSync(path.join(DIR, p), 'utf8');

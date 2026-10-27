@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 20 / 63 việc xong (31%)**
+**Toàn project: 22 / 63 việc xong (34%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -19,7 +19,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 4/11 ███░░░░░░░ 36% | — | E8.5: phân loại lỗi, sửa bộ chấm. Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
-| E10. Tách bộ tạo vault test thành repo `vantt/obsidian-test-fixture` | [E10-test-fixture-repo.md](plans/E10-test-fixture-repo.md) | ⬜ Todo | P2 | 0/2 ░░░░░░░░░░ 0% | E10.2 chờ E10.1 | Giao [prompt](handoff/E10-TEST-FIXTURE-PROMPT.md) cho agent khác (E10.1) |
+| E10. Tách bộ tạo vault test thành repo `vantt/obsidian-test-fixture` | [E10-test-fixture-repo.md](plans/E10-test-fixture-repo.md) | ✅ Done | — | 2/2 ██████████ 100% | — | — (test dùng `otf` từ `obsidian-test-fixture#v0.2.0`) |
 
 Ký hiệu trạng thái:
 - ✅ Done: xong, có bằng chứng.
@@ -116,8 +116,8 @@ Các việc này agent không tự làm được:
 | E9.4 | Lịch sử, `compare`, báo cáo, nhập dữ liệu E8 | E9 | P2 | ⬜ | Agent | — |
 | E9.5 | Một đợt chạy thật: 2 agent × 3 model | E9 | P2 | ⬜ | Agent + user | Sau khi ma trận E8 xong |
 | E9.6 | Tài liệu bench | E9 | P2 | ⬜ | Agent | — |
-| E10.1 | Tạo repo `vantt/obsidian-test-fixture` (CLI `otf`, output giống hệt script cũ, `graph.json`) | E10 | P2 | ⬜ | Agent + user | Agent khác làm theo prompt; user chọn public/private, license |
-| E10.2 | Chuyển repo này sang dùng package (npm git dependency ghim tag), xoá 3 script cũ | E10 | P2 | ⬜ | Agent | Sau E10.1 (E8.4 đã xong) |
+| E10.1 | Tạo repo `vantt/obsidian-test-fixture` (CLI `otf`, output giống hệt script cũ, `graph.json`) | E10 | P2 | ✅ | Agent + user | Repo public, MIT; tag `v0.1.0` → `v0.2.0` |
+| E10.2 | Chuyển repo này sang dùng package (npm git dependency ghim tag), xoá 3 script cũ | E10 | P2 | ✅ | Agent | Ghim `v0.2.0`; output và `truth` giống hệt script cũ; 3 script cũ đã xoá |
 
 ## Cách cập nhật board
 

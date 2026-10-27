@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "yaml": "^2.9.1"
+    "obsidian-test-fixture": "github:vantt/obsidian-test-fixture#v0.2.0"
   }
 }

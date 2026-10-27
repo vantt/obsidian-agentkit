@@ -234,3 +234,40 @@ Below the floor: `gpt-oss-20b` and `gemini-2.5-flash-lite`.
 **Known judge leniency, carried to E8.5:** a model that does nothing in S2 or S5 is scored `refused-safely`.
 
 **Privacy:** the CSV generalises Obsidian's numbered default note names to `Untitled N`, because the privacy scan's name list contains them. `privacy-scan.mjs docs/models` is clean.
+
+## E10.2: tests use obsidian-test-fixture (2026-10-27)
+
+**Change**
+
+- `tests/package.json` pins `"obsidian-test-fixture": "github:vantt/obsidian-test-fixture#v0.2.0"`. The `yaml` dev dependency is gone, because `otf truth yaml` vendors its own parser.
+- `tests/otf.mjs` exports the path of the `otf` CLI.
+- The callers now spawn `otf`:
+  - `tests/showcase/check.mjs` and `tests/compat/probes.mjs` call `otf truth`;
+  - `tests/profile.test.mjs` calls `otf generate --preset hard-cases --standalone`.
+- Removed: `tests/fixtures/gen-fixture.mjs`, `tests/ground-truth/gt.mjs`, `tests/models/gen-synth-vault.mjs`.
+
+**Why v0.2.0 and not v0.1.0:**
+
+- v0.2.0 only adds features: the `kg-solo` preset, `otf kg`, and `key` on frontmatter edges in `graph`.
+- Its CHANGELOG and parity tests state that the `hard-cases` and `personal-vault` trees are unchanged.
+- v0.1.1 changed only the wording of YAML parse errors.
+
+**Evidence, checked before the old scripts were deleted:**
+
+- **Trees:** 4 trees are byte-identical, old script vs `otf generate`, with no differing file under `diff -r`:
+  - hard-cases;
+  - hard-cases `--standalone`;
+  - hard-cases `--bulk 200`;
+  - personal-vault seed 7. The git file list is also the same, apart from the new `.fixture-manifest.json`.
+- **Ground truth:** `gt.mjs` vs `otf truth` gave 34 identical outputs. The comparison covered `tasks`, `unresolved`, `backlinks` on `Target Note.md`, `tags` (proj, project/active, projects), `yaml` and `crlf` on 4 vaults.
+- **Live vault:** the root commit of `vault-synth` (`c24ad10`) equals the new personal-vault output. `otf truth` on `vault-synth` gives 9 backlinks to `Target Note.md`, the calibration value.
+- **Offline tests:** `node --test tests/*.test.mjs` passes 26/26, and `size-check` passes.
+- **Not run:** live probes and a live E8 run. Obsidian was not running.
+
+**Found while checking: agents read the answer key.** This is for E8.5 and is not fixed here.
+
+- **Repo scripts:** in 3 round-0 runs, all Gemini 3.5 lite without the skill (S3-without-1, S3-without-3, S7-without-2), the agent left the vault and read the generator and `gt.mjs` in this repo. In S3-without-3 it also ran `gt.mjs`.
+- **Marker file:** 53 transcripts show the vault-root marker `.e8-synthetic` being read. That file holds the S6 answer key.
+- **Fix for the next round:**
+  - keep the answer key outside the vault, and leave only a flag in the marker;
+  - run agents with no read access to this repo, for example in a container or as another user.

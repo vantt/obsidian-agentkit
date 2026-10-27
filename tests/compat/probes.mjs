@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { OTF } from '../otf.mjs';
 import { detectEnv, findCli, makeRunner, TESTED_CLI } from '../../skills/obsidian-connect/scripts/obs.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -33,7 +34,7 @@ const num = (s) => Number(String(s).trim().split(/\s+/)[0]);
 const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 const git = (...a) => spawnSync('git', ['-C', dir, ...a], { encoding: 'utf8' });
 const evalJs = (code) => out(['eval', `code=${code}`]).replace(/^=> /, '');
-const gt = (...a) => JSON.parse(spawnSync(process.execPath, [path.join(here, '..', 'ground-truth', 'gt.mjs'), ...a], { encoding: 'utf8' }).stdout);
+const gt = (...a) => JSON.parse(spawnSync(process.execPath, [OTF, 'truth', ...a], { encoding: 'utf8' }).stdout);
 
 // Safety: refuse unless the CLI's vault path is the --dir we were given and it is a git repo.
 const winPath = out(['vault', 'info=path']);
