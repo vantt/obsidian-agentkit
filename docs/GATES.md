@@ -351,3 +351,44 @@ Done by a sub-agent; reviewed and committed by the main session.
 4. `node node_modules/obsidian-test-fixture/bin/otf.mjs generate --preset personal-vault --git --out /mnt/c/obsidian-agentkit-test/vault-synth --answers-out ~/.local/state/obs-e8/answer-key.json`
 5. `mv ~/.local/state/obs-e8/calibration.json ~/.local/state/obs-e8/calibration.r0.json`. The old calibration points at a base commit that does not exist in the new repo.
 6. Open the folder as a vault in Obsidian, keeping the name `vault-synth`. The agent then runs `run.mjs preflight` and `run.mjs calibrate`.
+
+## Security incident: OpenRouter key exposed to model providers (2026-10-27)
+
+**What happened**
+
+- `cc-run.sh` exported the OpenRouter key as `ANTHROPIC_API_KEY` into the environment of `claude -p`.
+- Claude Code passes `ANTHROPIC_API_KEY` on to its Bash tool. It drops `CLAUDE_CODE_OAUTH_TOKEN`, which is why that token did not leak.
+- In round 0, four S7 runs ran `printenv | sort` while looking for Obsidian: three by `gemini-3.5-flash-lite` and one by `gpt-6-luna`. The live key was therefore in the tool output that was sent to those providers.
+- The leaked string was compared against the current key in-process and was never printed.
+- No secret reached git: `tests/out/` is ignored.
+- During the fix, one test request through the new proxy returned 200, not the expected 402. **The key still works** and must be revoked.
+
+**Fix:** `tests/models/cred-proxy.mjs`, used by `cc-run.sh`.
+
+- **Proxy outside the sandbox:** a per-session proxy runs outside the sandbox on 127.0.0.1.
+  - It is the only process that reads `~/.config/obsidian-agentkit/*.env`.
+  - It injects the real credential: `x-api-key` for OpenRouter, and `Authorization: Bearer` with the OAuth token for the Claude subscription.
+  - `claude` gets only a random placeholder for each session.
+- **What the proxy accepts:**
+  - only `POST /v1/messages` and `/v1/messages/count_tokens`;
+  - on OpenRouter runs, only the model under test.
+  - Everything else gets 403.
+- **Agent environment:** built with `env -i` and an explicit allow-list (`--clearenv` inside bwrap). No `E8_*`, no `OPENROUTER_*`, no account or email variables, no secrets.
+- **`sandbox-check.sh` checks:**
+  - no real secret in any process environment, the transcript, stderr or the proxy log (compared by hash, printed only as yes/no);
+  - no credential-like variable that holds anything but a placeholder;
+  - the proxy refuses 7 non-model paths.
+  - It also uses a dummy CLI log through `E8_CLI_LOG`, and its probe text uses placeholders instead of expanded paths.
+- **Verification:** 2 Haiku runs passed every probe. 64/64 offline tests pass.
+- **Not yet verified:**
+  - a full OpenRouter agent session through the proxy (only curl was tested);
+  - a live Obsidian run inside the sandbox.
+
+**Limits**
+
+- The agent can still read its own placeholder and call `/v1/messages` through the proxy. It cannot get the real key.
+- On Claude runs no model is pinned.
+- `E8_SANDBOX=0` keeps secrets out of the environment, but it is not a security boundary.
+- The `obsidian eval` route stays open (see E8.12).
+
+**User action:** revoke the E8 key in OpenRouter. Put any new key only in `~/.config/obsidian-agentkit/openrouter.env`.
