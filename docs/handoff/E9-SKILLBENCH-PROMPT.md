@@ -46,14 +46,19 @@ The bench is done when:
 
 ## 3. Hard constraints
 
-1. **Do not disturb the running E8 matrix.**
-   - Until `pgrep -af "run.mjs matrix"` prints nothing, do not edit or move anything under `tests/models/`, `tests/showcase/`, or `tests/scenarios/`. The runner re-reads those scripts on every run.
-   - Until then, do not run anything against the vault `vault-synth` (`C:\obsidian-agentkit-test\vault-synth`), and do not touch `~/.local/state/obs-e8/` or `~/.local/state/obs-showcase/`.
+1. **Do not disturb E8 runs.**
+   - The E8 round-0 matrix stopped on 2026-10-27, but E8 rounds may run again. Whenever `pgrep -af "run.mjs"` prints anything, do not edit or move anything under `tests/models/`, `tests/showcase/`, or `tests/scenarios/`, because the runner re-reads those scripts on every run.
+   - Also, while an E8 run is active, do not run anything against the vault `vault-synth` (`C:\obsidian-agentkit-test\vault-synth`), and do not touch `~/.local/state/obs-e8/` or `~/.local/state/obs-showcase/`.
    - Build the bench in a new directory, for example `bench/`, by copying the pieces it needs.
    - Live runs need their own synthetic vault, for example `vault-bench`, which the user must open in Obsidian. Ask for this once, up front.
 2. **Never send real vault content to a model.**
    - Live runs only on a generated vault that carries the marker file.
    - The guard checks the marker, and that `vault info=path` resolves to that vault's folder. Keep it.
+   - **Keep the answer key away from the agent** (E8 lesson, board item E8.12):
+     - in E8 round 0, agents read the S6 answers in the vault-root marker, and some left the vault to read this repo's generator and ground-truth scripts;
+     - put answer keys outside the vault;
+     - run agents without read access to this repo or the bench state;
+     - make the judge flag any read outside the vault.
    - `vault-copy` holds the user's real notes. It is off-limits to third-party models.
 3. **Secrets:**
    - They live in `~/.config/obsidian-agentkit/*.env` (`openrouter.env`, `claude.env`), with mode 600.

@@ -1,6 +1,6 @@
 # E10. Tách bộ tạo vault test thành repo riêng `vantt/obsidian-test-fixture`
 
-**Trạng thái:** Done, 2/2 việc · **Board:** [BACKLOG.md](../BACKLOG.md) · **Prompt bàn giao:** [E10-TEST-FIXTURE-PROMPT.md](../handoff/E10-TEST-FIXTURE-PROMPT.md)
+**Trạng thái:** Chờ user, 2/3 việc · **Board:** [BACKLOG.md](../BACKLOG.md) · **Prompt bàn giao:** [E10-TEST-FIXTURE-PROMPT.md](../handoff/E10-TEST-FIXTURE-PROMPT.md)
 
 ## Mục tiêu
 Ba script đang nằm trong repo này dùng được cho cả các project khác, ví dụ test knowledge graph hoặc RAG trên note:
@@ -16,6 +16,7 @@ Tách chúng thành repo `vantt/obsidian-test-fixture`, có CLI `otf`, sinh vaul
 |---|---|---|---|---|
 | E10.1 | Tạo repo `vantt/obsidian-test-fixture` theo prompt bàn giao (agent khác làm). Không sửa repo này | Tag `v0.1.0`; output giống hệt (cùng mã băm) với script hiện tại; CI xanh trên ubuntu và windows | ✅ | Repo public, MIT; tag `v0.1.0`, `v0.1.1`, `v0.2.0` (thêm preset `kg-solo`, `otf kg`) |
 | E10.2 | Chuyển repo này sang dùng package: `tests/package.json` thêm `"obsidian-test-fixture": "github:vantt/obsidian-test-fixture#v0.2.0"`. Thay các lời gọi `gen-fixture.mjs`, `gen-synth-vault.mjs`, `gt.mjs` (trong `profile.test.mjs`, `tests/compat`, `tests/showcase/check.mjs`, `tests/models/`, `reset.sh`) bằng `otf generate` / `otf truth`, rồi xoá ba script cũ. Cập nhật README của `tests/compat` và prompt E9 | Toàn bộ test offline pass; `otf verify` khớp với `vault-synth`; cùng seed thì ra cùng mã băm như trước; probe compat chạy được | ✅ | Ghim `v0.2.0`. 4 bộ vault (hard-cases thường, `--standalone`, `--bulk 200`, personal-vault seed 7) giống hệt script cũ; 34 phép so `gt.mjs` và `otf truth` không lệch; commit gốc của `vault-synth` trùng output mới; 26/26 test offline, size-check pass ([GATES.md](../GATES.md) mục E10.2). Probe compat chưa chạy thật (Obsidian đang tắt) |
+| E10.3 | **Kiểm tra với Obsidian thật sau khi chuyển sang `otf`.** Lúc làm E10.2 Obsidian đang tắt, nên chỉ test offline. Chạy: `run.mjs preflight`, `run.mjs calibrate`, `run.mjs one haiku S1 with 1 --round 99`, `probes.mjs --no-write` trên `vault-synth` | Cả bốn lệnh chạy được; calibrate ra backlinks 9; lượt S1 pass (Haiku chạy bằng gói, không tốn OpenRouter) | ⬜ | Cần user mở `vault-synth` trong Obsidian |
 
 ## Cách tích hợp: npm git dependency, không dùng git submodule
 
