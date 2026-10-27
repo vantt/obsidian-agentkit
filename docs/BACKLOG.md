@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
-| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 5/13 ███░░░░░░░ 38% | — | E8.6 và E8.7 (theo [FAILURES.md](models/FAILURES.md)); E8.12 chờ user sinh lại `vault-synth`; vòng tối ưu chỉ chạy Claude. Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 5/13 ███░░░░░░░ 38% | — | Skill v2 xong (chờ chạy thật); user sinh lại `vault-synth`, rồi probe và vòng 1 (chỉ Claude). Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
 | E10. Tách bộ tạo vault test thành repo `vantt/obsidian-test-fixture` | [E10-test-fixture-repo.md](plans/E10-test-fixture-repo.md) | ⏸ Chờ | P2 | 2/3 ██████░░░░ 66% | User mở `vault-synth` | E10.3: kiểm tra với Obsidian thật (test đã dùng `otf` từ `obsidian-test-fixture#v0.2.0`) |
 
@@ -37,7 +37,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E8.6, E8.7 | Lệnh gộp trong bridge; viết lại SKILL.md và output bridge | Theo thứ tự sửa trong [FAILURES.md](models/FAILURES.md) |
+| E8.6, E8.7 | Skill v2 (bridge mới, SKILL.md mới) | Code xong; chờ probe và vòng 1 khi user mở lại `vault-synth` mới |
 
 ## Cần user
 
@@ -106,8 +106,8 @@ Các việc này agent không tự làm được:
 | E8.3 | Vault tổng hợp, ground truth, guard chặn vault thật | E8 | P2 | ✅ | Agent + user | `gen-synth-vault.mjs` (nay là `otf generate --preset personal-vault`); `vault-synth` mở trong Obsidian, calibrate khớp ground truth |
 | E8.4 | Vòng 0: đo skill v1 trên 10 model (5 family); có/không skill | E8 | P2 | ✅ | Agent | 434/540 ô, dừng theo quyết định user; khuyến nghị model rẻ nhất từng family ở [ROUND-0.md](models/ROUND-0.md) |
 | E8.5 | Phân loại lỗi, xếp hạng việc cần sửa; sửa bộ chấm ("không làm gì" = từ chối, `eval` vô hại vs có hại, nghi chấm nhầm `sed -i` ở S3) rồi chấm lại vòng 0 | E8 | P2 | ✅ | Agent | [FAILURES.md](models/FAILURES.md); 53/434 lượt đổi kết quả; khuyến nghị giữ nguyên ([GATES.md](GATES.md) mục E8.5) |
-| E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ⬜ | Agent | — |
-| E8.7 | Viết lại SKILL.md và output bridge cho model rẻ | E8 | P2 | ⬜ | Agent | — |
+| E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ⏸ | Agent | Code xong, 64/64 test; chờ probe và chạy thật |
+| E8.7 | Viết lại SKILL.md và output bridge cho model rẻ | E8 | P2 | ⏸ | Agent | SKILL.md v2 ~1.200 token; chờ chạy thật |
 | E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ⬜ | Agent | Chỉ Haiku và Sonnet bằng gói Claude (user 2026-10-27); sau E8.12 |
 | E8.9 | Báo cáo chứng minh H1–H4 và biểu đồ | E8 | P2 | ⬜ | Agent | — |
 | E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | P2 | ⬜ | Agent | — |

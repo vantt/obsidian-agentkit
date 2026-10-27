@@ -24,5 +24,5 @@ Adapted in our own words from kepano/obsidian-skills (MIT, commit 3ccff5338ea7: 
 
 ## Web clipping
 1. Fetch clean Markdown. If the `defuddle` CLI is installed (`defuddle parse <url> --md`), use it: it strips navigation and ads and costs fewer tokens. Otherwise use your web fetch tool and keep only the article body. Do not install it globally without asking.
-2. Create the note with `obs --create path=<clip folder>/<Title>.md content='…'`. Frontmatter: `source: <url>`, `clipped: <YYYY-MM-DD>`, `author`/`title` when known, and `tags` following the profile. Plain text values only. Add lists by file edit afterwards.
+2. Create the note with `obs --create path=<clip folder>/<Title>.md content='…'`. Frontmatter: `source: <url>`, `clipped: <YYYY-MM-DD>`, `author`/`title` when known, and `tags` following the profile. Plain text values only. Add list values afterwards with `obs --prop-set path=<p> name=tags add=<tag>`.
 3. Keep quotes attributed, and link back to the source. Read the note back once.

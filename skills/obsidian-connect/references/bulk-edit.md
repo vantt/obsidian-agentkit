@@ -13,19 +13,20 @@ Use this for any change that touches more than 5 files, any rename, move or tras
 6. **Report:** files changed, files skipped (and why), verification numbers, and where the snapshot is.
 
 ## Tag rename `#old` → `#new`
-Obsidian has no CLI command for this. Tag Wrangler works only inside the app. Use files, guided by the index:
+Obsidian has no CLI command for this (Tag Wrangler works only inside the app). The bridge does the whole protocol:
 
-1. `obs tag name=old verbose` lists the files that have `#old` or `#old/…`, with a count. Decide with the user whether nested `#old/sub` becomes `#new/sub`.
-2. For each listed file, find the exact occurrences:
-   - **Body:** `#old` followed by end of line, whitespace, punctuation or `/` (when nested tags are in scope). Skip fenced code blocks and inline code. **Do not touch** `#older`, `#old-x` or `#olds`; the regex needs a boundary after `old`.
-   - **Frontmatter `tags:`:** inline `tags: [old, x]` or block items `- old`. Values have no `#`. Keep the existing list style.
-3. Dry-run, confirm, snapshot, apply (protocol above).
-4. Verify: `obs tag name=new total` must equal the number of occurrences you changed, and a file grep for the exact `#old` (boundary after it) outside code, plus frontmatter `old` items, must find nothing. `obs tag name=old` also counts kept nested tags (`#old/sub`), so do not expect 0 from it. A tag that does not exist yet returns `Error: Tag … not found` (exit 3), not an empty result.
+1. `obs --tag-rename from=old to=new` is the dry run. It prints `NOT DONE: dry run` and every `path:line  old -> new`. Nothing is written.
+   - It changes `#old` in the body (not in code, not `#older`, `#old-x` or `#olds`) and `old` in frontmatter `tags:` lists, keeping the list style. Case does not matter, as in Obsidian.
+   - Nested `#old/sub` stays, and the output counts them. Ask the user; `nested=yes` renames them to `#new/sub`.
+2. Show the list to the user and wait for a yes.
+3. The same command with `apply` snapshots the files, edits them line by line, checks that no `#old` is left, and prints `OK:` with the snapshot folder and any new sync conflict copies.
+
+`obs tag name=old` also counts kept nested tags, so do not expect 0 from it. A tag that does not exist returns `Error: Tag … not found` (exit 3), not an empty result.
 
 ## Multi-file property change
 - List the files: `obs search query='"key:"' path=<folder> format=json` is approximate. Better is `obs properties name=<key> total` for the count, then `grep -rl --include='*.md' '^<key>:' <folder>` for the paths (frontmatter only; check each hit is inside the leading `---` block).
-- Edit the frontmatter line in each file. Keep the type shown in the profile `property_types`. Never `property:set type=`.
-- Read back a sample with `obs properties path=<p> format=json`.
+- Dry-run and confirm, then run `obs --prop-set path=<p> name=<key> value=<v>` (or `add=`/`remove=`) once per file. It keeps the type from `types.json` and reads its own result back; stop at the first `NOT DONE`. Its snapshot is your job: step 3 above.
+- Never `property:set type=`: it rewrites `types.json` for the whole vault.
 
 ## Rename or move many notes
-One `obs --rename`/`--move` per note, after the protocol's dry-run and confirmation. Stop at the first exit `7` and report it. Do not continue with the remaining files.
+One `obs --rename`/`--move` per note, after the protocol's dry-run and confirmation. Each one snapshots the note and the notes linking to it, and checks the link counts. Stop at the first `NOT DONE` and report it. Do not continue with the remaining files.

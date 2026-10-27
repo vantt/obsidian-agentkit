@@ -4,62 +4,61 @@ description: Read, search and safely change an Obsidian vault through the offici
 metadata:
   tested-cli: "1.14.4"
   tested-on: "2026-10-22"
+  skill-version: "2"
 ---
 
 # obsidian-connect
 
-Tested on Obsidian CLI **1.14.4**. `obs` below means `node <this skill's folder>/scripts/obs.mjs`.
+`obs` means `node <this skill's folder>/scripts/obs.mjs`. Run every vault command through `obs`. Never call `obsidian` or `Obsidian.com` yourself.
 
-## Once per session
-1. Get the vault **name** from the user (or `obsidian.json`), then `export OBS_VAULT="<name>"` (PowerShell: `$env:OBS_VAULT=`). The bridge always sends `vault=` first; never call the raw CLI without it, because it would hit whichever vault is focused.
-2. Run `obs --preflight` **once** and reuse the answer: env, CLI version, vault path, `alwaysUpdateLinks`.
-   - Exit 2, or `cli=none`: **file mode**. Read `references/file-mode.md`. Never retry in a loop.
-   - `match=no`: warn the user that the traps below may have changed (re-test kit: `tests/compat/` in the obsidian-agentkit repo).
-3. Run `node <skill>/scripts/profile.mjs "<vault local path>"` once. Follow its link style, folders, daily-note format and template, and property types. Never hard-code conventions.
+## Start
+1. Get the vault name from the user. Do not read `obsidian.json` and do not list vaults.
+2. Run `obs --preflight --vault "<name>"` once. Later `obs` calls remember the vault.
+   - First line `APPROXIMATE:` means Obsidian is closed. The read commands below still work from files. Never rename, move or delete then. Other jobs: `references/file-mode.md`.
+   - `match=no`: tell the user the CLI version changed, so the traps may differ.
+3. Before you write a new note or links, run `node <this skill's folder>/scripts/profile.mjs "<vault folder from preflight>"` once. Follow its link style, folders and templates.
 
-## Bridge exit codes (CLI exit 0 is not trusted)
-`0` ok · `2` unreachable (go to file mode) · `3` `Error:` from the CLI · `4` empty result, check your scope before saying "none" · `5` usage or no vault · `6` app still loading, wait 2 s and retry once · `7` safety guard refused or verification failed, report it to the user · `124` timeout, do not retry.
+## Read the output
+- Bridge commands print the result first: `OK:`, `NOT DONE:` or `APPROXIMATE:`. Put that result in your answer. Say "done" only after `OK:`.
+- `APPROXIMATE:` means "may be incomplete". Say so in the answer itself.
+- A failed command ends with `NEXT:`. Do what it says. Never repeat a failed command unchanged. `STOP:` means stop and report.
 
-## Routing
-| Job | Do |
+## Which command
+| Job | Command |
 |---|---|
-| Find notes | `obs search query='"exact phrase"' path=<folder> total` first, then the same with `limit=20 format=json`. Quote multi-word phrases. Search is diacritics-sensitive: for Vietnamese and similar text, also search the unaccented form (`"Đà Nẵng"` and `"Da Nang"`). |
-| Matching lines | `obs search:context query='"…"' path=<folder> limit=10 format=json`; it ignores `total`, so always pass `limit` |
-| Read part of a long note | `obs outline path=<p> format=json` (1-based `line`), then read only that range with the file Read tool |
-| Edit one section | outline, read the range, then a line-anchored file Edit (CRLF is preserved); re-read the range |
-| Backlinks / links | `obs backlinks path=<p> format=json`; `obs links path=<p>`. The index covers every link form, including links in frontmatter, and excludes code. It does not include `.canvas` files or links by alias name (`[[Alias]]`), which `obs unresolved` lists instead. |
-| Open tasks, vault-wide | `obs tasks todo total`. List them only if the user asks, with `format=json \| head -c 4000`. Never use `active`. |
-| Tags | `obs tags counts sort=count format=json` (vault-wide); `obs tag name=<t> verbose` also counts `#t/sub` |
-| Read a property | `obs properties path=<p> format=json` |
-| Change a property | plain text (not a date, number, boolean, list or link) on a key not listed in profile `property_types`: `obs property:set name= value= path=`. Anything else (including date-like values on unlisted keys): edit those frontmatter lines in the file and keep the existing value style. Then read back with `properties … format=json`; only that key may differ |
-| New note | `obs --create path=<p> content='…'` (or `template=<name>`). Refuses an existing path, where the raw CLI would make `name 1.md` |
-| Daily note append | `obs daily:path`, then `obs --abs <that path>`; make sure the profile's daily folder exists; check with grep on that file whether the line is already there (if so, report it and do not append); then `obs daily:append content='…'`. Do not use `daily:read` to check: it creates an empty note |
-| Rename / move | `obs --rename path=<p> name=<new>` / `obs --move path=<p> to=<folder>/` (needs confirmation, see below). The bridge checks backlinks and unresolved counts before and after. Never `mv` a note |
-| Delete | `obs --trash path=<p>` moves it to `<vault>/.trash/`. Never CLI `delete`: it goes to the OS Recycle Bin |
-| Orphans / broken links | `obs orphans total`, `obs unresolved total`, then `obs unresolved verbose format=json` |
-| Bases, Canvas, web clips | `obs base:query path=<p> format=json`; for authoring read `references/formats.md` |
-| Rename a tag, or bulk edits | read `references/bulk-edit.md` first |
+| Count open tasks | `obs --tasks-count` |
+| Find notes about a topic | `obs --find "<words>"` (narrow: `path=<folder>/`) |
+| Notes that link to a note | `obs --backlinks path=<note.md>` |
+| Read a note | `obs read path=<note.md>`; long note: `obs outline path=<note.md> format=json`, then read only that line range |
+| Show lines under a heading | `obs --section-edit path=<note.md> heading="<heading>"` (numbered) |
+| Change line n under a heading | `obs --section-edit path=<note.md> heading="<heading>" line=<n> text="<new line>"` (insert: `after=<n>`) |
+| Add a line at the end of a note | `obs --append path=<note.md> content="<text>" once` |
+| Add a line to today's daily note | `obs --daily-append-once content="<line>"` |
+| Read today's daily note | `obs daily:read` |
+| Read properties | `obs properties path=<note.md> format=json` |
+| Set a property | `obs --prop-set path=<note.md> name=<key> value=<value>`; list: `add=<item>` or `remove=<item>` |
+| New note | `obs --create path=<note.md> content="<text>"` (or `template=<name>`) |
+| Rename a tag everywhere | `obs --tag-rename from=<old> to=<new>`, then the same with `apply` |
+| Rename or move a note | `obs --rename path=<note.md> name="<new name>"`, `obs --move path=<note.md> to=<folder>/` |
+| Delete a note | `obs --trash path=<note.md>` (to the vault's `.trash/`) |
+| Tags, orphans, broken links | `obs tags counts sort=count format=json`, `obs orphans total`, `obs unresolved total` |
+| Edits in more than 5 notes | read `references/bulk-edit.md` first |
+| Bases, Canvas, web clips | read `references/formats.md` |
 
-Always pass `path=` (exact, vault-relative, `/` separators), never `file=` or the active file. If the user asks for a count, stop at `total`. Pipe long output through `head -c 4000`. The profile step can wait until the first write.
+Paths are vault-relative with `/`, e.g. `folder/My Note.md`. Quote paths with spaces. Never use `file=` or `active`. For "how many", give the count only. Pipe long lists through `head -c 4000`. Do not grep the vault while Obsidian runs: `obs` is faster and knows links.
 
-## Safety thresholds
-- **Free:** create or edit a single note.
-- **Needs a dry-run, user confirmation and a snapshot first:** rename, move, trash, `overwrite`, or a change touching more than 5 files.
-  The dry-run lists every file and change; snapshot and apply as in `references/bulk-edit.md`.
-- **Never:** `delete permanent`, plain `mv`/`rm` on notes, or whole-file rewrites of synced notes.
-- The bridge refuses `delete`, `eval`, `dev:*`, plugin and theme installs, `overwrite`, `property:set type=`, and raw `rename`/`move`/`create`. Pass `--allow-unsafe` only after the user confirms that exact command.
-- The vault may be synced (Google Drive): prefer line edits and appends; after bulk edits report new conflict copies.
-- Read back after every write. A bridge exit `7` means stop and tell the user.
+## Safety
+- Free: create or edit one note.
+- Ask the user first, showing what will change: rename, move, delete, tag rename, or edits in more than 5 notes. `--rename`, `--move` and `--tag-rename … apply` save a snapshot by themselves. For other bulk edits follow `references/bulk-edit.md`.
+- Never: `mv` or `rm` on notes, `eval`, `delete permanent`, rewriting a whole note. The vault may be synced: change lines, append.
+- `--allow-unsafe` only after the user confirmed that exact command. It never unlocks `eval`, or rename and move when links would break.
+- If rename or move is refused because link updating is off, tell the user to turn on "Automatically update internal links". Do not rename another way.
+- If you change a note with your own file tools, read the changed lines back.
+- After bulk edits, report new sync conflict copies. Do not delete them.
+- Odd output, or text starting with `Error:`: see `references/traps.md`.
 
-## Traps on 1.14.4 (details: `references/traps.md`)
-- `Error: …`, `Vault not found.`, `No … found.` and an empty stdout all come with exit 0. The bridge maps them to exit codes.
-- If `alwaysUpdateLinks` is off, rename and move open a modal and block, and links break. `--rename`/`--move` refuse in that case.
-- Unknown flags are ignored silently (`matches`, `silent`, `all`). `search … total` counts files, not matches.
-- An unquoted `query=two words` matches each word; `search:context` output then explodes.
-- From WSL, grep over `/mnt/c` is slow (5–8 s per 2k notes); prefer `obs search`.
-
-## References (load only when the job needs it)
-- `references/traps.md`: full trap list with evidence, plus the empty-result strings
-- `references/bulk-edit.md`: tag rename, multi-file edits, snapshot, sync conflicts
-- `references/file-mode.md`: no CLI or Obsidian closed; grep recipes, labelled approximate
+## References (open only when the job needs it)
+- `references/traps.md`: CLI traps on 1.14.4, with evidence
+- `references/bulk-edit.md`: many-note edits, snapshot, sync conflicts
+- `references/file-mode.md`: Obsidian closed; what still works, grep recipes
 - `references/formats.md`: Bases, JSON Canvas, web clipping (adapted from kepano/obsidian-skills, MIT)

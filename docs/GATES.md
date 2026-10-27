@@ -392,3 +392,58 @@ Done by a sub-agent; reviewed and committed by the main session.
 - The `obsidian eval` route stays open (see E8.12).
 
 **User action:** revoke the E8 key in OpenRouter. Put any new key only in `~/.config/obsidian-agentkit/openrouter.env`.
+
+## E8.6 and E8.7: skill v2, bridge commands and output contract (2026-10-27)
+
+Done by a sub-agent, then reviewed and committed by the main session. Nothing has run against a live Obsidian yet.
+
+**Bridge (`scripts/obs.mjs`, plus the new `scripts/files.mjs`)**
+
+- New commands: `--find`, `--backlinks`, `--tasks-count`, `--section-edit`, `--prop-set`, `--append`, `--daily-append-once`, `--tag-rename` (dry run, then `apply`), and `--help`.
+- `--rename` and `--move` now save a snapshot.
+- `--preflight` remembers the vault for 12 h in the OS temp folder. An explicit `OBS_VAULT` or `--vault` always takes precedence.
+- When Obsidian is closed, preflight still finds the selected vault. It never lists other vaults or prints environment variables.
+
+**Output contract**
+
+- The first line is `OK:`, `NOT DONE:` or `APPROXIMATE:`.
+- Every non-zero exit ends with `NEXT:`.
+- The third identical failure in a row gives `NEXT: STOP:`.
+
+**Guards**
+
+- Raw writes and unknown commands exit 5, with a `NEXT:` line that names the right bridge command.
+- `eval`, `dev:*`, `devtools`, raw `rename` and raw `move` can never be unlocked.
+- `command id=` is denied unless unlocked.
+
+**SKILL.md**
+
+- 64 lines, about 1,200 tokens; v1 was 65 lines, about 1,630 tokens.
+- It has one routing table, and no longer has the exit-code table.
+- It tells the agent to ask the user for the vault name, and never to read `obsidian.json`.
+- Every v1 safety rule is kept, either in SKILL.md or in the bridge.
+- `size-check` limits are tightened to 70 lines and 1,630 tokens, so v2 can never grow past v1.
+
+**Tests:** 64/64 offline. Four v1 tests changed on purpose; the commit diff marks each with a comment.
+
+**Defaults kept, pending the user's decision**
+
+1. Raw writes exit 5 (use the right command); `eval` and dev exit 7 (refused).
+2. `--rename`, `--move` and `--trash` still act in one step, so asking first stays the model's job. Only `--tag-rename` has a built-in dry run.
+3. `--tag-rename` ignores case, as Obsidian does.
+4. The remembered vault lasts 12 h.
+5. `files.mjs` is a second script, so any install step that copies files by name must include it.
+
+**Live checks still needed** (E8.6 and E8.7 stay ⏸ until they pass):
+
+- **Probes:** all 29 `probes.mjs` probes on `vault-copy`.
+- **New probes for:**
+  - the `search:context` limit;
+  - the plain `backlinks` output format;
+  - the full `obsidian help` command list;
+  - whether Obsidian picks up external edits made by `--prop-set`, `--section-edit` and `--tag-rename`, with `types.json` unchanged;
+  - `daily:path` and `--daily-append-once` with a template;
+  - the snapshot folder not being indexed;
+  - the `obsidian.json` schema and the WSL path conversion;
+  - file-mode timing on about 1,800 notes.
+- **E8 round 1:** Haiku and Sonnet, with the skill, on the regenerated `vault-synth`, run in the sandbox.

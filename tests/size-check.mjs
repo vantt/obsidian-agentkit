@@ -12,8 +12,9 @@ const desc = (fm.match(/^description: (.*)$/m) || [])[1] || '';
 const tok = (s) => Math.round(s.length / 4);
 const rows = [
   ['description words', desc.split(/\s+/).filter(Boolean).length, 60],
-  ['SKILL.md body lines', body.trim().split('\n').length, 100],
-  ['SKILL.md tokens (est)', tok(skill), 1700],
+  // v2 (E8.7): SKILL.md may not grow past v1 (65 lines, ~1,630 tokens); limits tightened from 100 lines / 1,700 tokens.
+  ['SKILL.md body lines', body.trim().split('\n').length, 70],
+  ['SKILL.md tokens (est)', tok(skill), 1630],
 ];
 let biggestRef = 0;
 for (const f of fs.readdirSync(path.join(root, 'references'))) {

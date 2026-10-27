@@ -7,10 +7,10 @@ Evidence: `docs/FINDINGS.md` in the obsidian-connect repo (`F#`). Re-test on oth
 | stdout starts with | Means | Bridge exit |
 |---|---|---|
 | `Error: …` (not found, missing parameter, no active file, ENOENT, no template folder, folder not found, failed to open daily note) | failure | 3 |
-| `Error: Command "x" not found` | app still loading after start or reload, or no such command | 6 |
+| `Error: Command "x" not found` | app still loading after start or reload (a known command: 6), or no such command (5) | 6 or 5 |
 | `Vault not found.` | wrong `vault=` name | 3 |
 | `No matches found.` / `No backlinks found.` / `No links found.` / `No tags found.` / `No headings found.` / `No frontmatter found.` / `No aliases found.` | empty; check `path=` and spelling before saying "none" | 4 |
-| empty stdout from `daily:read` | today's note is empty, or did not exist and was **just created empty** | 4 |
+| empty stdout from `daily:read` | today's note is empty, or did not exist and was **just created empty**. `obs daily:read` checks first and creates nothing | 4 |
 | `The CLI is unable to find Obsidian…` (exit 1) | app closed; switch to file mode | 2 |
 
 ## Scope and output size
@@ -23,21 +23,22 @@ Evidence: `docs/FINDINGS.md` in the obsidian-connect repo (`F#`). Re-test on oth
 - `backlinks` and `unresolved` lag after a move into a new folder (up to about 10 s) and after `reload` (up to about 40 s). Poll; never trust a single reading.
 
 ## Writes
+- The bridge refuses raw `create`, `append`, `prepend`, `property:set`, `property:remove`, `daily:append`, `delete`, `rename` and `move` (exit 5). Its `NEXT:` names the bridge command, which reads its result back.
 - `create` on an existing path silently creates `name 1.md`. Use `obs --create`, which refuses.
 - `create` makes parent folders, opens no tab, and honours `path=` together with `template=`. `name=` without `path=` lands in the new-note location (profile).
 - `move` into a missing folder fails with `Error: ENOENT`. `obs --move` creates the folder first.
 - Rename and move rewrite markdown links into the vault's `newLinkFormat` (for example `../../A%20B.md` becomes `A%20B.md`). They still resolve, but the diff includes the restyle.
-- With `alwaysUpdateLinks` off, rename and move pop up an "Update links" modal and the CLI blocks. On timeout the file is **already renamed** and its links are broken. `obs --rename`/`--move` check the live setting first.
+- With `alwaysUpdateLinks` off, rename and move pop up an "Update links" modal and the CLI blocks. On timeout the file is **already renamed** and its links are broken. `obs --rename`/`--move` check the live setting first and refuse; `--allow-unsafe` cannot override that, and raw `rename`/`move` are always refused.
 - `delete` always goes to the OS Recycle Bin, even when the vault trash setting is `.trash`. Use `obs --trash`.
 - `property:set` pitfalls:
   - `value="a, b"` becomes the single string `"a, b"`.
   - A list of links needs a JSON array: `value='["[[A]]","[[B]]"]'`.
   - A number without `type=number` becomes `"5"`.
   - Any list write, or `type=`, **rewrites `.obsidian/types.json` vault-wide** (for example `tags: tags` becomes `multitext`).
-  - So edit typed properties in the file instead.
+  - So `obs --prop-set` edits the frontmatter in the file instead.
 - `daily:append` creates the note from its template and the `YYYY/MM` subfolders, but the root daily folder must already exist. Running it again appends again.
-- `daily:read` **creates** today's note as an empty file when it does not exist (bridge exit 4, empty output). Check for the note with `obs --abs $(obs daily:path)` and file tools instead.
-- `\n` inside `content=` becomes LF. In a CRLF note, append with the file tools instead if the line endings must match.
+- `daily:read` **creates** today's note as an empty file when it does not exist. `obs daily:read` checks with `daily:path` first and returns exit 4 without creating it; `obs --daily-append-once` never calls it.
+- `\n` inside `content=` becomes LF. `obs --append` and `obs --daily-append-once` (on an existing note) write with the note's own line endings.
 
 ## Environment
 - Git Bash: `obsidian` resolves to `Obsidian.exe`, and colon commands exit 127. The bridge calls `Obsidian.com` directly.

@@ -2,6 +2,8 @@
 
 Every decision cites a finding (`F#` in `FINDINGS.md`) or a lesson key. Tested on Obsidian CLI **1.14.4**.
 
+> **v2 (E8.6, E8.7, 2026-10-27).** This spec describes v1. v2 keeps every rule here and moves more into the bridge; see §8.
+
 ## 1. Bridge: `skills/obsidian-connect/scripts/obs.mjs`
 
 One Node script (Node ≥ 18; Windows has v22 and WSL has v24) for WSL, PowerShell, cmd and Git Bash. Node avoids keeping a shell and a PowerShell copy in sync. It sidesteps the Git Bash `.exe` trap by calling `Obsidian.com` directly (F1, `windows-com-redirector-and-wrapper`).
@@ -136,3 +138,13 @@ Measured with `wc -w`, `wc -l` and characters ÷ 4 as a **token estimate** (`tes
 | SKILL.md and references | size check passes; contains preflight, routing pointer, thresholds, traps; every example is bounded (`examples-teach-unbounded-output`) |
 | `tests/compat` | a run on 1.14.4 recorded in `HISTORY.md`; README documents method and scoring |
 | `RESULTS.md` | every one of the 11 cases has a row with evidence, or is listed as not run with the reason |
+
+## 8. v2 changes (E8.6, E8.7)
+
+Driven by the round-0 failure analysis (`docs/models/FAILURES.md`). Every v1 rule still holds; some moved from SKILL.md into the bridge.
+
+- **Output contract.** Bridge commands print a first line `OK:` (done and read back), `NOT DONE:` (with the reason; dry runs too) or `APPROXIMATE:` (read from files because Obsidian is closed). Every non-zero exit ends with a stderr line `NEXT: <what to do>`. The third identical failure in a row says `NEXT: STOP: …`. Pass-through reads keep the CLI's stdout.
+- **New commands:** `--find` (quoted phrase plus the unaccented form, F8c), `--backlinks`, `--tasks-count` (F8b), `--section-edit` (outline + line edit, CRLF kept, F9h, F10a), `--prop-set` (frontmatter edit keeping types, never `property:set`, F9a, F9b), `--append`, `--daily-append-once` (`daily:path`, never `daily:read`, F9g, F9j), `--tag-rename` (dry run, then `apply` with snapshot, F9i), `--help`. The read commands fall back to files when Obsidian is closed.
+- **Routing instead of refusal.** Raw `create`, `append`, `prepend`, `property:set`, `property:remove`, `daily:append`, `daily:prepend`, `delete`, `rename`, `move` exit 5 and name the bridge command. A command that does not exist exits 5 (v1 said 6, "not ready"). `eval`, `dev:*` and raw `rename`/`move` can no longer be unlocked by `--allow-unsafe`; `command` joins the deny list. `daily:read` checks `daily:path` first and creates nothing.
+- **Vault.** `--preflight --vault <name>` remembers the vault for 12 h (`OBS_STATE`, default in the OS temp dir), so `OBS_VAULT` is optional afterwards; an explicit vault always wins. With Obsidian closed, preflight finds the folder of that one vault in `obsidian.json` and never prints the others.
+- **Snapshots.** `--rename`/`--move` copy the note and its referrers, and `--tag-rename … apply` copies every file it edits, to `.trash/obsidian-connect-snapshots/<time>/` before writing.

@@ -1,12 +1,14 @@
 # File mode (no CLI, or Obsidian closed)
 
-Enter file mode when `obs --preflight` exits 2 or prints `cli=none`. Say so once to the user ("Obsidian CLI not reachable, answers from files are approximate"). Then do not call `obs` again this session, unless the user starts Obsidian.
+File mode starts when the first line of `obs --preflight` is `APPROXIMATE:`. Preflight still prints the vault folder (from Obsidian's own settings, only the vault you named). Never read `obsidian.json` yourself: it lists every vault of the user. If the folder is unknown, ask the user for it and run `obs --preflight --dir "<folder>"`.
+
+These bridge commands keep working and read the files themselves: `obs --find`, `obs --backlinks`, `obs --tasks-count`, `obs --section-edit`, `obs --prop-set`, `obs --append`, `obs --tag-rename`. Read commands print `APPROXIMATE:` first; copy that into the answer. Other `obs` commands need Obsidian: do not retry them.
 
 Every answer in file mode is **approximate**. Say which part could be incomplete:
 - grep does not resolve links (shortest-path names, relative paths, `%20`), and it does not know about aliases, embeds of renamed files, or plugin state (Tasks, Dataview, Templater).
 - Notes in excluded folders (profile `excluded`) still match grep. Filter them out.
 
-## Recipes (always bounded)
+## Recipes (always bounded), for jobs the bridge does not cover
 Run from the vault root. Use `rg` if it exists, otherwise `grep -r`. From WSL on `/mnt/c`, a vault-wide scan takes several seconds, so scope it to a folder when you can.
 
 | Job | Command | Gaps |
@@ -28,5 +30,6 @@ If `rg` fails (missing, or rewritten by a shell hook), use `grep -rl --include='
 
 ## Writes in file mode
 - Single-note create and edit are allowed. Follow the profile's link style, folders and property types.
-- **Rename, move and trash are not allowed.** Links would not be updated. Tell the user to open Obsidian, or to do it in the app.
+- **Rename, move and trash are not allowed.** Links would not be updated. Tell the user to open Obsidian, or to do it in the app. The bridge refuses them anyway.
+- Daily notes need Obsidian (`obs --daily-append-once` stops with `NOT DONE`).
 - Bulk edits follow `bulk-edit.md`, and the result is labelled approximate.
