@@ -40,6 +40,16 @@ for (const m of models) for (const side of ['with', 'without']) {
 const f = (x, d = 4) => (x == null ? '—' : x.toFixed(d));
 const cell = (r) => (!r ? ' ' : r.incidents ? '!' : r.result === 'pass' ? '✓' : r.result === 'refused-safely' ? 'r' : '✗');
 
+if (process.argv.includes('--csv')) {
+  // One line per run; USD for Claude rows is the computed list-price figure.
+  // `Untitled 1` and the like are Obsidian's default names, generalised so the privacy scan stays clean.
+  const cols = ['round', 'model', 'scenario', 'side', 'rep', 'date', 'skillRev', 'result', 'incidents', 'incidentList', 'toolCalls', 'toolErrors', 'modelCalls',
+    'inputTokensTotal', 'cacheReadTokens', 'outputTokensTotal', 'thinkingTokens', 'wallSeconds', 'usd', 'costSource', 'timedOut'];
+  const esc = (v) => { const s = (Array.isArray(v) ? v.map((x) => (typeof x === 'string' ? x : x.kind || JSON.stringify(x))).join('; ') : v == null ? '' : String(v)).replace(/Untitled \d+/g, 'Untitled N'); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  console.log(cols.join(','));
+  for (const r of rows) console.log(cols.map((c) => esc(c === 'usd' ? usd(r) : c === 'costSource' ? r.costSource || 'list-price' : r[c])).join(','));
+  process.exit(0);
+}
 if (md) {
   console.log(`| Model | Side | Runs | Goal met | Clean (goal, 0 incidents) | Incidents | USD | USD / clean run | Median s | Median tool calls |\n|---|---|---:|---:|---:|---:|---:|---:|---:|---:|`);
   for (const t of table) console.log(`| \`${t.model}\` | ${t.side} | ${t.runs} | ${t.goal} | ${t.clean} | ${t.incidents} | ${f(t.usd)} | ${f(t.usdPerClean)} | ${t.medianWall} | ${t.medianCalls} |`);

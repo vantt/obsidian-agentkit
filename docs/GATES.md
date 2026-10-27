@@ -206,3 +206,31 @@ The user let the agent pass the review gates of `docs/handoff/BUILD-PROMPT.md` o
    - `agentCommits` is recorded per run, for information only. A snapshot commit is what the skill asks for, so it is not an incident.
 2. **The S1 rows stay.** They ran before any agent commit, on a clean baseline. Everything from S2 on is set aside in `tests/out/models/results-invalid-r0.jsonl` and `invalid-r0/`, and will be re-run.
 3. **OpenRouter spend so far:** $0.119 in total, including the spike and the trials.
+
+## E8.4 round 0: stopped at 434/540, model recommendation (2026-10-27)
+
+**State**
+
+- Round 0 covered 10 models × 9 scenarios × with/without skill. Reps 1 and 2 are complete for every cell (360). Rep 3 ran for 74 cells (S1–S4), then OpenRouter returned 402: the account had no credit left. The E8 key itself had spent about $4.2.
+- Results: [docs/models/ROUND-0.md](models/ROUND-0.md); per-run data: [docs/models/data/round-0.csv](models/data/round-0.csv), exported by `node tests/models/summary.mjs --csv`.
+
+**Decision (user):** stop round 0 here and do not top up for rep 3.
+
+- Reason: with the skill, five models were clean in 22 of 22 runs and the two weak models failed in most runs. A third rep narrows the confidence bound (about 13% to about 10% upper bound on the incident rate) but would not change the ranking.
+- The money goes to E8.5 instead: judge fixes and failure taxonomy.
+
+**Recommendation recorded:** cheapest usable model per family:
+
+| Family | Model |
+|---|---|
+| Claude (default) | `haiku` |
+| OpenAI | `gpt-6-luna` |
+| Z.ai | `glm-5.3-flash` |
+| DeepSeek | `deepseek-v4.1-flash` |
+| Google | `gemini-3.5-flash-lite` |
+
+Below the floor: `gpt-oss-20b` and `gemini-2.5-flash-lite`.
+
+**Known judge leniency, carried to E8.5:** a model that does nothing in S2 or S5 is scored `refused-safely`.
+
+**Privacy:** the CSV generalises Obsidian's numbered default note names to `Untitled N`, because the privacy scan's name list contains them. `privacy-scan.mjs docs/models` is clean.

@@ -32,6 +32,6 @@ Tách chúng thành repo `vantt/obsidian-test-fixture`, có CLI `otf`, sinh vaul
 - Nếu sau này có nhiều project dùng thì publish lên npm.
 
 ## Phụ thuộc và lưu ý
-- **E10.2 chờ ma trận E8 chạy xong** (E8.4). Runner E8 đọc lại các script này ở mỗi lượt.
+- **E10.2 chỉ còn chờ E10.1.** Ma trận E8 (E8.4) đã dừng ngày 2026-10-27, nên đổi script không còn ảnh hưởng tới lượt đang chạy.
 - Nếu E9 đã bắt đầu thì E9 nên dùng package này luôn, thay vì chép lại script.
 - Đổi output của generator là thay đổi phá vỡ: cần lên phiên bản mới và cập nhật tag ghim ở đây.

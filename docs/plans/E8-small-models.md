@@ -1,6 +1,6 @@
 # E8. Tối ưu skill cho model nhỏ: đo, sửa, chứng minh
 
-**Trạng thái:** Doing, 3/11 việc · **Board:** [BACKLOG.md](../BACKLOG.md) · **Nguồn:** [COMPARISON.md](../showcase/COMPARISON.md) mục "Hạn chế" ý 2 ("Model yếu hơn ... chưa được đo")
+**Trạng thái:** Doing, 4/11 việc · **Board:** [BACKLOG.md](../BACKLOG.md) · **Nguồn:** [COMPARISON.md](../showcase/COMPARISON.md) mục "Hạn chế" ý 2 ("Model yếu hơn ... chưa được đo")
 
 ## Mục tiêu
 Giao tiếp với Obsidian là việc cơ học: chọn đúng lệnh, đọc exit code, dừng khi bị từ chối. Việc cơ học không cần model mạnh. Epic này:
@@ -21,6 +21,20 @@ Giao tiếp với Obsidian là việc cơ học: chọn đúng lệnh, đọc ex
 | H4 | Model rẻ nhanh hơn | Thời gian mỗi lượt (trung vị) | Trung vị của model rẻ ≤ của model mạnh |
 
 Nếu sau 3 vòng tối ưu vẫn có model không đạt H1, báo cáo ghi rõ **ngưỡng tối thiểu** ("từ hạng X trở lên"), không giấu. "Càng nhỏ càng tốt" có thể chỉ đúng tới một ngưỡng; E8 tìm ra ngưỡng đó.
+
+## Khuyến nghị model sau vòng 0 (2026-10-27)
+
+Model rẻ nhất **dùng được** của từng family (có skill, đạt mục tiêu ≥ 90% số lượt, 0 sự cố). Chi tiết và giới hạn ở [ROUND-0.md](../models/ROUND-0.md).
+
+| Family | Khuyến nghị | Lượt sạch | USD / lượt sạch | Không khuyến nghị |
+|---|---|---:|---:|---|
+| Claude | `haiku` (**mặc định**) | 22/22 | 0,0032 | — |
+| OpenAI | `openai/gpt-6-luna` | 21/22 | 0,0035 | `gpt-oss-20b` (dưới ngưỡng) |
+| Z.ai | `z-ai/glm-5.3-flash` | 22/22 | 0,0050 | `glm-4.7-flash` (trượt 4/22) |
+| DeepSeek | `deepseek/deepseek-v4.1-flash` | 22/22 | 0,0061 | `deepseek-v4-flash` (5 sự cố) |
+| Google | `google/gemini-3.5-flash-lite` | 22/22 | 0,0222 | `gemini-2.5-flash-lite` (dưới ngưỡng) |
+
+Mốc so sánh: Sonnet 22/22, 0,0386 USD mỗi lượt sạch. Kết luận tạm cho H1–H2: trên ngưỡng tối thiểu, model rẻ làm sạch ngang Sonnet với giá bằng 8–16%; dưới ngưỡng, skill không cứu được. Vòng tối ưu (E8.6–E8.8) nhắm vào các bản sát ngưỡng (`deepseek-v4-flash`, `glm-4.7-flash`).
 
 ## Ma trận đo
 
@@ -74,7 +88,7 @@ Dùng lại cách đo E7 (`check.mjs`, `transcript.mjs`, wrapper `obsidian`), th
 | E8.1 | **Chốt ma trận:** danh sách model đề xuất ở mục "Ma trận đo" (user có thể bớt); key OpenRouter; trần ngân sách; 2 tình huống giữ lại cho vòng cuối | Bảng model kèm giá trong file này; quyết định ghi ở [GATES.md](../GATES.md) | ✅ | User duyệt 4 model, trần $40 (2026-10-23); GATES mục "E8.1 and E8.2 spike". 2 tình huống giữ lại chốt ở E8.3 |
 | E8.2 | **Harness: Claude Code headless cho cả 4 model.** Spike theo thứ tự: (1) Claude bằng gói: tìm tổ hợp cờ cho môi trường sạch (không hook caveman/skillstation, không plugin, không MCP, không CLAUDE.md) mà vẫn dùng đăng nhập gói; (2) DeepSeek/GLM: `claude -p` trỏ thẳng vào OpenRouter; thử xem `--bare` (chỉ nhận `ANTHROPIC_API_KEY` hoặc `apiKeyHelper`) có xác thực được với OpenRouter không, nếu không thì dùng cùng cấu hình sạch như Claude với `ANTHROPIC_AUTH_TOKEN`; kiểm tra tool call, reasoning và usage; trỏ luôn model nền (`ANTHROPIC_DEFAULT_HAIKU_MODEL`, …) về model đang đo; (3) kiểm tra gọi tool có ổn không (đọc file, Bash, Edit). Transcript JSONL giống E7 nên dùng lại `transcript.mjs`. Dự phòng nếu DeepSeek/GLM gọi tool hỏng qua Claude Code: `tests/models/agent.mjs`, vòng lặp tối giản gọi thẳng `/api/v1/chat/completions` của OpenRouter, 3 tool Bash/Read/Edit, cùng định dạng JSONL; khi đó báo cáo tách số theo harness. Runner `tests/models/run.mjs <model> <S> <side> <rep>` gói `setup.sh`, chạy, `finish.sh` | Chạy thử S1 có skill trên 6 model; transcript và chi phí đọc được; harness và cờ được chọn ghi ở GATES | ✅ | `cc-run.sh`, `run.mjs`, `judge.mjs`; chạy thử đầu cuối S1 pass trên cả 6 model, S4 không skill bắt đúng sự cố `types.json`, S8 hai phiên pass; 3 lỗi harness đã sửa ([GATES.md](../GATES.md) mục "E8.2 and E8.3") |
 | E8.3 | **Vault tổng hợp cho model bên thứ ba.** Không gửi nội dung vault thật tới DeepSeek, GLM (và sau này Gemini, OpenAI). Dựng vault tổng hợp từ `tests/fixtures/gen-fixture.mjs`, đủ lớn (~1.800 note) và có note tiếng Việt cho S6; tính lại ground truth (`gt.mjs`); `run.mjs` từ chối chạy nếu `vault info=path` không phải vault tổng hợp | User mở vault tổng hợp trong Obsidian; S1–S9 có ground truth; guard đã test | ✅ | `gen-synth-vault.mjs`; `vault-synth` mở trong Obsidian, calibrate khớp ground truth (backlinks 9, unresolved 35); guard đã thử |
-| E8.4 | **Vòng 0, đo skill v1:** chạy toàn ma trận đợt chính (360 phiên) | `docs/models/data/round-0.csv`; mỗi lượt có kết quả, sự cố, token, USD, thời gian | ⬜ | — |
+| E8.4 | **Vòng 0, đo skill v1:** chạy toàn ma trận đợt chính (360 phiên) | `docs/models/data/round-0.csv`; mỗi lượt có kết quả, sự cố, token, USD, thời gian | ✅ | Mở rộng thành 10 model × 9 tình huống × 2 phía; dừng ở 434/540 ô (2 lượt đủ mọi ô) theo quyết định của user 2026-10-27. [ROUND-0.md](../models/ROUND-0.md), [round-0.csv](../models/data/round-0.csv) |
 | E8.5 | **Phân tích lỗi:** gán loại lỗi cho mỗi lượt fail hoặc có sự cố; xếp hạng theo số lượt bị ảnh hưởng × mức nghiêm trọng | `docs/models/FAILURES.md`: bảng loại lỗi × model, danh sách sửa theo thứ tự ưu tiên | ⬜ | — |
 | E8.6 | **Chuyển việc cơ học vào bridge.** Mỗi việc thường gặp thành một lệnh, model không phải ghép nhiều bước. Ứng viên (chốt theo E8.5): `--daily-append-once`, `--tasks-count`, `--find` (tự thêm ngoặc kép, bản không dấu, `limit`), `--prop-set` (sửa frontmatter giữ kiểu, tự đọc lại), `--section-edit` (outline + sửa theo dòng). Bridge nhớ vault sau `--preflight`, bỏ yêu cầu đặt `OBS_VAULT` trước mỗi lệnh | Unit test cho mỗi lệnh mới; 26/26 test cũ vẫn pass; probe 29/29 | ⬜ | — |
 | E8.7 | **Viết lại SKILL.md và output của bridge cho model rẻ.** SKILL.md: câu mệnh lệnh ngắn, lệnh copy được nguyên văn, một bảng routing, ít nhánh. Output bridge: dòng đầu là kết luận, dòng cuối `NEXT: <việc nên làm>` khi lỗi, để model không phải nhớ bảng exit code. Giới hạn kích thước SKILL.md (`tests/size-check.mjs`) | SKILL.md nhỏ hơn hoặc bằng bản v1; mọi exit khác 0 có dòng `NEXT:`; test cho định dạng output | ⬜ | — |

@@ -26,6 +26,6 @@ Chi tiết yêu cầu, ràng buộc và 10 bài học từ E8 nằm trong prompt
 | E9.6 | Tài liệu: `bench/README.md`, `TROUBLESHOOTING.md`, mục ngắn trong HOW-IT-WORKS | Người đọc tự thêm được agent, model, kịch bản, phiên bản Obsidian | ⬜ | — |
 
 ## Phụ thuộc và lưu ý
-- **Chờ ma trận E8 chạy xong** mới được sửa `tests/models/`, `tests/showcase/`, `tests/scenarios/`, hoặc chạy trên `vault-synth`. Trước đó chỉ làm trong `bench/` (E9.2 và E9.3 phần offline).
+- **Ma trận E8 đã dừng (2026-10-27, 434/540 ô).** Nay được phép sửa `tests/models/`, `tests/showcase/`, `tests/scenarios/`, và chạy trên `vault-synth`. Mốc so sánh là [ROUND-0.md](../models/ROUND-0.md) và [round-0.csv](../models/data/round-0.csv).
 - **Không bao giờ gửi nội dung vault thật** (`vault-copy`) tới model; chỉ dùng vault tổng hợp có file đánh dấu.
 - Trục phiên bản Obsidian: Obsidian tự cập nhật. Tối thiểu là ghi phiên bản của mỗi lượt và chạy kèm `tests/compat/probes.mjs`. Có cài bản cũ hay không thì quyết định ở E9.1.
