@@ -2,6 +2,9 @@
   "name": "obsidian-agentkit-tests",
   "private": true,
   "type": "module",
+  "scripts": {
+    "test": "node --test *.test.mjs models/*.test.mjs && node size-check.mjs"
+  },
   "devDependencies": {
     "obsidian-test-fixture": "github:vantt/obsidian-test-fixture#v0.3.0"
   }

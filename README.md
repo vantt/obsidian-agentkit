@@ -1,5 +1,7 @@
 # obsidian-agentkit
 
+[![CI](https://github.com/vantt/obsidian-agentkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vantt/obsidian-agentkit/actions/workflows/ci.yml)
+
 Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately and cheaply (few tokens).
 
 **Status: built and tested on Obsidian CLI 1.14.4 (2026-10-22); all 29 compatibility probes re-checked on 1.15.0 (2026-10-28).** Scenario results: [tests/RESULTS.md](tests/RESULTS.md). Probe score history: [tests/compat/HISTORY.md](tests/compat/HISTORY.md).

@@ -519,3 +519,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - First commit `5107172`: 1,879 text files, 0 attachments, 11 MB of history, about 2 min over the Drive mount. The tree is clean afterwards.
 - Bridge change: `--rename`, `--move` and `--tag-rename … apply` still copy the touched files to `.trash/obsidian-connect-snapshots/`, and now also commit the pre-state when the vault is a git work tree. The `OK:` line prints `(git <sha>)`. Undo a multi-file change with `git checkout <sha> -- .` in the vault. New bridge test; 67/67.
 - The history exists only on this machine. Losing WSL loses the history, not the vault. Pushing it to a private remote is possible later; never to a public one.
+
+## E5.1, E5.2: CI và `npm test` (2026-10-28)
+- `tests/package.json` có script `test` = `node --test *.test.mjs models/*.test.mjs && node size-check.mjs`; `.github/workflows/ci.yml` chạy `npm ci` rồi `npm test` (Node 22) mỗi push và PR; badge ở đầu README.
+- Bằng chứng: xoá `node_modules`, `npm ci`, `npm test` → 67/67 pass, size-check ok. Thêm 40 dòng vào SKILL.md → exit 1 (`FAIL SKILL.md body lines: 95 (max 70)`), đã hoàn lại.
+- Còn mở: badge xanh chỉ có sau lần chạy đầu trên GitHub. `privacy-scan.mjs` cần `tests/out/showcase/real-names.json` (cục bộ), nên chạy tay trước mỗi commit, không đưa vào CI.
