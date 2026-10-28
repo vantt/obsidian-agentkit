@@ -1,0 +1,10 @@
+{
+  "name": "obsidian-agentkit",
+  "displayName": "Obsidian AgentKit",
+  "version": "0.1.0",
+  "description": "Read, search and safely change an Obsidian vault through the official Obsidian CLI, with a file-only fallback.",
+  "author": { "name": "vantt", "url": "https://github.com/vantt" },
+  "homepage": "https://github.com/vantt/obsidian-agentkit",
+  "repository": "https://github.com/vantt/obsidian-agentkit",
+  "keywords": ["obsidian", "vault", "notes", "skill"]
+}

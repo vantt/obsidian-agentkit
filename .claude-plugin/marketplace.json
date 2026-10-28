@@ -1,0 +1,14 @@
+{
+  "name": "obsidian-agentkit",
+  "owner": { "name": "vantt", "url": "https://github.com/vantt" },
+  "description": "Agent skills for working safely inside an Obsidian vault.",
+  "plugins": [
+    {
+      "name": "obsidian-agentkit",
+      "source": "./",
+      "description": "obsidian-connect skill: read, search and safely change an Obsidian vault through the official Obsidian CLI, with a file-only fallback.",
+      "category": "productivity",
+      "tags": ["obsidian", "vault", "notes"]
+    }
+  ]
+}
