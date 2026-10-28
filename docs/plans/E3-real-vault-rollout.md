@@ -12,7 +12,7 @@ Dùng skill hằng ngày trên vault thật đang đồng bộ Google Drive, b�
 | E3.1 | Cài skill vào `~/.claude/skills/obsidian-connect/` (symlink tới repo) trên WSL, và trên Windows nếu dùng | `obs --preflight` chạy được trên vault thật, `match=yes` |
 | E3.2 | Chạy `profile.mjs` trên vault thật, đối chiếu với cài đặt trong Obsidian | Profile khớp: kiểu link, daily note, thư mục template |
 | E3.3 | **Giai đoạn chỉ đọc (1 tuần):** tìm, backlink, đếm task | Không có lần trả lời sai nào; ghi các trường hợp skill thiếu vào E5 hoặc E6 |
-| E3.3a | **Chuẩn bị E3.3:** bảng ghi lỗi và 10 câu hỏi chỉ đọc mẫu, chạy thử trên `vault-copy` | 10 câu đúng, vault sạch |
+| E3.3a ✅ | **Chuẩn bị E3.3:** bảng ghi lỗi và 10 câu hỏi chỉ đọc mẫu, chạy thử trên `vault-copy` | 10 câu đúng, vault sạch |
 | E3.3b | **Một tuần chỉ đọc** trên vault thật (user) | Như "Xong khi" của E3.3 |
 | E3.4 | Quyết định chiến lược snapshot cho vault thật: git trong vault, hay copy vào `.trash/obsidian-connect-snapshots/` | Quyết định được ghi vào GATES.md |
 | E3.5 | **Mở quyền ghi một note:** append daily note, sửa property | 10 lần ghi đều đọc lại đúng, không tạo bản xung đột Drive |

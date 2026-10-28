@@ -58,7 +58,7 @@ function obs(vault, args) {
 }
 
 // Vault-relative file list: through the file system when the vault folder is readable from here, else PowerShell (WSL with a stale /mnt mount).
-function listFiles(vaultPath) {
+export function listFiles(vaultPath) {
   const candidates = [vaultPath];
   if (/^[A-Za-z]:[\\/]/.test(vaultPath)) {
     const w = spawnSync('wslpath', ['-u', vaultPath], { encoding: 'utf8' });
@@ -72,7 +72,7 @@ function listFiles(vaultPath) {
   throw new Error('cannot list the vault folder (file system and PowerShell both failed)');
 }
 // Text of a vault file read from disk (what Drive syncs), with the same two routes as listFiles.
-function readText(vaultPath, rel) {
+export function readText(vaultPath, rel) {
   const roots = [vaultPath];
   if (/^[A-Za-z]:[\\/]/.test(vaultPath)) { const w = spawnSync('wslpath', ['-u', vaultPath], { encoding: 'utf8' }); if (w.status === 0) roots.unshift(w.stdout.trim()); }
   for (const root of roots) { try { return fs.readFileSync(path.join(root, ...rel.split('/')), 'utf8'); } catch { /* next route */ } }

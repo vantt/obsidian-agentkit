@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 52 / 68 việc xong (76%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 53 / 68 việc xong (77%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -14,7 +14,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 3/6 █████░░░░░ 50% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 5/9 █████░░░░░ 55% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 6/9 ██████░░░░ 66% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 5/6 ████████░░ 83% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
@@ -39,7 +39,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E3.3b | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi |
+| E3.3b | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi; dùng [bảng ghi](handoff/E3.3-READONLY-LOG.md) |
 
 ## Cần user
 
@@ -78,7 +78,7 @@ Các việc này agent không tự làm được:
 | E3.1 | Cài skill cho vault thật | E3 | P1 | ✅ | User + agent | Symlink `~/.claude/skills/obsidian-connect`; `--preflight` OK, `match=yes` (lần đầu timeout vì Obsidian đang mở vault; `NEXT:` đã sửa, test mới) |
 | E3.2 | Profile vault thật | E3 | P1 | ✅ | Agent | `profile.mjs` khớp giá trị live (`alwaysUpdateLinks` true, daily note ở gốc, không template). Vault có Tasks, Dataview, Templater, Breadcrumbs; `.obsidian/` đã có 2 bản xung đột Drive từ 2025 |
 | E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | Tách thành a/b |
-| E3.3a | Bảng ghi lỗi và 10 câu hỏi chỉ đọc mẫu, chạy thử trên `vault-copy` | E3 | P1 | ⬜ | Agent | Xong khi: 10 câu trả lời đúng, vault sạch |
+| E3.3a | Bảng ghi lỗi và 10 câu hỏi chỉ đọc mẫu, chạy thử trên `vault-copy` | E3 | P1 | ✅ | Agent | [E3.3-READONLY-LOG.md](handoff/E3.3-READONLY-LOG.md) (bảng ghi + 10 câu + cách kiểm trên file); `tests/e33-readonly-check.mjs` chỉ đọc, chạy trên `vault-copy`: 10/10 đúng, vault không đổi, 78 test pass |
 | E3.3b | Một tuần dùng chỉ đọc trên vault thật | E3 | P1 | ⏸ | User | 1 tuần dùng bình thường |
 | E3.4 | Chọn cách snapshot | E3 | P1 | ✅ | User | Git, repo ngoài Drive (`--separate-git-dir`), chỉ file text; bridge tự commit trước rename, move, đổi tên tag ([GATES.md](GATES.md) mục E3.4) |
 | E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | Tách thành a/b |

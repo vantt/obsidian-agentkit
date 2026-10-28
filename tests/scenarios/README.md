@@ -40,6 +40,16 @@ Run before opening write access on a real vault, on a test vault first:
 - It does not reset the vault. Reset afterwards: in the vault (git dir outside Drive for the Drive vault), `git checkout -q -- <note>`, then remove the new daily note (`git clean -fdq -- <daily note>`), and check `git status` is empty, then `obs reload`. If the shell cannot read the Drive folder (stale `/mnt/g`), run the script with Windows `node.exe` through PowerShell. From WSL with a dead `/mnt/g` mount, run Windows git with `-c core.fileMode=false --git-dir=<UNC path of the .git dir> --work-tree=<vault>`.
 - Offline test of the guard and the checks: `node --test tests/e35-write-check.test.mjs`.
 
+## E3.3a read-only check (`tests/e33-readonly-check.mjs`)
+Run before the one-week read-only trial on a real vault (E3.3b), on a test vault:
+`node tests/e33-readonly-check.mjs --vault <test vault> [--word <w>] [--tag <t>] [--backlinks-note <p.md>] [--props-note <p.md>] [--outline-note <p.md>]`
+- Asks 10 read-only questions through the bridge (search `--find`, `--backlinks`, `--tasks-count`, `tag name= total`, `properties`, `outline`, `unresolved`, `daily:read` plus `read path=`, `orphans`, `recents`) and compares each with a ground truth computed from the vault files alone. The probe word, notes and tag are picked from the files by fixed rules (pass the arguments to choose others). Exit 0 = 10/10 and the vault unchanged.
+- Read-only by construction: the script only runs commands in a hard-coded read-only list (`assertReadOnly`, unit-tested), and it fingerprints the vault (path, size, mtime of every file outside `.obsidian/` and `.git/`, plus git HEAD and status) before and after; any change fails the run. The bridge's `daily:read` creates nothing when today's note is missing.
+- Refuses (exit 2) unless `vault info=path` ends in `vault-synth`, `vault-copy` or `obsidian-agentkit-drive-test`. There is no flag to point it at another vault; the real vault is checked by the user with `docs/handoff/E3.3-READONLY-LOG.md` (log template, 10 sample questions, grep recipes).
+- Differences that are known and printed as "PASS (benign difference)": the daily note of today is absent (the read of an existing note is compared instead); `unresolved` also lists markdown-link and URL-like targets (the file scan counts wikilinks, and every one of them must be in the bridge list); attachment orphans (images, pdf) can differ because Obsidian resolves links with escaped characters or same-named files in ways the file scan cannot rebuild, while orphan notes (`.md`) must match exactly.
+- File-scan rules worth knowing: `--find` and Obsidian search match whole words, case-insensitively; open tasks include `1. [ ]` items; links are case-insensitive, `[[#Heading]]` and `[x](#h)` are links to the note itself, a `.canvas` file node counts as an incoming link for `orphans`, and `x.png` never resolves to `x.png.md`.
+- Offline test (guard, read-only list, every parser and comparison): `node --test tests/e33-readonly-check.test.mjs`.
+
 ## E3.6a bulk-operation rehearsal (`tests/e36-bulk-rehearsal.mjs`)
 Run before the first bulk operation on a real vault (E3.6b), on a test vault with a clean git tree:
 `node tests/e36-bulk-rehearsal.mjs --vault <test vault> [--wait 45] [--index-timeout 60]`
