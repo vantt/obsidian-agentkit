@@ -57,7 +57,7 @@ Lab target with 9 referrers: wikilink, `|display` link, heading, block, embed, `
 - With `trashOption: "local"` set through `app.json` + `reload` (`getConfig` → `local`), and again through `setConfig`, CLI `delete` **still went to the Recycle Bin**: 3 copies in the bin, and still no `.trash/`. Verdict: the CLI ignores the vault trash setting.
 - `permanent` exists (`delete … permanent — Skip trash, delete permanently`). It was not run.
 - Missing file: `Error: File "…" not found.`, exit 0.
-- Google Drive: not tested. Test 10 was skipped by user decision, so whether the Recycle Bin receives files deleted from the Drive virtual drive (`G:`) is **unverified**.
+- Google Drive (2026-10-28, CLI 1.15.0, test vault in a folder under `G:\My Drive`, `trashOption` `system`): CLI `delete` printed `Moved to trash: …` and the file landed in the **Windows Recycle Bin**, `DeletedFrom G:\My Drive\…\refs`, the same as on `C:`. So it is restorable from the local bin. Bridge `--trash` moved the file to the vault's `.trash/` instead, which Drive syncs like any folder. Whether Drive's own web Trash also keeps a copy is checked by the user on drive.google.com.
 
 ## F6 Exit codes and empty results
 

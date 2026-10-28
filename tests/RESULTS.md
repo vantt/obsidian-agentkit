@@ -21,6 +21,7 @@ Cases and judging: `tests/scenarios/README.md`.
 | 2026-10-22 | WSL | 1.14.4 | 8b tag rename | 1 | **pass**: dry-run listed 4 edits + 2 skips first; exact `#proj` 0 left; `#projects`, `#proj/sub`, code untouched; frontmatter updated | 10 | ~2,100 | `gt.mjs tags proj` 0/0, `project/active` 2 body + 2 frontmatter; diff 4 files 4 lines. Verify rule fixed for kept nested tags |
 | 2026-10-22 | WSL + PowerShell | 1.14.4 | 9 WSL vs Windows | 1 | **partial**: bridge gives identical answers (backlinks 9, open tasks 114) from PowerShell and WSL; no Windows-native *agent* session was available | — | — | PowerShell 372/254 ms vs WSL 198/204 ms per call (bridge incl. node start) |
 | 2026-10-22 | — | — | 10 Drive sync bulk edit | — | **not run**: skipped by user decision (no Drive test folder) | — | — | — |
+| 2026-10-28 | WSL, vault on `G:` (Google Drive for desktop) | 1.15.0 | 10 Drive sync bulk edit | 1 | **pass**: bridge `--append` on 6 notes, then `--rename` of the target (9 more files rewritten); after 3 min of sync no conflict copy (`(1)`, "conflict"), 25 notes, backlinks 9→9, unresolved 2→2 | 7 bridge calls | — | Run by the builder with the bridge directly, not a subagent. Single device, so a second editor (phone) was not part of the test. `git status`: 13 modified + 1 rename, nothing else |
 
 ## Summary for CLI 1.14.4 (2026-10-22)
 

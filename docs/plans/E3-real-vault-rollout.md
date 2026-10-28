@@ -1,6 +1,6 @@
 # E3. Đưa skill vào dùng trên vault thật
 
-**Trạng thái:** Todo (chờ E2.2–E2.3) · **Board:** [BACKLOG.md](../BACKLOG.md)
+**Trạng thái:** Todo (E2.2, E2.3 xong 2026-10-28) · **Board:** [BACKLOG.md](../BACKLOG.md)
 
 ## Mục tiêu
 Dùng skill hằng ngày trên vault thật đang đồng bộ Google Drive, bắt đầu từ việc chỉ đọc, rồi mới mở dần quyền ghi.

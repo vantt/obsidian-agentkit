@@ -6,15 +6,15 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 29 / 63 việc xong (46%)**
+**Toàn project: 31 / 63 việc xong (49%)**
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | ⏸ Chờ | P1 | 0/4 ░░░░░░░░░░ 0% | — | E2.2 và E2.3: user tạo thư mục test trên Google Drive, mở thành vault riêng |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | ⏸ Chờ | P1 | 0/6 ░░░░░░░░░░ 0% | E2.2, E2.3 | Chờ thư mục test trên Drive |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/4 █████░░░░░ 50% | — | E2.1 (Claude Code trên Windows) và E2.4 (terminal admin) cần user |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | ⬜ Todo | P1 | 0/6 ░░░░░░░░░░ 0% | ✅ E2.2, E2.3 | E3.1: user báo tên vault thật; E3.4: user chọn cách snapshot |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | — | Để sau (user 2026-10-28) |
@@ -39,7 +39,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E2 | Kiểm chứng trên Google Drive, Windows, admin | Chờ user (mục "Cần user") |
+| E2 | E2.2, E2.3 xong trên Drive; còn E2.1, E2.4 | Chờ user (mục "Cần user") |
 
 ## Cần user
 
@@ -48,7 +48,7 @@ Các việc này agent không tự làm được:
 | ID | Việc | User cần làm |
 |---|---|---|
 | E2.1 | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill |
-| E2.2, E2.3 | Test trên Google Drive | Tạo thư mục test trong Drive, mở thành vault riêng |
+| E3.1 | Cài skill cho vault thật | Báo tên vault thật (agent chỉ chạy `--preflight` và `profile.mjs`, chỉ đọc) |
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
 | — | Thu hồi key OpenRouter đã lộ | OpenRouter → Keys → revoke key E8 ([GATES.md](GATES.md) mục sự cố bảo mật) |
@@ -65,12 +65,12 @@ Các việc này agent không tự làm được:
 | E1.5 | 11 kịch bản test | E1 | — | ✅ | Agent | [RESULTS.md](../tests/RESULTS.md) |
 | E1.6 | Tài liệu HOW-IT-WORKS | E1 | — | ✅ | Agent | [HOW-IT-WORKS.md](HOW-IT-WORKS.md) |
 | E2.1 | Case 9 với agent trên Windows | E2 | P1 | ⏸ | User + agent | Cần máy Windows có Claude Code |
-| E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ⏸ | User + agent | Cần thư mục test trên Drive |
-| E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ⏸ | Agent | Cùng thư mục với E2.2 |
+| E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
+| E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | — |
 | E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
 | E2.6 | Đo token từ transcript | E2 | P2 | ❌ | Agent | Bỏ: E8 đo token từ transcript cho mọi lượt (`tests/models/summary.mjs`) |
-| E3.1 | Cài skill cho vault thật | E3 | P1 | ⏸ | User + agent | Chờ E2.3 |
+| E3.1 | Cài skill cho vault thật | E3 | P1 | ⬜ | User + agent | E2.3 xong; cần tên vault thật |
 | E3.2 | Profile vault thật | E3 | P1 | ⏸ | Agent | Chỉ đọc |
 | E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | — |
 | E3.4 | Chọn cách snapshot | E3 | P1 | ⏸ | User | — |

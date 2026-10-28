@@ -1,6 +1,6 @@
 # E2. Lấp các lỗ hổng kiểm chứng của v1
 
-**Trạng thái:** Chờ user (E2.5, E2.6 bỏ vì E8 đã đo; còn E2.1–E2.4) · **Board:** [BACKLOG.md](../BACKLOG.md) · **Nguồn:** [GATES.md](../GATES.md) cổng 3, [tests/RESULTS.md](../../tests/RESULTS.md)
+**Trạng thái:** Doing, 2/4 (E2.2, E2.3 xong 2026-10-28; E2.5, E2.6 bỏ vì E8 đã đo; còn E2.1, E2.4) · **Board:** [BACKLOG.md](../BACKLOG.md) · **Nguồn:** [GATES.md](../GATES.md) cổng 3, [tests/RESULTS.md](../../tests/RESULTS.md)
 
 ## Mục tiêu
 Kiểm chứng những gì v1 mới giả định hoặc mới test một phần, để có thể dùng skill trên vault thật mà không lo rủi ro ẩn.
