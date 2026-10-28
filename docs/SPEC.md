@@ -100,7 +100,7 @@ skills/obsidian-connect/references/       traps.md, bulk-edit.md, file-mode.md, 
 skills/obsidian-connect/scripts/          obs.mjs, profile.mjs
 tests/bridge.test.mjs                     node:test, fake CLI, no Obsidian needed
 tests/compat/                             probes.mjs, README.md (method + scoring), HISTORY.md, history/*.json, TROUBLESHOOTING.md
-tests/scenarios/README.md                 the 11 cases: prompt, setup, judge commands
+tests/scenarios/README.md                 the 13 cases: prompt, setup, judge commands
 tests/RESULTS.md                          per-run rows, appended per version
 tests/fixtures/, tests/ground-truth/      already built in Phase 1
 ```
@@ -137,7 +137,7 @@ Measured with `wc -w`, `wc -l` and characters ÷ 4 as a **token estimate** (`tes
 | `profile.mjs` | runs on the copy and on the fixture; ≤ 35 lines; no note content; values match the source JSON (spot-checked in the tests) |
 | SKILL.md and references | size check passes; contains preflight, routing pointer, thresholds, traps; every example is bounded (`examples-teach-unbounded-output`) |
 | `tests/compat` | a run on 1.14.4 recorded in `HISTORY.md`; README documents method and scoring |
-| `RESULTS.md` | every one of the 11 cases has a row with evidence, or is listed as not run with the reason |
+| `RESULTS.md` | every one of the 13 cases has a row with evidence, or is listed as not run with the reason |
 
 ## 8. v2 changes (E8.6, E8.7)
 

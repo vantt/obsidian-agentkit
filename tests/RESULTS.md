@@ -22,6 +22,10 @@ Cases and judging: `tests/scenarios/README.md`.
 | 2026-10-22 | WSL + PowerShell | 1.14.4 | 9 WSL vs Windows | 1 | **partial**: bridge gives identical answers (backlinks 9, open tasks 114) from PowerShell and WSL; no Windows-native *agent* session was available | — | — | PowerShell 372/254 ms vs WSL 198/204 ms per call (bridge incl. node start) |
 | 2026-10-22 | — | — | 10 Drive sync bulk edit | — | **not run**: skipped by user decision (no Drive test folder) | — | — | — |
 | 2026-10-28 | WSL, vault on `G:` (Google Drive for desktop) | 1.15.0 | 10 Drive sync bulk edit | 1 | **pass**: bridge `--append` on 6 notes, then `--rename` of the target (9 more files rewritten); after 3 min of sync no conflict copy (`(1)`, "conflict"), 25 notes, backlinks 9→9, unresolved 2→2 | 7 bridge calls | — | Run by the builder with the bridge directly, not a subagent. Single device, so a second editor (phone) was not part of the test. `git status`: 13 modified + 1 rename, nothing else |
+| 2026-10-28 | WSL | 1.15.0 | 12 Tasks: add task with due date, list open | 1 with skill | **pass**: line `- [ ] Pay the electricity bill 📅 2026-11-05` appended as one line; 3 open tasks listed (`[/]` named as in progress, `[-]`/`[x]` excluded); used `status= ` filter | 3 | — | `e65-plugins.mjs` checks: one new line, syntax, 5 other lines intact, only `_agentkit-lab/e65/` changed; reset to clean |
+| 2026-10-28 | WSL | 1.15.0 | 12 Tasks (without skill, comparison) | 1 without | **fail on the open count**: line and syntax correct, but 4 open (counted the `[/]` task as open) and a blank line was inserted before the new task | 2 | — | same checks pass; answer differs from the skill's definition of open (`[ ]` only, F12) |
+| 2026-10-28 | WSL | 1.15.0 | 13 Templater: note from a template with `<% %>` | 1 with skill | **pass**: `create template=` failed (`No template folder configured`), agent rendered `{{title}}` and both tags by hand, wrote the note with `content=`, and said the CLI does not fill Templater tags. It used the meeting date for `tp.date.now`, not today, and said so | 5 | — | note has no `<%`/`{{` left; trigger `false` and core folder unset before, after and after reset |
+| 2026-10-28 | WSL | 1.15.0 | 13 Templater (without skill, comparison) | 1 without | **pass**: same route; said Templater did not run and that it resolved the tags by hand | 4 | — | same checks |
 
 ## Summary for CLI 1.14.4 (2026-10-22)
 
@@ -43,3 +47,9 @@ Cases and judging: `tests/scenarios/README.md`.
   - Windows-native agent not tested;
   - Google Drive Recycle Bin and sync conflicts not tested;
   - admin terminal not tested.
+
+## E6.5 plugin cases (CLI 1.15.0, 2026-10-28)
+- Cases 12 and 13 ran once with and once without the skill, on `vault-copy` only, with `tests/scenarios/e65-plugins.mjs`. Both with-skill runs passed first time. Tokens were not estimated (the runner reads the transcript, not the bridge log).
+- Case 13 ran with the Templater trigger off (the default), so it did not need any setting change; the trigger-on behaviour stays covered by probe P31.
+- Observation, not a skill fault: the with-skill agent rendered `tp.date.now()` as the meeting date from the note name, not today's date; it said so. `references/plugins.md` says "render them yourself" but does not say what `tp.*` values to use.
+- Case 13 first with-skill run (4 turns, same outcome) was repeated after the judge check was widened (tags rendered by the agent count as a pass); only the second is listed.

@@ -241,6 +241,6 @@ These files are not part of the skill when installed, but they keep the skill co
 | `otf` (package [`obsidian-test-fixture`](https://github.com/vantt/obsidian-test-fixture), tag pinned in `tests/package.json`; path in `tests/otf.mjs`) | `otf generate --preset hard-cases` generates a fake vault with hard cases (every link style, a 3,000-line CRLF note, Vietnamese names, easily confused tags); `--preset personal-vault` generates a synthetic vault of ~1,800 notes for E8. `otf truth` computes the correct answers from files alone (backlinks, tasks, tags, YAML, CRLF) to grade results |
 | `tests/compat/probes.mjs` | 32 probes that re-check every CLI behavior the skill relies on, scored by severity of damage, with history saved in `HISTORY.md` |
 | `tests/compat/TROUBLESHOOTING.md` | Lessons for handling problems while measuring (slow index, reload, dialogs...) |
-| `tests/scenarios/README.md`, `tests/RESULTS.md` | 11 test scenarios with real agents, plus the results of each run |
+| `tests/scenarios/README.md`, `tests/RESULTS.md` | 13 test scenarios with real agents, plus the results of each run |
 
 **When Obsidian ships a new version:** `obs --preflight` will report `match=no`. Then run `tests/compat/probes.mjs`, see which probes changed result in `HISTORY.md`, and update `traps.md`, SKILL.md and `TESTED_CLI`. Details in [tests/compat/README.md](../tests/compat/README.md).

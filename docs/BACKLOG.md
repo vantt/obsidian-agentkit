@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 51 / 68 việc xong (75%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 52 / 68 việc xong (76%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 5/9 █████░░░░░ 55% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
-| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 4/6 ██████░░░░ 66% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
+| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 5/6 ████████░░ 83% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | ✅ Done | — | 10/12 ████████░░ 83% | — | Báo cáo: [REPORT.md](models/REPORT.md). Mặc định `haiku`. Còn E8.11, E8.13 (P3, tuỳ chọn) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
@@ -102,7 +102,7 @@ Các việc này agent không tự làm được:
 | E6.2 | Đo Templater qua `--create` | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F13: `create template=` chỉ chạy core Templates; `<% %>` giữ nguyên chữ trừ khi bật "trigger on new file creation" (khi đó chạy cả với note thường); probe P31, 31/31; thêm 1 dòng bẫy vào `references/traps.md` |
 | E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F14: không có lệnh CLI nào chạy query Dataview; `read`/`outline`/`search` chỉ thấy mã nguồn; kết quả chỉ có trong app (cần `eval`, bridge chặn); skill chỉ nên hướng dẫn viết query, không đọc kết quả; probe P32, 32/32 |
 | E6.4 | Viết `references/plugins.md` | E6 | P3 | ✅ | Agent | `references/plugins.md` (~914 token): Tasks, Dataview, Templater từ F12–F14; SKILL.md có dòng trỏ tới; size-check đạt (tải điển hình 2538/3000). Cú pháp emoji Tasks và trường Dataview lấy từ tài liệu plugin, không đo |
-| E6.5 | Fixture và kịch bản test cho plugin | E6 | P3 | ⬜ | Agent | Sau E6.4 |
+| E6.5 | Fixture và kịch bản test cho plugin | E6 | P3 | ✅ | Agent | Case 12 (Tasks) và 13 (Templater) trong [tests/scenarios/README.md](../tests/scenarios/README.md), kết quả trong [RESULTS.md](../tests/RESULTS.md): có skill pass cả hai; không skill: case 12 sai số task mở (4 thay vì 3). Runner `tests/scenarios/e65-plugins.mjs` chỉ chạy trên `vault-copy`; vault sạch sau reset |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |
 | E7.1 | Chốt tình huống diễn tập | E7 | P2 | ✅ | Agent | Plan E7, mục "Kịch bản đã chốt"; `tests/showcase/prompt.mjs` |
 | E7.2 | Chạy không có skill | E7 | P2 | ✅ | Agent | 9 phiên, `docs/showcase/scenarios/*/without*/` |

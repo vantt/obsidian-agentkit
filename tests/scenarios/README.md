@@ -1,4 +1,4 @@
-# Scenario tests (YARDSTICK.md tests 1-10, 11 cases)
+# Scenario tests (YARDSTICK.md tests 1-10 = 11 cases, plus plugin cases 12-13 = 13 cases)
 
 Each case is one task given to a **fresh agent session** that has only the `obsidian-connect` skill as guidance. The case is judged by `git diff` in the vault copy plus file-only ground truth (`otf truth` from `obsidian-test-fixture`, see `tests/otf.mjs`), never by the agent's own claim.
 
@@ -28,6 +28,8 @@ Each case is one task given to a **fresh agent session** that has only the `obsi
 | 8b | "Rename the tag `#proj` to `#project/active` across the vault." *(user pre-confirms after the dry-run)* | A dry-run listing is shown before any write; `#projects`, the code-block and inline-code `#proj`, and the heading `# proj` are untouched; frontmatter `proj` entries are updated; `obs tag name=proj total` (exact) has no plain `#proj` left |
 | 9 | Cases 1 and 4 from a Windows-native shell (PowerShell) vs WSL | Same answers; latency recorded per call |
 | 10 | Bulk edit under Google Drive sync | **Skipped by user decision**: needs a Drive test folder |
+| 12 | Tasks plugin (E6.5): fixture note `_agentkit-lab/e65/Project Plan.md` with `[ ]` x2, `[/]`, `[-]`, `[x]`. "Add a task 'Pay the electricity bill' due 2026-11-05 to that note, then tell me which open tasks it has." | The note gains exactly one new line `- [ ] ... 📅 2026-11-05` (checkbox `[ ]`, Tasks emoji syntax, same line); the other 5 lines are unchanged; the answer lists the 3 `[ ]` tasks as open and does not list `[-]` or `[x]` (the `[/]` task may be named as in progress, not counted as open); nothing outside `_agentkit-lab/e65/` changed |
+| 13 | Templater (E6.5): template `_agentkit-lab/e65/templates/Meeting Template.md` with `{{title}}` and two `<% %>` tags. "Create the note `.../Meeting 2026-11-02.md` from that template and tell me what it contains." | Templater trigger is off (default), so the CLI cannot fill the tags. Pass = the new note has either the tags still literal or rendered by the agent itself; and the agent says the CLI/Templater did not fill them (never claims Templater ran); the Templater trigger and the core-template folder are the same before and after (read in the app); nothing outside `_agentkit-lab/e65/` changed |
 
 ## E3.5 write check (`tests/e35-write-check.mjs`)
 Run before opening write access on a real vault, on a test vault first:
@@ -46,3 +48,10 @@ Run before the first bulk operation on a real vault (E3.6b), on a test vault wit
 - Resets itself: `git reset --hard` to the starting commit and `git clean` of the fixture and snapshot folders (named paths, test vault only), `git status` empty, `obs reload`, wait `--wait` seconds, `unresolved total` back to its start value.
 - Refuses (exit 2, nothing written) unless `vault info=path` ends in a test vault (same allowlist as the write check), the folder is a git work tree, and the tree is clean. Exit 0 = all checks pass and the vault is clean.
 - Offline test (guard, checks and a full run against the fake CLI): `node --test tests/e36-bulk-rehearsal.test.mjs`.
+
+## E6.5 plugin cases 12 and 13 (`tests/scenarios/e65-plugins.mjs`)
+`node tests/scenarios/e65-plugins.mjs <12|13> <with|without> [--model sonnet]`
+- One fresh headless `claude -p` agent per run (Claude subscription, through the E8 harness `tests/models/cc-run.sh`: bubblewrap sandbox, credential proxy, empty config dir, tools Bash/Read/Edit/Write). `with` gets the skill copy and the bridge command; `without` gets neither. The prompt names the vault `vault-copy`.
+- Refuses (exit 2) unless the bridge's `vault info=path` ends in `vault-copy` and its git tree is clean. Writes the fixture under `_agentkit-lab/e65/`, runs the agent, judges from the file on disk and from the app settings (Templater trigger, core-template folder, read with the CLI before and after), then resets by itself (`git reset --hard` to the starting commit and `git clean` of `_agentkit-lab`, test vault only), runs `obs reload` and waits 45 s.
+- Output in `tests/out/e65/<case>-<side>/` (gitignored): prompt, transcript, `result.json`.
+- Case 13 runs with the trigger off only. The trigger-on behaviour is measured by probe P31, not by an agent run.
