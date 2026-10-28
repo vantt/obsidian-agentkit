@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 41 / 68 việc xong (60%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 42 / 68 việc xong (61%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -14,7 +14,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 3/9 ███░░░░░░░ 33% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 4/9 ████░░░░░░ 44% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | 🔄 Doing | P2 | 5/6 ████████░░ 83% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 3/6 █████░░░░░ 50% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
@@ -82,7 +82,7 @@ Các việc này agent không tự làm được:
 | E3.3b | Một tuần dùng chỉ đọc trên vault thật | E3 | P1 | ⏸ | User | 1 tuần dùng bình thường |
 | E3.4 | Chọn cách snapshot | E3 | P1 | ✅ | User | Git, repo ngoài Drive (`--separate-git-dir`), chỉ file text; bridge tự commit trước rename, move, đổi tên tag ([GATES.md](GATES.md) mục E3.4) |
 | E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | Tách thành a/b |
-| E3.5a | Script 10 lần ghi (append daily, sửa property) + đọc lại, chạy trên vault Drive test | E3 | P1 | ⬜ | Agent | Xong khi: 10/10 đúng, không có bản xung đột sau 3 phút |
+| E3.5a | Script 10 lần ghi (append daily, sửa property) + đọc lại, chạy trên vault Drive test | E3 | P1 | ✅ | Agent | `tests/e35-write-check.mjs` (chỉ chạy trên 3 vault test): 10/10 đúng khi đọc file, không bản xung đột sau 180 s; 54 test pass. [FINDINGS.md](FINDINGS.md) F15: Obsidian chậm thấy sửa file ở vault Drive |
 | E3.5b | Làm lại trên vault thật cùng user | E3 | P1 | ⏸ | User + agent | Sau E3.3b; ~15 phút. Agent không tự ghi vào vault thật |
 | E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | Tách thành a/b |
 | E3.6a | Diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | E3 | P2 | ⬜ | Agent | Xong khi: `unresolved total` không đổi, vault sạch sau reset |

@@ -550,3 +550,10 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Bằng chứng: các lệnh và cờ đối chiếu với code `probes.mjs`, `run.mjs`; khớp với lần 1.14.4 → 1.15.0 ghi ở mục E8.6. Chạy được ở đây: test offline và size-check. Chưa chạy: các bước cần Obsidian, vì lần cập nhật thật chưa tới.
 - Đã sửa số probe lỗi thời (29 → 32) ở README và SPEC.
 - Còn mở: lần cập nhật Obsidian kế tiếp là lần chạy thật đầu tiên theo checklist.
+
+## E3.5a: 10 lần ghi trên vault Drive test (2026-10-28)
+- `tests/e35-write-check.mjs`: 5 `--daily-append-once` và 5 `--prop-set`, đọc lại từ file, chờ 180 s, kiểm không có bản xung đột Drive. Danh sách cho phép cứng 3 vault test; vault khác thì thoát mã 2, không ghi. 5 test offline.
+- Bằng chứng: chạy 1 lần trên `obsidian-agentkit-drive-test`: 10/10, không bản xung đột, `E3.5 CHECK PASS`. Reset bằng git (git dir ngoài Drive) rồi `obs reload`; agent báo vault sạch, tôi chưa tự kiểm lại.
+- Phát hiện: [FINDINGS.md](FINDINGS.md) F15. Đọc lại qua CLI trên vault Drive cho 1/10 vì Obsidian chậm; đọc file thì 10/10.
+- Môi trường: `/mnt/g` chết trong phiên này nên chạy bằng `node.exe` Windows qua PowerShell. Agent thử mount lại bằng root và bị chặn; không ai mount lại.
+- Còn mở: E3.5b trên vault thật cùng user; không đưa vào `npm test` (3 phút, cần Obsidian).

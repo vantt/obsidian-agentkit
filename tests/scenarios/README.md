@@ -28,3 +28,12 @@ Each case is one task given to a **fresh agent session** that has only the `obsi
 | 8b | "Rename the tag `#proj` to `#project/active` across the vault." *(user pre-confirms after the dry-run)* | A dry-run listing is shown before any write; `#projects`, the code-block and inline-code `#proj`, and the heading `# proj` are untouched; frontmatter `proj` entries are updated; `obs tag name=proj total` (exact) has no plain `#proj` left |
 | 9 | Cases 1 and 4 from a Windows-native shell (PowerShell) vs WSL | Same answers; latency recorded per call |
 | 10 | Bulk edit under Google Drive sync | **Skipped by user decision**: needs a Drive test folder |
+
+## E3.5 write check (`tests/e35-write-check.mjs`)
+Run before opening write access on a real vault, on a test vault first:
+`node tests/e35-write-check.mjs --vault <test vault> [--note <path.md>] [--wait 180] [--tag <text>]`
+- Does 10 writes through the bridge (5 `--daily-append-once`, 5 `--prop-set` of `e35_check` on `--note`), reads each back from the file on disk (the Obsidian CLI view is printed beside it), waits `--wait` seconds (default 180), then lists the vault folder and fails on any new file named like a Google Drive conflict copy (`name (1).md`, "conflict", "- Copy"). Exit 0 = 10/10 and no conflict copy.
+- Refuses (exit 2, nothing written) unless `vault info=path` ends in `vault-synth`, `vault-copy` or `obsidian-agentkit-drive-test`. The allowlist is hard-coded; it is the guard that keeps this off a real vault.
+- Measured on the Drive vault (CLI 1.15.0): the bridge's file edits are not seen by Obsidian, even after 3 minutes (`obsidian=stale`), and after an outside change (a reset) Obsidian's view is out of date, so the next `daily:append` fails with ENOENT. Run `obs reload` and wait about 45 s after every reset, before the next run. For that reason the pass test reads the file, not the CLI.
+- It does not reset the vault. Reset afterwards: in the vault (git dir outside Drive for the Drive vault), `git checkout -q -- <note>`, then remove the new daily note (`git clean -fdq -- <daily note>`), and check `git status` is empty, then `obs reload`. If the shell cannot read the Drive folder (stale `/mnt/g`), run the script with Windows `node.exe` through PowerShell. From WSL with a dead `/mnt/g` mount, run Windows git with `-c core.fileMode=false --git-dir=<UNC path of the .git dir> --work-tree=<vault>`.
+- Offline test of the guard and the checks: `node --test tests/e35-write-check.test.mjs`.

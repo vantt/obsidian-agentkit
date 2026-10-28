@@ -175,6 +175,14 @@ CLI 1.15.0, `vault-copy` (Dataview 0.5.68 enabled). A fixture note with a `datav
 - **Consequence for the skill:** guide the agent to write Dataview queries (as note text, for Obsidian to render), not to read their results. For the same answer, use what the CLI does return: `search`, `tags`, `properties`, `tasks`, `base:query` for Bases. Do not report "the query returns N rows" from `read`: that is the source, and a silent wrong answer (damage tier 3 if relied on). Do not try `eval` or `dev:dom` to get around this; it is refused on purpose.
 - Verdict: new finding, no source claim. Probe P32 (the probe runner uses `eval` for measurement only).
 
+## F15 Obsidian lags behind file-mode edits on a Drive vault (E3.5a, 2026-10-28)
+
+`vault-drive-test` on Google Drive, CLI 1.15.0. The bridge's `--prop-set` and `--daily-append-once` edit the file on disk. Obsidian's own view (`daily:read`, `properties`) did not show those edits minutes later; only the first daily write, which Obsidian created, showed. Reading back through the CLI scored 1/10 on the same 10 writes that were 10/10 correct on disk.
+
+- Verify writes on a Drive vault by reading the file, not through the CLI. `tests/e35-write-check.mjs` does this and prints whether Obsidian caught up.
+- After any outside change (for example a reset), Obsidian's view is stale: a later `daily:append` hit ENOENT. `obs reload` and about 45 s fixes it.
+- Open for E3.5b: confirm this on the real vault with the user watching; no source claim.
+
 ## Not verified
 
 - An admin terminal (F1).

@@ -16,7 +16,7 @@ Dùng skill hằng ngày trên vault thật đang đồng bộ Google Drive, b�
 | E3.3b | **Một tuần chỉ đọc** trên vault thật (user) | Như "Xong khi" của E3.3 |
 | E3.4 | Quyết định chiến lược snapshot cho vault thật: git trong vault, hay copy vào `.trash/obsidian-connect-snapshots/` | Quyết định được ghi vào GATES.md |
 | E3.5 | **Mở quyền ghi một note:** append daily note, sửa property | 10 lần ghi đều đọc lại đúng, không tạo bản xung đột Drive |
-| E3.5a | **Chuẩn bị E3.5:** script 10 lần ghi và đọc lại, chạy trên vault Drive test | 10/10 đúng, không bản xung đột sau 3 phút |
+| E3.5a ✅ | **Chuẩn bị E3.5:** script 10 lần ghi và đọc lại, chạy trên vault Drive test | 10/10 đúng, không bản xung đột sau 3 phút |
 | E3.5b | **Ghi trên vault thật** cùng user (~15 phút), sau E3.3b | Như "Xong khi" của E3.5 |
 | E3.6a | **Chuẩn bị E3.6:** diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | `unresolved total` không đổi, vault sạch |
 | E3.6b | **Thao tác lớn trên vault thật** có người theo dõi (~20 phút), sau E3.5b | Như "Xong khi" của E3.6 |
