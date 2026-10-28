@@ -1,3 +1,5 @@
+Ngôn ngữ: [English](HOW-IT-WORKS.en.md) | Tiếng Việt
+
 # Skill obsidian-connect hoạt động thế nào
 
 Tài liệu này giải thích cách skill `obsidian-connect` chạy và vai trò của từng file trong skill. Nội dung đã cập nhật cho **skill v2** (E8.6, E8.7): việc cơ học chuyển vào bridge, output của bridge có dòng kết luận và dòng `NEXT:`, SKILL.md viết lại cho model rẻ. Lý do ở [models/FAILURES.md](models/FAILURES.md). Số liệu dựa trên Obsidian CLI 1.14.4 đã đo trong [FINDINGS.md](FINDINGS.md); thiết kế đầy đủ nằm ở [SPEC.md](SPEC.md).

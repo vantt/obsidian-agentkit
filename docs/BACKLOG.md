@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 44 / 68 việc xong (64%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 45 / 68 việc xong (66%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -15,7 +15,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 4/9 ████░░░░░░ 44% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
-| E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | 🔄 Doing | P3 | 1/5 ██░░░░░░░░ 20% | E3.1 | Để sau (quyết định ở cổng 0) |
+| E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | 🔄 Doing | P3 | 2/5 ████░░░░░░ 40% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 3/6 █████░░░░░ 50% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
@@ -87,11 +87,11 @@ Các việc này agent không tự làm được:
 | E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | Tách thành a/b |
 | E3.6a | Diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | E3 | P2 | ⬜ | Agent | Xong khi: `unresolved total` không đổi, vault sạch sau reset |
 | E3.6b | Làm lần đầu trên vault thật có người theo dõi | E3 | P2 | ⏸ | User + agent | Sau E3.5b; ~20 phút |
-| E4.1 | Plugin và marketplace của Claude Code | E4 | P3 | ✅ | Agent | `.claude-plugin/plugin.json` + `marketplace.json`; `claude plugin validate` pass; cài từ bản local vào config tạm OK; mục "Install as a plugin" trong README |
+| E4.1 | Plugin và marketplace của Claude Code | E4 | P3 | ✅ | Agent | `.claude-plugin/plugin.json` + `marketplace.json`; `claude plugin validate` pass; sau push, `marketplace add vantt/obsidian-agentkit` + `plugin install` từ GitHub OK trong config tạm (skill `obsidian-connect` hiện ra); mục "Install as a plugin" trong README |
 | E4.2 | Đường dẫn script không phụ thuộc chỗ cài | E4 | P3 | ⬜ | Agent | — |
 | E4.3 | Script cài đặt kiểm tra điều kiện | E4 | P3 | ⬜ | Agent | — |
 | E4.4 | Hướng dẫn cài trên Windows | E4 | P3 | ⬜ | Agent | — |
-| E4.5 | HOW-IT-WORKS tiếng Anh | E4 | P3 | ⬜ | Agent | — |
+| E4.5 | HOW-IT-WORKS tiếng Anh | E4 | P3 | ✅ | Agent | [HOW-IT-WORKS.en.md](HOW-IT-WORKS.en.md), dịch đủ 6 mục, hai file trỏ qua lại |
 | E5.1 | GitHub Actions | E5 | P2 | ✅ | Agent | `.github/workflows/ci.yml` (`npm ci` + `npm test`), badge trong README; SKILL.md quá ngân sách làm `npm test` fail (exit 1). Badge xanh chờ lần chạy đầu trên GitHub |
 | E5.2 | `npm test` | E5 | P2 | ✅ | Agent | `cd tests && npm ci && npm test`: 67/67 pass + size-check ok. privacy-scan không vào `npm test` (cần file cục bộ `real-names.json`) |
 | E5.3 | Checklist khi Obsidian cập nhật | E5 | P2 | ✅ | Agent | 10 bước trong [tests/compat/README.md](../tests/compat/README.md); "lần đầu theo checklist" được chứng minh bằng lần 1.14.4 → 1.15.0 (đã làm đúng các bước đó, [GATES.md](GATES.md) mục E8.6); lần chạy thật kế tiếp là bản Obsidian sau 1.15.0 |

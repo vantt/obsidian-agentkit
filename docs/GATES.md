@@ -561,3 +561,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 ## E5.4: nhắc kiểm tra định kỳ (2026-10-28)
 - Mục "Monthly check" trong `tests/compat/README.md`: lệnh `probes.mjs ... --no-write` (~1 phút), cái cần xem, khi nào leo lên checklist E5.3; ví dụ crontab, Task Scheduler, `/schedule` chỉ là văn bản để user tự cài. Cảnh báo: cron và routine đám mây có thể hỏng vì Obsidian desktop phải đang mở vault; nhắc lịch là cách an toàn hơn.
 - Bằng chứng: 54 test pass, size-check ok. Chưa chạy lệnh trên vault (đã có chạy đủ probe ở các việc khác).
+
+## E4.1, E4.5: plugin và HOW-IT-WORKS tiếng Anh (2026-10-28)
+- E4.1: `.claude-plugin/plugin.json` (version 0.1.0, nhớ nâng mỗi bản phát hành) và `marketplace.json` (`source: ./`). `claude plugin validate` pass. Sau push, cài từ GitHub (`vantt/obsidian-agentkit`) vào config tạm (`CLAUDE_CONFIG_DIR`) thành công, `plugin details` thấy skill `obsidian-connect`; `~/.claude` thật không bị đổi (không có dòng nào nhắc tới plugin).
+- Cho E4.2: đường dẫn script trong SKILL.md là chỗ giữ chỗ ("thư mục của skill"), không cứng, nhưng sau cài plugin skill nằm trong `plugins/cache/<marketplace>/<plugin>/<version>/skills/obsidian-connect/` (đổi theo phiên bản). `${CLAUDE_PLUGIN_ROOT}` được thay trong thân SKILL.md nhưng không có khi cài bằng symlink; E4.2 cần dạng dùng được cả hai. Plugin copy cả repo (tests, docs) vào cache.
+- E4.5: `docs/HOW-IT-WORKS.en.md` dịch đủ nội dung; cả hai file có dòng liên kết ngôn ngữ ở đầu. Hai file cùng nói CLI 1.14.4 (đo) và 1.15.0 (skill), chưa chỉnh.
