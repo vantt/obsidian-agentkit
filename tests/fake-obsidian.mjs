@@ -21,6 +21,7 @@ switch (mode) {
   case 'exe-127': out('', 127);
   case 'leading-blank': out('\nreal output\n');
   case 'hang': setTimeout(() => out('late\n'), 60000); break;
+  case 'hang-vault': if (process.argv.slice(2).some((x) => x === 'version')) out('1.15.0 (installer 1.14.4)\n'); else setTimeout(() => out('late\n'), 60000); break;
   case 'vault-path': out('C:\\Some Dir\\Vault Đà Nẵng\n');
   case 'vault': vaultMode(); break;
   default: out(`unknown FAKE_MODE ${mode}\n`, 9);

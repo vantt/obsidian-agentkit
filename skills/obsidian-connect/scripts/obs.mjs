@@ -162,7 +162,9 @@ export function fixPathArgs(args) {
 
 function must(run, args, okCodes = [EXIT.ok]) {
   const r = run(args);
-  if (!okCodes.includes(r.code)) throw new Fail(r.code, `${args[0]}: ${r.reason}`, { next: nextFor(r.code, r.reason) });
+  // A vault that is not open yet makes Obsidian open and index it; the first `vault` call can time out (E3.1).
+  const next = r.code === EXIT.timeout && args[0] === 'vault' ? 'Obsidian may be opening this vault; wait 60 s and run obs --preflight once more. If it times out again, tell the user' : nextFor(r.code, r.reason);
+  if (!okCodes.includes(r.code)) throw new Fail(r.code, `${args[0]}: ${r.reason}`, { next });
   return r.out.replace(/^\r?\n/, '').trim();
 }
 const num = (s) => Number(String(s).trim().split(/\s+/)[0]) || 0;

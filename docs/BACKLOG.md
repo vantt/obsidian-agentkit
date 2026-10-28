@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 31 / 63 việc xong (49%)**
+**Toàn project: 33 / 63 việc xong (52%)**
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -14,7 +14,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/4 █████░░░░░ 50% | — | E2.1 (Claude Code trên Windows) và E2.4 (terminal admin) cần user |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | ⬜ Todo | P1 | 0/6 ░░░░░░░░░░ 0% | ✅ E2.2, E2.3 | E3.1: user báo tên vault thật; E3.4: user chọn cách snapshot |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | ✅ E2.2, E2.3 | E3.3: một tuần chỉ đọc (user dùng); E3.4: user chọn cách snapshot |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | — | Để sau (user 2026-10-28) |
@@ -39,7 +39,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E2 | E2.2, E2.3 xong trên Drive; còn E2.1, E2.4 | Chờ user (mục "Cần user") |
+| E3.3 | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi |
 
 ## Cần user
 
@@ -48,7 +48,7 @@ Các việc này agent không tự làm được:
 | ID | Việc | User cần làm |
 |---|---|---|
 | E2.1 | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill |
-| E3.1 | Cài skill cho vault thật | Báo tên vault thật (agent chỉ chạy `--preflight` và `profile.mjs`, chỉ đọc) |
+| E3.3 | Một tuần chỉ đọc trên vault thật | Dùng agent hỏi vault (tìm, backlink, đếm task); báo lại câu trả lời sai hoặc thiếu |
 | E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
 | E3.4 | Chọn cách snapshot cho vault thật | Quyết định: git trong vault, hay copy vào `.trash/` |
 | — | Thu hồi key OpenRouter đã lộ | OpenRouter → Keys → revoke key E8 ([GATES.md](GATES.md) mục sự cố bảo mật) |
@@ -70,8 +70,8 @@ Các việc này agent không tự làm được:
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | — |
 | E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
 | E2.6 | Đo token từ transcript | E2 | P2 | ❌ | Agent | Bỏ: E8 đo token từ transcript cho mọi lượt (`tests/models/summary.mjs`) |
-| E3.1 | Cài skill cho vault thật | E3 | P1 | ⬜ | User + agent | E2.3 xong; cần tên vault thật |
-| E3.2 | Profile vault thật | E3 | P1 | ⏸ | Agent | Chỉ đọc |
+| E3.1 | Cài skill cho vault thật | E3 | P1 | ✅ | User + agent | Symlink `~/.claude/skills/obsidian-connect`; `--preflight` OK, `match=yes` (lần đầu timeout vì Obsidian đang mở vault; `NEXT:` đã sửa, test mới) |
+| E3.2 | Profile vault thật | E3 | P1 | ✅ | Agent | `profile.mjs` khớp giá trị live (`alwaysUpdateLinks` true, daily note ở gốc, không template). Vault có Tasks, Dataview, Templater, Breadcrumbs; `.obsidian/` đã có 2 bản xung đột Drive từ 2025 |
 | E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | — |
 | E3.4 | Chọn cách snapshot | E3 | P1 | ⏸ | User | — |
 | E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | — |

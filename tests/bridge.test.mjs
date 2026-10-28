@@ -120,6 +120,12 @@ test('124 timeout without retry', () => {
   assert.ok(Date.now() - t < 5000, 'returned within 5 s');
 });
 
+test('--preflight timeout on a vault that is still opening: wait and run --preflight once more', () => {
+  const r = obs(['--preflight', '--vault', 'v'], 'hang-vault', { OBS_TIMEOUT: '1' });
+  assert.equal(r.code, 124);
+  assert.match(lastLine(r.err), /^NEXT: Obsidian may be opening this vault; wait 60 s and run obs --preflight once more/);
+});
+
 // v2 (intended change): the first line is NOT DONE, and NEXT says to ask the user (never to read obsidian.json).
 test('--preflight without vault: NOT DONE, ask the user, exit 5', () => {
   const r = obs(['--preflight'], 'ok', { OBS_VAULT: '' });

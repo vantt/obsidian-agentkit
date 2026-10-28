@@ -502,3 +502,10 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - E8.8 closed: round 1 met H1 on Claude; more rounds only if the skill changes.
 - E2.5 and E2.6 dropped: E8 already ran every scenario 3 times and measured tokens from transcripts for every run.
 - What is left on the main path needs the user: E2.2 and E2.3 (a test folder on Google Drive opened as its own vault), E2.1 (Claude Code on Windows), E2.4 (admin terminal), then E3.
+
+## E2.2, E2.3 on Drive; E3.1, E3.2 on the real vault (2026-10-28)
+
+- E2.2 and E2.3 ran on a test vault in a folder under `G:\My Drive`. Its git repo lives outside Drive (`~/.local/state/obs-e2/`), so Drive never syncs `.git`. Results: `tests/RESULTS.md` case 10 and `docs/FINDINGS.md` F5.
+- E3.1: the skill is symlinked into `~/.claude/skills/obsidian-connect`. The first `--preflight` on the real vault timed out: the vault was registered but not open, so the CLI made Obsidian open and index it. A second `--preflight` 45 s later was OK, `match=yes`. The bridge's `NEXT:` line for a timeout on that first `vault` call now says to wait 60 s and run `--preflight` once more, instead of blaming a dialog (new bridge test).
+- E3.2: `profile.mjs` read only `.obsidian/*.json`; its values agree with the live `--preflight` (`alwaysUpdateLinks` true, `trashOption` system). The vault uses Tasks, Dataview and Templater (E6, P3, may come back if E3.3 trips on them), and its `.obsidian/` already holds two Drive conflict copies from 2025, so a second device does create conflicts.
+- No note content left the machine; nothing in the real vault was written. The vault's name and folders stay out of this repo.
