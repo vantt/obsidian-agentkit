@@ -162,6 +162,25 @@ const probes = [
     const byS = out(['tasks', `path=${f}`, 'status=/']);
     const pass = v.ok && todo === 2 && done === 3 && keys === 'file,line,status,text' && j[1]?.text.includes('📅 2026-10-30') && j.map((x) => x.status).join('') === '  /-x' && /^- \[\/\] c/.test(byS);
     return { pass, obs: `total=${v.t} todo=${todo} done=${done} keys=${keys} status=/ -> ${byS.slice(0, 20)}` }; } },
+  { id: 'P31', f: 'F13', w: 3, name: 'create template= runs core Templates only; Templater runs only if its create trigger is on', write: true, run: () => {
+    const TP = 'app.plugins.plugins["templater-obsidian"]', CO = 'app.internalPlugins.plugins.templates.instance.options';
+    if (evalJs(`!!${TP}`) !== 'true') return { pass: false, obs: 'Templater not loaded' };
+    const f = `${L}/p31-tpl.md`, tag = '<% 1+1 %>';
+    fs.writeFileSync(path.join(dir, f), `T={{title}} X=${tag}\n`);
+    const prevTrig = evalJs(`${TP}.settings.trigger_on_file_creation`), prevFolder = evalJs(`${CO}.folder`);
+    const mk = (n, extra) => { out(['create', `path=${L}/${n}.md`, ...extra]); sleep(3500); try { return fs.readFileSync(path.join(dir, `${L}/${n}.md`), 'utf8').trim(); } catch { return ''; } }; // fixed wait: Templater rewrites the new file a moment after it appears
+    const setTrig = (v) => evalJs(`(()=>{${TP}.settings.trigger_on_file_creation=${v};${TP}.event_handler.update_trigger_file_on_creation();return "ok"})()`);
+    let off = '', on = '', plain = '';
+    try {
+      evalJs(`(()=>{${CO}.folder="${L}";return "ok"})()`);
+      setTrig(false); off = mk('p31-off', ['template=p31-tpl']);
+      setTrig(true); on = mk('p31-on', ['template=p31-tpl']); plain = mk('p31-plain', [`content=Z=<% 2+2 %>`]);
+    } finally {
+      setTrig(prevTrig === 'true');
+      evalJs(`(()=>{${prevFolder === 'undefined' || prevFolder === '' ? `delete ${CO}.folder` : `${CO}.folder=${JSON.stringify(prevFolder)}`};return "ok"})()`);
+    }
+    const pass = off === `T=p31-off X=${tag}` && on === 'T=p31-on X=2' && plain === 'Z=4';
+    return { pass, obs: `trigger off: ${off}; on: ${on}; plain content, on: ${plain}` }; } },
   { id: 'P27', f: 'F6', w: 1, name: 'unknown flags ignored silently', run: () => { const r = out(['search', 'query="Section A"', `path=${L}`, 'bogusflag=1', 'matches']); return { pass: r.split('\n').length === 2, obs: r.replace(/\n/g, ' | ').slice(0, 60) }; } },
   { id: 'P28', f: 'F1', w: 1, name: 'bridge --preflight <= 5 lines, exit 0', run: () => { const r = spawnSync(process.execPath, [path.join(here, '..', '..', 'skills/obsidian-connect/scripts/obs.mjs'), '--preflight'], { encoding: 'utf8', env: { ...process.env, OBS_VAULT: vault } }); return { pass: r.status === 0 && r.stdout.trim().split('\n').length <= 5, obs: `exit=${r.status}` }; } },
 ];

@@ -156,6 +156,15 @@ CLI 1.15.0, `vault-copy` (Tasks, Dataview and Templater enabled). A fixture note
 - `line` is a string (`"2"`) in JSON, and 1-based.
 - Verdict: new finding, no source claim. Probe P30.
 
+## F13 `create template=` and the Templater plugin syntax (E6.2, 2026-10-28)
+
+CLI 1.15.0, `vault-copy` (Templater 2.16.0 enabled with default settings: templates folder empty, "trigger on new file creation" off). A template file with `{{title}}` (core syntax) and `<% 1+1 %>` (Templater syntax).
+
+- **`create template=` is the core Templates plugin only.** It needs the core plugin's template folder; with none set it fails with `Error: No template folder configured.` (F11: the copy has none). With the folder set (temporarily, in memory), `create path=… template=<name>` resolved `{{title}}` and left `<% 1+1 %>` literal in the new note. Templater tags are not run by the CLI, and the CLI has no Templater command.
+- **Templater runs only through its own "Trigger Templater on new file creation" setting**, and then on every new note, not only on notes made from a template. With the trigger on, the same `create template=` gave `X=2`, and a plain `create content="Z=<% 2+2 %>"` gave `Z=4`. Only the trigger itself must be live: flipping the setting value in memory was not enough until the plugin re-registered its create handler (the settings screen does this when the toggle is clicked).
+- **Consequence:** with the default (trigger off) a Templater template made through `obs --create template=` keeps its `<% %>` tags, so render it yourself or have the user turn the trigger on. With the trigger on, any note content containing `<% %>` is executed, so do not write untrusted text that contains it. The skill should not offer `template=` for Templater templates (damage tier 3, silent wrong result).
+- The probe sets both settings temporarily and restores them. Verdict: new finding, no source claim. Probe P31.
+
 ## Not verified
 
 - An admin terminal (F1).

@@ -534,3 +534,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Kết quả đầy đủ ở [FINDINGS.md](FINDINGS.md) F12; probe P30 (đã có trong 30 probe).
 - Bằng chứng: chạy đủ bộ probe trên `vault-copy`, CLI 1.15.0: 30/30, 100% có trọng số; 49 test pass; vault sạch.
 - Điểm mở cho E6.4: bẫy `[/]`/`[-]` bị tính là done khi đếm `todo`; chưa đưa vào `references/`.
+
+## E6.2: Templater qua `create template=` (2026-10-28)
+- Kết quả ở [FINDINGS.md](FINDINGS.md) F13; probe P31 đặt tạm hai cài đặt rồi khôi phục (trong `finally`).
+- Bằng chứng: đủ 31 probe trên `vault-copy`, CLI 1.15.0, 100% có trọng số; 49 test pass; vault sạch. Trigger tắt: `X=<% 1+1 %>`; bật: `X=2`, note thường `Z=4`.
+- Rủi ro cần biết: khi trigger bật, mọi nội dung chứa `<% %>` được thực thi, nên không ghi văn bản không tin cậy có chuỗi này.

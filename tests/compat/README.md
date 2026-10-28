@@ -3,7 +3,7 @@
 The skill's trap list and guards are true for the CLI version in `SKILL.md` `metadata.tested-cli`. When `obs --preflight` prints `match=no`, or before a release, run this suite and compare.
 
 ## What it measures
-`probes.mjs` holds 30 probes. Each one re-checks a single behaviour the skill relies on, and is tied to a finding in `docs/FINDINGS.md`. A probe **passes** when the CLI still behaves as recorded. A failure means the CLI changed, so the related skill text or guard may now be wrong or unnecessary. A failure is not always bad news: a fixed trap also shows up as a failure.
+`probes.mjs` holds 31 probes. Each one re-checks a single behaviour the skill relies on, and is tied to a finding in `docs/FINDINGS.md`. A probe **passes** when the CLI still behaves as recorded. A failure means the CLI changed, so the related skill text or guard may now be wrong or unnecessary. A failure is not always bad news: a fixed trap also shows up as a failure.
 
 | Kind | Probes |
 |---|---|
@@ -13,7 +13,7 @@ The skill's trap list and guards are true for the CLI version in `SKILL.md` `met
 | Link integrity | P13–P17 |
 | Data safety | P18 P19 |
 | Metadata and conventions | P22–P24 |
-| Plugin data (Tasks) | P30 |
+| Plugin data and syntax (Tasks, Templater) | P30 P31 |
 | Other writes, UI and the bridge | P20 P21 P26 P28 P29 |
 
 ## Scoring

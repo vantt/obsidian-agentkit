@@ -26,6 +26,7 @@ Evidence: `docs/FINDINGS.md` in the obsidian-connect repo (`F#`). Re-test on oth
 - The bridge refuses raw `create`, `append`, `prepend`, `property:set`, `property:remove`, `daily:append`, `delete`, `rename` and `move` (exit 5). Its `NEXT:` names the bridge command, which reads its result back.
 - `create` on an existing path silently creates `name 1.md`. Use `obs --create`, which refuses.
 - `create` makes parent folders, opens no tab, and honours `path=` together with `template=`. `name=` without `path=` lands in the new-note location (profile).
+- `create template=` runs only the core Templates plugin (`{{title}}`, `{{date}}`) and needs its template folder. Templater `<% %>` tags stay literal unless Templater's "trigger on new file creation" is on; then they run on every new note, also plain `content=`. F13.
 - `move` into a missing folder fails with `Error: ENOENT`. `obs --move` creates the folder first.
 - Rename and move rewrite markdown links into the vault's `newLinkFormat` (for example `../../A%20B.md` becomes `A%20B.md`). They still resolve, but the diff includes the restyle.
 - With `alwaysUpdateLinks` off, rename and move pop up an "Update links" modal and the CLI blocks. On timeout the file is **already renamed** and its links are broken. `obs --rename`/`--move` check the live setting first and refuse; `--allow-unsafe` cannot override that, and raw `rename`/`move` are always refused.
