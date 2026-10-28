@@ -2,11 +2,11 @@
 
 Bảng quản lý công việc, trạng thái và tiến độ của toàn project. Mỗi epic có một plan chi tiết trong [`docs/plans/`](plans/); mỗi việc có ID (`E2.3`) trỏ tới dòng tương ứng trong plan đó.
 
-**Cập nhật lần cuối:** 2026-10-27 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4)
+**Cập nhật lần cuối:** 2026-10-28 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4); skill v2 kiểm trên CLI 1.15.0
 
 ## Tổng quan tiến độ
 
-**Toàn project: 26 / 66 việc xong (39%)**
+**Toàn project: 27 / 66 việc xong (40%)**
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
-| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 7/13 █████░░░░░ 53% | — | Vòng 1 xong: skill v2, Haiku và Sonnet 27/27 sạch ([ROUND-1.md](models/ROUND-1.md)). Tiếp: probe ghi trên CLI 1.15.0 (E8.6), báo cáo E8.9. Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 8/13 ██████░░░░ 61% | — | Vòng 1 xong: skill v2, Haiku và Sonnet 27/27 sạch ([ROUND-1.md](models/ROUND-1.md)); skill đã kiểm trên CLI 1.15.0. Tiếp: báo cáo E8.9. Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
 | E10. Tách bộ tạo vault test thành repo `vantt/obsidian-test-fixture` | [E10-test-fixture-repo.md](plans/E10-test-fixture-repo.md) | ✅ Done | — | 3/3 ██████████ 100% | — | — (test dùng `otf` từ `obsidian-test-fixture#v0.3.0`) |
 
@@ -37,7 +37,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E8.6 | Probe ghi trên CLI 1.15.0, probe mới cho lệnh gộp | Vòng 1 xong; cần chạy trên bản sao vault, cập nhật `TESTED_CLI` nếu không có gì đổi |
+| — | Không có việc đang chạy | Việc tiếp theo: E8.9 (báo cáo H1–H4) |
 
 ## Cần user
 
@@ -104,7 +104,7 @@ Các việc này agent không tự làm được:
 | E8.3 | Vault tổng hợp, ground truth, guard chặn vault thật | E8 | P2 | ✅ | Agent + user | `gen-synth-vault.mjs` (nay là `otf generate --preset personal-vault`); `vault-synth` mở trong Obsidian, calibrate khớp ground truth |
 | E8.4 | Vòng 0: đo skill v1 trên 10 model (5 family); có/không skill | E8 | P2 | ✅ | Agent | 434/540 ô, dừng theo quyết định user; khuyến nghị model rẻ nhất từng family ở [ROUND-0.md](models/ROUND-0.md) |
 | E8.5 | Phân loại lỗi, xếp hạng việc cần sửa; sửa bộ chấm ("không làm gì" = từ chối, `eval` vô hại vs có hại, nghi chấm nhầm `sed -i` ở S3) rồi chấm lại vòng 0 | E8 | P2 | ✅ | Agent | [FAILURES.md](models/FAILURES.md); 53/434 lượt đổi kết quả; khuyến nghị giữ nguyên ([GATES.md](GATES.md) mục E8.5) |
-| E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ⏸ | Agent | Chạy đúng trong vòng 1; còn probe ghi trên CLI 1.15.0 |
+| E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ✅ | Agent | Chạy đúng trong vòng 1; 29/29 probe trên CLI 1.15.0, `TESTED_CLI` = 1.15.0 ([GATES.md](GATES.md) mục E8.6 close) |
 | E8.7 | Viết lại SKILL.md và output bridge cho model rẻ | E8 | P2 | ✅ | Agent | Vòng 1: 27/27 sạch mỗi model, rẻ hơn 37–51% ([ROUND-1.md](models/ROUND-1.md)) |
 | E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | 🔄 | Agent | Vòng 1 xong, H1 đạt với Claude; vòng sau chỉ khi skill đổi |
 | E8.9 | Báo cáo chứng minh H1–H4 và biểu đồ | E8 | P2 | ⬜ | Agent | — |

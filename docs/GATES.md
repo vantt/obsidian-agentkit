@@ -480,3 +480,15 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Re-judging round 0 with this rule changed one without-skill run (`gemini-3.5-flash-lite` S8), which is now clean.
 
 **H1 for Claude:** met on skill v2, with both models at 100% and no incidents.
+
+## E8.6 close: all 29 probes on CLI 1.15.0 (2026-10-28)
+
+**Run:** `probes.mjs` (all 29, write probes included) on `vault-synth`, CLI 1.15.0.
+
+- 28/29 on the first run. Only P29 failed: `before=false after=true`.
+- P29 checks finding F9j: `daily:read` creates today's daily note. On 1.15.0 it still does. The probe failed only because it also required the new file to be 0 bytes. `vault-synth` has a Daily notes template (`Templates/Daily`), so the created note holds the rendered template (31 bytes). `vault-copy`, used for the 1.14.4 runs, has no template. This is a difference between the vaults, not a CLI change. Checked by hand.
+- Fix: P29 now passes when the note exists afterwards, and records its size. Re-run with `--only P29`: pass. FINDINGS F9j has a dated note.
+- Verdict: no behaviour the skill relies on changed. `TESTED_CLI`, SKILL.md `tested-cli` and `tested-on`, the traps header, SPEC and README now say 1.15.0. `--preflight` prints `match=yes`.
+- `calibrate` after the probes: backlinks 9, unresolved 35, base `1a8a43f`; the vault is clean.
+- Not added: live probes for the new bridge commands (`--find`, `--prop-set`, ...). They are bridge code over the probed CLI commands, covered by the 44 bridge tests and by round 1 (54/54 clean).
+- Side note: `obsidian help` on 1.15.0 lists 103 commands; the bridge's `KNOWN` list holds the 71 the skill can meet. It was a subset on 1.14.4 too (for example `dev:screenshot` existed then), so the gap is not new.

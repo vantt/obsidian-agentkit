@@ -123,6 +123,7 @@ jackal's `HIGH_RISK_REPORT.md` gives 13/57 silent failures on CLI 1.12.1. The ma
 - **F9i `tag name=proj verbose`** counts nested `#proj/sub` too (5 occurrences, where ground truth for exact `#proj` is 2 in body + 2 in frontmatter). It does not count `#projects` or code blocks.
 
 - **F9j `daily:read` creates the note (found in Phase 4, 2026-10-22).** With no daily note on disk, `daily:read` printed nothing (bridge exit 4), and right afterwards `2026-10-22.md` existed with 0 bytes. A read command has a write side effect. A later `daily:append` into that empty file starts the note with a blank line (`\n- [ ] …`). Verdict: new finding. The skill checks with `daily:path` and file tools instead.
+  - **Re-checked on CLI 1.15.0 (2026-10-28), `vault-synth`:** still true. That vault's Daily notes setting has a template (`Templates/Daily`), so the note `daily:read` creates holds the rendered template, not 0 bytes. The side effect is the same. Probe P29 now passes on "the note exists afterwards" and records its size.
 
 ## F10 Remaining assumptions
 

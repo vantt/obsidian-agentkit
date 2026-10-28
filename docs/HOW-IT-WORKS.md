@@ -59,7 +59,7 @@ skills/obsidian-connect/
 ### `SKILL.md`: bản hướng dẫn chính (~1,2k token ở v2, v1 là ~1,6k)
 
 Agent luôn đọc file này đầu tiên. Nó gồm:
-- **Frontmatter:** `name`, `description` (quyết định khi nào skill được kích hoạt: chỉ khi làm việc với vault Obsidian, không phải Markdown thông thường), và `metadata.tested-cli: "1.14.4"` để biết skill đã được kiểm chứng trên bản CLI nào.
+- **Frontmatter:** `name`, `description` (quyết định khi nào skill được kích hoạt: chỉ khi làm việc với vault Obsidian, không phải Markdown thông thường), và `metadata.tested-cli: "1.15.0"` để biết skill đã được kiểm chứng trên bản CLI nào.
 - **Start:** hỏi tên vault, chạy preflight một lần, chạy profile trước khi viết note mới.
 - **Read the output:** chép dòng `OK:`/`NOT DONE:`/`APPROXIMATE:` vào câu trả lời; lỗi thì làm theo `NEXT:`. Bảng mã thoát của v1 đã bỏ.
 - **Bảng routing:** 18 việc, mỗi việc một lệnh copy được nguyên văn.

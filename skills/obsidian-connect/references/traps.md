@@ -1,4 +1,4 @@
-# Obsidian CLI traps (measured on 1.14.4)
+# Obsidian CLI traps (measured on 1.14.4, all re-checked on 1.15.0)
 
 Evidence: `docs/FINDINGS.md` in the obsidian-connect repo (`F#`). Re-test on other versions with `tests/compat/`.
 

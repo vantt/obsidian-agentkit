@@ -1,6 +1,6 @@
 # Spec: obsidian-connect v1
 
-Every decision cites a finding (`F#` in `FINDINGS.md`) or a lesson key. Tested on Obsidian CLI **1.14.4**.
+Every decision cites a finding (`F#` in `FINDINGS.md`) or a lesson key. Tested on Obsidian CLI **1.14.4**; the 29 probes pass unchanged on **1.15.0** (2026-10-28).
 
 > **v2 (E8.6, E8.7, 2026-10-27).** This spec describes v1. v2 keeps every rule here and moves more into the bridge; see §8.
 
@@ -115,7 +115,7 @@ Licenses checked:
 
 ## 5. Re-test kit (user request)
 
-- **Version pin:** SKILL.md `metadata.tested-cli: "1.14.4"` and `tested-on`. `--preflight` prints `tested=1.14.4 match=yes|no`. On `no`, the skill tells the agent to run the probe suite before trusting the trap list.
+- **Version pin:** SKILL.md `metadata.tested-cli: "1.15.0"` and `tested-on`. `--preflight` prints `tested=1.15.0 match=yes|no`. On `no`, the skill tells the agent to run the probe suite before trusting the trap list.
 - **Probe suite** (`tests/compat/probes.mjs --vault <copy>`): about 25 probes, each tied to an `F#`, with an expected result and a severity weight (data loss 5, links 4, silent wrong answer 3, metadata 3, tokens 2, UI 1). It writes `history/<date>_<cli>.json` and appends a row to `HISTORY.md`: date, CLI, environment, passed/total, weighted score (%), and the probes that changed since the last run. `--compare` prints the diff from the previous run.
 - **Scenario results:** `RESULTS.md` keeps one row per run with date and CLI version; new versions append, nothing is overwritten.
 - **Troubleshooting:** `tests/compat/TROUBLESHOOTING.md`, updated whenever a probe needs more than one retry.

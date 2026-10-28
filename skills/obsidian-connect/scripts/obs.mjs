@@ -12,7 +12,7 @@ import os from 'node:os';
 import path from 'node:path';
 import * as F from './files.mjs';
 
-export const TESTED_CLI = '1.14.4';
+export const TESTED_CLI = '1.15.0';
 const EXIT = { ok: 0, unreachable: 2, error: 3, empty: 4, usage: 5, notReady: 6, guard: 7, timeout: 124 };
 const LIST_CMDS = /^(search|search:context|backlinks|links|tags|tag|tasks|orphans|deadends|unresolved|aliases|properties|outline|files|folders|bases|base:query|templates|recents|bookmarks|daily:read|read|property:read)$/;
 const EMPTY_RE = /^No [\w ]+ found\.$/;

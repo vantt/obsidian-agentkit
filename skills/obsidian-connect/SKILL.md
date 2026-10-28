@@ -2,8 +2,8 @@
 name: obsidian-connect
 description: Read, search and safely change an Obsidian vault through the official Obsidian CLI from Windows, WSL or Git Bash, with a file-only fallback. Use for work inside the user's Obsidian vault (notes, backlinks, tags, tasks, properties, daily notes, templates, rename or move, Bases, Canvas). Not for plain Markdown outside a vault.
 metadata:
-  tested-cli: "1.14.4"
-  tested-on: "2026-10-22"
+  tested-cli: "1.15.0"
+  tested-on: "2026-10-28"
   skill-version: "2"
 ---
 
@@ -58,7 +58,7 @@ Paths are vault-relative with `/`, e.g. `folder/My Note.md`. Quote paths with sp
 - Odd output, or text starting with `Error:`: see `references/traps.md`.
 
 ## References (open only when the job needs it)
-- `references/traps.md`: CLI traps on 1.14.4, with evidence
+- `references/traps.md`: CLI traps (measured on 1.14.4, re-checked on 1.15.0), with evidence
 - `references/bulk-edit.md`: many-note edits, snapshot, sync conflicts
 - `references/file-mode.md`: Obsidian closed; what still works, grep recipes
 - `references/formats.md`: Bases, JSON Canvas, web clipping (adapted from kepano/obsidian-skills, MIT)
