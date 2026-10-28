@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 47 / 68 việc xong (69%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 48 / 68 việc xong (70%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -17,7 +17,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 4/9 ████░░░░░░ 44% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | 🔄 Doing | P3 | 4/5 ████████░░ 80% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
-| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 3/6 █████░░░░░ 50% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
+| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 4/6 ██████░░░░ 66% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | ✅ Done | — | 10/12 ████████░░ 83% | — | Báo cáo: [REPORT.md](models/REPORT.md). Mặc định `haiku`. Còn E8.11, E8.13 (P3, tuỳ chọn) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
@@ -85,7 +85,7 @@ Các việc này agent không tự làm được:
 | E3.5a | Script 10 lần ghi (append daily, sửa property) + đọc lại, chạy trên vault Drive test | E3 | P1 | ✅ | Agent | `tests/e35-write-check.mjs` (chỉ chạy trên 3 vault test): 10/10 đúng khi đọc file, không bản xung đột sau 180 s; 54 test pass. [FINDINGS.md](FINDINGS.md) F15: Obsidian chậm thấy sửa file ở vault Drive |
 | E3.5b | Làm lại trên vault thật cùng user | E3 | P1 | ⏸ | User + agent | Sau E3.3b; ~15 phút. Agent không tự ghi vào vault thật |
 | E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | Tách thành a/b |
-| E3.6a | Diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | E3 | P2 | ⬜ | Agent | Xong khi: `unresolved total` không đổi, vault sạch sau reset |
+| E3.6a | Diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | E3 | P2 | ✅ | Agent | `tests/e36-bulk-rehearsal.mjs` chạy trên `vault-copy`: 33/33 kiểm tra đạt, `unresolved total` 89 không đổi ở cả 3 thao tác, snapshot git có đủ, vault sạch sau reset |
 | E3.6b | Làm lần đầu trên vault thật có người theo dõi | E3 | P2 | ⏸ | User + agent | Sau E3.5b; ~20 phút |
 | E4.1 | Plugin và marketplace của Claude Code | E4 | P3 | ✅ | Agent | `.claude-plugin/plugin.json` + `marketplace.json`; `claude plugin validate` pass; sau push, `marketplace add vantt/obsidian-agentkit` + `plugin install` từ GitHub OK trong config tạm (skill `obsidian-connect` hiện ra); mục "Install as a plugin" trong README |
 | E4.2 | Đường dẫn script không phụ thuộc chỗ cài | E4 | P3 | ✅ | Agent | SKILL.md dùng `${CLAUDE_SKILL_DIR}`; chạy `claude -p` thật với skill cài bằng symlink: agent in ra đúng đường dẫn script; cài bằng plugin chỉ dựa trên tài liệu chính thức (chưa chạy sống) |
@@ -101,7 +101,7 @@ Các việc này agent không tự làm được:
 | E6.1 | Đo task của plugin Tasks qua CLI | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F12: CLI chỉ đọc dòng checkbox, không hiểu emoji ngày/priority; mọi status khác cách trắng bị tính là done (`todo` bỏ sót `[/]`, `[-]`); probe P30, 30/30 |
 | E6.2 | Đo Templater qua `--create` | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F13: `create template=` chỉ chạy core Templates; `<% %>` giữ nguyên chữ trừ khi bật "trigger on new file creation" (khi đó chạy cả với note thường); probe P31, 31/31; thêm 1 dòng bẫy vào `references/traps.md` |
 | E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F14: không có lệnh CLI nào chạy query Dataview; `read`/`outline`/`search` chỉ thấy mã nguồn; kết quả chỉ có trong app (cần `eval`, bridge chặn); skill chỉ nên hướng dẫn viết query, không đọc kết quả; probe P32, 32/32 |
-| E6.4 | Viết `references/plugins.md` | E6 | P3 | ⬜ | Agent | Sau E6.1–E6.3 |
+| E6.4 | Viết `references/plugins.md` | E6 | P3 | ✅ | Agent | `references/plugins.md` (~914 token): Tasks, Dataview, Templater từ F12–F14; SKILL.md có dòng trỏ tới; size-check đạt (tải điển hình 2538/3000). Cú pháp emoji Tasks và trường Dataview lấy từ tài liệu plugin, không đo |
 | E6.5 | Fixture và kịch bản test cho plugin | E6 | P3 | ⬜ | Agent | Sau E6.4 |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |
 | E7.1 | Chốt tình huống diễn tập | E7 | P2 | ✅ | Agent | Plan E7, mục "Kịch bản đã chốt"; `tests/showcase/prompt.mjs` |

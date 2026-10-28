@@ -18,7 +18,7 @@ Dùng skill hằng ngày trên vault thật đang đồng bộ Google Drive, b�
 | E3.5 | **Mở quyền ghi một note:** append daily note, sửa property | 10 lần ghi đều đọc lại đúng, không tạo bản xung đột Drive |
 | E3.5a ✅ | **Chuẩn bị E3.5:** script 10 lần ghi và đọc lại, chạy trên vault Drive test | 10/10 đúng, không bản xung đột sau 3 phút |
 | E3.5b | **Ghi trên vault thật** cùng user (~15 phút), sau E3.3b | Như "Xong khi" của E3.5 |
-| E3.6a | **Chuẩn bị E3.6:** diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | `unresolved total` không đổi, vault sạch |
+| E3.6a ✅ | **Chuẩn bị E3.6:** diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | `unresolved total` không đổi, vault sạch |
 | E3.6b | **Thao tác lớn trên vault thật** có người theo dõi (~20 phút), sau E3.5b | Như "Xong khi" của E3.6 |
 | E3.6 | **Mở thao tác lớn:** rename, move, đổi tên tag (luôn có dry-run và xác nhận) | Lần đầu làm có người theo dõi; `unresolved total` không đổi |
 

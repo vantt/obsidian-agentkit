@@ -62,4 +62,5 @@ Paths are vault-relative with `/`, e.g. `folder/My Note.md`. Quote paths with sp
 - `references/traps.md`: CLI traps (measured on 1.14.4, re-checked on 1.15.0), with evidence
 - `references/bulk-edit.md`: many-note edits, snapshot, sync conflicts
 - `references/file-mode.md`: Obsidian closed; what still works, grep recipes
+- `references/plugins.md`: Tasks syntax and the `tasks` done-count trap, Dataview (write, cannot read results), Templater limits
 - `references/formats.md`: Bases, JSON Canvas, web clipping (adapted from kepano/obsidian-skills, MIT)

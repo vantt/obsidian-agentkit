@@ -575,3 +575,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - SKILL.md: `node ${CLAUDE_SKILL_DIR}/scripts/obs.mjs` và `.../profile.mjs`. Tài liệu chính thức: `${CLAUDE_SKILL_DIR}` được thay trong thân SKILL.md ở cả cài cá nhân, dự án và plugin; `${CLAUDE_PLUGIN_ROOT}` chỉ có ở plugin nên không dùng.
 - Bằng chứng: `claude -p` thật trong thư mục tạm có `.claude/skills/obsidian-connect` là symlink, agent trả lời đúng lệnh `node <đường dẫn đã thay>/scripts/obs.mjs --preflight --vault "test-x"` (không chạy lệnh). 54 test pass, size-check ok (SKILL.md ~1261/1630 token).
 - Chưa kiểm sống: cài bằng plugin (config tạm không đăng nhập). Agent khác Claude Code (Codex...) không thay biến này; nếu cần thêm dòng dự phòng thì còn chỗ trong ngân sách token.
+
+## E6.4: `references/plugins.md` (2026-10-28)
+- File mới ~914 token; `SKILL.md` thêm 1 dòng trỏ tới (1294/1630 token); `traps.md` rút dòng Templater thành con trỏ. Tải điển hình 2538/3000.
+- Nội dung đo được (F12–F14) và nội dung "documented" (cú pháp emoji Tasks, trường Dataview) được đánh dấu riêng trong file. Phần documented chưa kiểm bằng probe.
+- 60 test pass, size-check và privacy-scan sạch.
