@@ -1,6 +1,6 @@
 # E3. Đưa skill vào dùng trên vault thật
 
-**Trạng thái:** Doing, 2/6 (E3.1, E3.2 xong 2026-10-28; tiếp: E3.3 một tuần chỉ đọc, E3.4 user quyết) · **Board:** [BACKLOG.md](../BACKLOG.md)
+**Trạng thái:** Doing, 3/6 (E3.1, E3.2, E3.4 xong 2026-10-28; tiếp: E3.3 một tuần chỉ đọc) · **Board:** [BACKLOG.md](../BACKLOG.md)
 
 ## Mục tiêu
 Dùng skill hằng ngày trên vault thật đang đồng bộ Google Drive, bắt đầu từ việc chỉ đọc, rồi mới mở dần quyền ghi.

@@ -247,6 +247,19 @@ test('--rename: OK line with link counts, snapshot of the note and its referrers
   assert.ok(fs.existsSync(path.join(f.dir, snap, 'refs', 'ref-wikilink.md')));
 });
 
+test('--rename in a git vault: also commits the pre-state, including unrelated pending edits', () => {
+  const f = fixture();
+  const git = (...a) => spawnSync('git', ['-C', f.dir, ...a], { encoding: 'utf8' });
+  git('init', '-q'); git('add', '-A'); git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qm', 'base');
+  fs.appendFileSync(path.join(f.dir, 'refs', 'ref-block.md'), 'pending edit\n');
+  const r = f.call(['--rename', 'Target Note.md', 'name=Target Renamed']);
+  assert.equal(r.code, 0, r.err);
+  const sha = firstLine(r.out).match(/snapshot in \S+ \(git ([0-9a-f]+)\)/)[1];
+  assert.match(git('log', '-1', '--format=%s', sha).stdout, /^obsidian-connect: snapshot before rename Target Note\.md/);
+  assert.match(git('show', `${sha}:refs/ref-block.md`).stdout, /pending edit/);
+  assert.equal(git('show', `${sha}:Target Note.md`).status, 0, 'the commit holds the note under its old name');
+});
+
 test('--trash: OK line, file in the vault .trash/', () => {
   const f = fixture();
   const r = f.call(['--trash', 'path=refs/ref-block.md']);

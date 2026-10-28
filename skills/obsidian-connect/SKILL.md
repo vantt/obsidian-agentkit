@@ -50,7 +50,7 @@ Paths are vault-relative with `/`, e.g. `folder/My Note.md`. Quote paths with sp
 
 ## Safety
 - Free: create or edit one note.
-- Ask the user first, showing what will change: rename, move, delete, tag rename, or edits in more than 5 notes. `--rename`, `--move` and `--tag-rename … apply` save a snapshot by themselves. For other bulk edits follow `references/bulk-edit.md`.
+- Ask the user first, showing what will change: rename, move, delete, tag rename, or edits in more than 5 notes. `--rename`, `--move` and `--tag-rename … apply` save a snapshot by themselves (plus a git commit when the vault is a git repo; the `OK:` line names it). For other bulk edits follow `references/bulk-edit.md`.
 - Never: `mv` or `rm` on notes, `eval`, `delete permanent`, rewriting a whole note. The vault may be synced: change lines, append.
 - `--allow-unsafe` only after the user confirmed that exact command. It never unlocks `eval`, or rename and move when links would break.
 - If rename or move is refused because link updating is off, tell the user to turn on "Automatically update internal links". Do not rename another way.

@@ -6,6 +6,7 @@ Use this for any change that touches more than 5 files, any rename, move or tras
 1. **Dry-run.** Collect every file and every exact line change. Show the user a list of `path:line  old → new` (or a count per file if there are more than 30). Nothing is written yet.
 2. **Confirm.** Wait for an explicit yes on that list.
 3. **Snapshot.**
+   - `--rename`, `--move` and `--tag-rename … apply` do this step themselves; report the snapshot folder and `git <sha>` from their `OK:` line.
    - If the vault is a git repo: `git -C <vault> add -A && git -C <vault> commit -m "snapshot before <op>"`. If the tree is already clean, do not make an empty commit; record `git rev-parse HEAD` as the restore point. Do not commit after applying unless the user asks.
    - Otherwise copy each file to be touched into `<vault>/.trash/obsidian-connect-snapshots/<UTC timestamp>/<same relative path>`.
 4. **Apply** with line-anchored file edits (the Edit tool, or `sed -i '<n>s/…/…/'`), one file at a time. Never rewrite whole files, because the vault may be synced by Google Drive. Keep the file's line endings.

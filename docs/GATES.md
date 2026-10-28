@@ -509,3 +509,13 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - E3.1: the skill is symlinked into `~/.claude/skills/obsidian-connect`. The first `--preflight` on the real vault timed out: the vault was registered but not open, so the CLI made Obsidian open and index it. A second `--preflight` 45 s later was OK, `match=yes`. The bridge's `NEXT:` line for a timeout on that first `vault` call now says to wait 60 s and run `--preflight` once more, instead of blaming a dialog (new bridge test).
 - E3.2: `profile.mjs` read only `.obsidian/*.json`; its values agree with the live `--preflight` (`alwaysUpdateLinks` true, `trashOption` system). The vault uses Tasks, Dataview and Templater (E6, P3, may come back if E3.3 trips on them), and its `.obsidian/` already holds two Drive conflict copies from 2025, so a second device does create conflicts.
 - No note content left the machine; nothing in the real vault was written. The vault's name and folders stay out of this repo.
+
+## E3.4: snapshot strategy for the real vault (2026-10-28)
+
+**User decision:** git, with the repository outside Google Drive. The vault on Drive keeps the current state; the history lives on this machine. Git is for safety and for letting the agent undo or compare.
+
+- `git init --separate-git-dir ~/.local/state/obs-e3/real-vault.git`: the vault gets only a one-line `.git` file; Drive never syncs the history.
+- Text only (`info/exclude`): `*.md`, `*.canvas`, `*.base`, `.obsidian/*.json`, plugin `data.json`. Attachments, `workspace*.json`, `.trash/` and Drive temp folders stay out. The vault is about 2.9 GB, mostly attachments.
+- First commit `5107172`: 1,879 text files, 0 attachments, 11 MB of history, about 2 min over the Drive mount. The tree is clean afterwards.
+- Bridge change: `--rename`, `--move` and `--tag-rename … apply` still copy the touched files to `.trash/obsidian-connect-snapshots/`, and now also commit the pre-state when the vault is a git work tree. The `OK:` line prints `(git <sha>)`. Undo a multi-file change with `git checkout <sha> -- .` in the vault. New bridge test; 67/67.
+- The history exists only on this machine. Losing WSL loses the history, not the vault. Pushing it to a private remote is possible later; never to a public one.

@@ -296,7 +296,7 @@ function guardedMove(ctx, run, op, a) {
   const root = vaultPaths(run, ctx.env).local;
   const before = { back: num(must(run, ['backlinks', `path=${a.path}`, 'total'], [EXIT.ok, EXIT.empty])), unres: num(must(run, ['unresolved', 'total'], [EXIT.ok, EXIT.empty])) };
   // Snapshot the note and every note that links to it (Obsidian rewrites those links).
-  const snap = F.snapshot(root, [a.path, ...F.backlinksFromFiles(root, a.path).files]);
+  const snap = F.snapshot(root, [a.path, ...F.backlinksFromFiles(root, a.path).files], `${op} ${a.path}`);
   if (op === 'move') {
     const dir = path.posix.dirname(dest);
     if (dir !== '.') fs.mkdirSync(absIn(root, dir), { recursive: true }); // CLI move does not create folders (F4d)
@@ -535,7 +535,7 @@ function tagRename(ctx, run, a) {
     return { out, next: `show this list to the user; after they say yes run: obs --tag-rename from=${from} to=${to}${nested ? ' nested=yes' : ''} apply` };
   }
   const conflictsBefore = new Set(F.conflictCopies(root));
-  const snap = F.snapshot(root, plan.files.map((f) => f.path));
+  const snap = F.snapshot(root, plan.files.map((f) => f.path), `tag rename #${from} -> #${to}`);
   for (const f of plan.files) F.writeNote(absIn(root, f.path), f.doc);
   // Verify: no #from left in the changed files, and the new tag is there.
   const again = F.tagPlan(root, from, to, { nested, only: plan.files.map((f) => f.path) });

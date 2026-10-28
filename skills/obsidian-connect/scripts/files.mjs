@@ -4,6 +4,7 @@
 // never count, dot folders (.obsidian, .trash, .git) are not notes, links by alias name do not resolve (F4e).
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 // ---------- text and lines ----------
 export function splitText(text) {
@@ -369,7 +370,7 @@ export function tagPlan(root, from, to, { nested = false, only = null } = {}) {
 }
 
 // ---------- snapshot and conflict copies ----------
-export function snapshot(root, rels) {
+export function snapshot(root, rels, op = 'edit') {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const dir = `.trash/obsidian-connect-snapshots/${stamp}`;
   for (const rel of rels) {
@@ -377,6 +378,19 @@ export function snapshot(root, rels) {
     fs.mkdirSync(path.dirname(dst), { recursive: true });
     fs.copyFileSync(abs(root, rel), dst);
   }
-  return dir + '/';
+  const sha = gitSnapshot(root, op);
+  return dir + '/' + (sha ? ` (git ${sha})` : '');
+}
+
+// When the vault is a git work tree (a `.git` dir, or a `.git` file pointing outside a synced folder), commit the
+// pre-state too, so a multi-file change can be undone in one step. A clean tree gives HEAD; no git gives null.
+export function gitSnapshot(root, op) {
+  if (!fs.existsSync(path.join(root, '.git'))) return null;
+  const git = (...a) => spawnSync('git', ['-C', root, ...a], { encoding: 'utf8', timeout: 120000 });
+  if (git('add', '-A').status !== 0) return null;
+  if (git('diff', '--cached', '--quiet').status !== 0
+    && git('-c', 'user.name=obsidian-connect', '-c', 'user.email=obsidian-connect@localhost', 'commit', '-q', '-m', `obsidian-connect: snapshot before ${op}`).status !== 0) return null;
+  const head = git('rev-parse', '--short', 'HEAD');
+  return head.status === 0 ? head.stdout.trim() : null;
 }
 export const conflictCopies = (root) => walkNotes(root).filter((r) => /conflict|\s\(\d+\)\.md$/i.test(path.posix.basename(r)));
