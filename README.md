@@ -17,11 +17,37 @@ Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately
 - `tests/`: bridge and profile unit tests (`node --test tests/*.test.mjs`), a size budget check, the synthetic fixture and file-only ground truth (from [`obsidian-test-fixture`](https://github.com/vantt/obsidian-test-fixture); `cd tests && npm ci`), scenario cases, and a scored [compatibility probe suite](tests/compat/README.md) for re-testing new CLI versions.
 
 ## Install
-1. Copy or symlink `skills/obsidian-connect/` into your agent's skills folder (for Claude Code: `~/.claude/skills/obsidian-connect/`).
-2. Requirements: Node 18 or later, and Obsidian 1.12 or later with the CLI enabled (Settings > General > Command line interface), running on Windows.
-3. Per session, set `OBS_VAULT=<vault name>`. The skill's first step is `node <skill>/scripts/obs.mjs --preflight`.
+Needs Node 18 or later, and Obsidian 1.12 or later with the CLI enabled (Settings > General > Command line interface; this menu path is from the earlier README, not re-checked). Obsidian runs on Windows and must be open. The skill is `skills/obsidian-connect/`; `<repo>` below is your clone of this repo. Prefer the plugin? See [Install as a plugin](#install-as-a-plugin).
 
-Without Obsidian running, the skill falls back to file tools and labels its answers as approximate.
+### WSL, Linux or macOS-style shell
+```sh
+mkdir -p ~/.claude/skills
+ln -s <repo>/skills/obsidian-connect ~/.claude/skills/obsidian-connect
+export OBS_VAULT="<vault name>"
+node ~/.claude/skills/obsidian-connect/scripts/obs.mjs --preflight --vault "<vault name>"
+```
+Tested path: WSL2 calling the Windows Obsidian through interop. The bridge finds `Obsidian.com` itself.
+
+### Windows (PowerShell)
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\obsidian-connect" -Target "<repo>\skills\obsidian-connect"
+$env:OBS_VAULT = "<vault name>"
+node "$env:USERPROFILE\.claude\skills\obsidian-connect\scripts\obs.mjs" --preflight --vault "<vault name>"
+```
+- A junction needs no admin rights. A symlink (`-ItemType SymbolicLink`) needs an admin shell or Windows Developer Mode. To copy instead: `Copy-Item -Recurse <repo>\skills\obsidian-connect "$env:USERPROFILE\.claude\skills\"` (copy again after each update).
+- To keep `OBS_VAULT` across sessions: `setx OBS_VAULT "<vault name>"`, then open a new terminal. Or skip it: `--preflight --vault` makes the bridge remember the vault for 12 hours.
+- Git Bash runs the same Windows `node`, so these steps apply there too (use `$USERPROFILE` and `/` paths).
+- **Windows native path: written from measurements in WSL and bridge code; first full native run is pending.** Measured: the bridge from PowerShell 5.1 gave the same answers as from WSL ([tests/RESULTS.md](tests/RESULTS.md) case 9, partial). Not yet seen: a Claude Code agent session running natively on Windows (E2.1b), and any admin terminal ([docs/FINDINGS.md](docs/FINDINGS.md) F1).
+
+### What OK looks like
+```
+OK: vault "<vault name>" at C:\Users\<you>\...\<vault folder>
+env=windows cli=<version> tested=<version> match=yes
+alwaysUpdateLinks=true trashOption=... (obs --trash uses .trash/ anyway)
+remembered: the next obs commands use this vault for 12 h; OBS_VAULT is optional now
+```
+`env=` is `wsl` or `windows`. `match=no` means the CLI is another minor version than the tested one; see [tests/compat/README.md](tests/compat/README.md). `APPROXIMATE: Obsidian is not running` means start Obsidian and run it again; meanwhile the skill falls back to file tools and labels its answers as approximate. Background: [docs/HOW-IT-WORKS.en.md](docs/HOW-IT-WORKS.en.md).
 
 ## Install as a plugin
 This repo is also a Claude Code plugin marketplace (`.claude-plugin/marketplace.json`) with one plugin, `obsidian-agentkit`, which exposes the `obsidian-connect` skill:

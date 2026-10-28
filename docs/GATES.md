@@ -566,3 +566,7 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - E4.1: `.claude-plugin/plugin.json` (version 0.1.0, nhớ nâng mỗi bản phát hành) và `marketplace.json` (`source: ./`). `claude plugin validate` pass. Sau push, cài từ GitHub (`vantt/obsidian-agentkit`) vào config tạm (`CLAUDE_CONFIG_DIR`) thành công, `plugin details` thấy skill `obsidian-connect`; `~/.claude` thật không bị đổi (không có dòng nào nhắc tới plugin).
 - Cho E4.2: đường dẫn script trong SKILL.md là chỗ giữ chỗ ("thư mục của skill"), không cứng, nhưng sau cài plugin skill nằm trong `plugins/cache/<marketplace>/<plugin>/<version>/skills/obsidian-connect/` (đổi theo phiên bản). `${CLAUDE_PLUGIN_ROOT}` được thay trong thân SKILL.md nhưng không có khi cài bằng symlink; E4.2 cần dạng dùng được cả hai. Plugin copy cả repo (tests, docs) vào cache.
 - E4.5: `docs/HOW-IT-WORKS.en.md` dịch đủ nội dung; cả hai file có dòng liên kết ngôn ngữ ở đầu. Hai file cùng nói CLI 1.14.4 (đo) và 1.15.0 (skill), chưa chỉnh.
+
+## E4.4: hướng dẫn cài trên Windows (2026-10-28)
+- README mục Install: điều kiện (Node ≥ 18, Obsidian ≥ 1.12 bật CLI), cài trên WSL/Linux bằng `ln -s`, trên PowerShell bằng junction (không cần admin; symlink cần admin hoặc Developer Mode) hoặc `Copy-Item`, `OBS_VAULT` (`setx`), `--preflight` và dấu hiệu OK.
+- Bằng chứng: junction tạo và đọc được qua `powershell.exe` từ WSL; 54 test pass, size-check ok. Chưa kiểm: `setx`, tên mục cài đặt CLI trong Obsidian, chạy trọn vẹn trên Windows native (E2.1b). README nói rõ điều này.
