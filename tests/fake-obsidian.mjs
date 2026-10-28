@@ -47,7 +47,7 @@ function vaultMode() {
     return o;
   }
   const links = process.env.FAKE_LINKS !== 'false';
-  const linkers = (p) => notes().filter((n) => n !== p && fs.readFileSync(abs(n), 'utf8').includes(`[[${path.posix.basename(p, '.md')}`));
+  const linkers = (p) => notes().filter((n) => n !== p && ((t) => t.includes(`[[${path.posix.basename(p, '.md')}`) || t.includes(`[[${p.replace(/\.md$/, '')}`))(fs.readFileSync(abs(n), 'utf8')));
   switch (cmd) {
     case 'version': out('1.14.4 (installer 1.14.4)\n');
     case 'vault': out(`${root}\n`);
@@ -70,7 +70,7 @@ function vaultMode() {
       const dest = cmd === 'rename' ? path.posix.join(path.posix.dirname(a.path), a.name + '.md') : path.posix.join(a.to, path.posix.basename(a.path));
       if (cmd === 'move' && !fs.existsSync(abs(path.posix.dirname(dest)))) out(`Error: ENOENT: no such file or directory, rename '${a.path}' -> '${dest}'\n`);
       const old = path.posix.basename(a.path, '.md'), neu = path.posix.basename(dest, '.md');
-      for (const n of linkers(a.path)) fs.writeFileSync(abs(n), fs.readFileSync(abs(n), 'utf8').split(`[[${old}`).join(`[[${neu}`));
+      for (const n of linkers(a.path)) fs.writeFileSync(abs(n), fs.readFileSync(abs(n), 'utf8').split(`[[${a.path.replace(/\.md$/, '')}`).join(`[[${dest.replace(/\.md$/, '')}`).split(`[[${old}`).join(`[[${neu}`)); // full-path links too
       fs.renameSync(abs(a.path), abs(dest));
       if (cmd === 'rename' || cmd === 'move') { if (!links) break; out(`Renamed: ${a.path} -> ${dest}\n`); }
       break;

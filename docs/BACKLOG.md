@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 48 / 68 việc xong (70%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 49 / 68 việc xong (72%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -14,7 +14,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 4/9 ████░░░░░░ 44% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 5/9 █████░░░░░ 55% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | 🔄 Doing | P3 | 4/5 ████████░░ 80% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 4/6 ██████░░░░ 66% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |

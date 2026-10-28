@@ -580,3 +580,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - File mới ~914 token; `SKILL.md` thêm 1 dòng trỏ tới (1294/1630 token); `traps.md` rút dòng Templater thành con trỏ. Tải điển hình 2538/3000.
 - Nội dung đo được (F12–F14) và nội dung "documented" (cú pháp emoji Tasks, trường Dataview) được đánh dấu riêng trong file. Phần documented chưa kiểm bằng probe.
 - 60 test pass, size-check và privacy-scan sạch.
+
+## E3.6a: diễn tập thao tác lớn trên `vault-copy` (2026-10-28)
+- `tests/e36-bulk-rehearsal.mjs` (dùng lại danh sách cho phép của `e35-write-check`; từ chối nếu không phải vault test, không phải git work tree hoặc cây bẩn): tạo fixture trong `_agentkit-lab/e36/`, rồi rename, move, đổi tên tag; kiểm snapshot (bản sao `.trash/obsidian-connect-snapshots/` và commit git `obsidian-connect: snapshot before <op>`), link, `unresolved total`; reset bằng `git reset --hard` + `git clean` đúng đường dẫn; `obs reload`, chờ 45 s.
+- Bằng chứng: chạy 1 lần trên `vault-copy`: 33/33 kiểm tra đạt; `unresolved total` 89 trước và sau từng thao tác và sau reset; vault sạch (tôi kiểm lại `git status` rỗng). 60 test pass.
+- Lưu ý: bridge không có dry-run cho rename/move (chỉ `--tag-rename` có); bước xem trước của hai thao tác này là `--backlinks`. Chỉ mục tag của Obsidian chưa kiểm cho tag mới. Chưa thay E3.6b.

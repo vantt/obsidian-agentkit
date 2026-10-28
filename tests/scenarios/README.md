@@ -37,3 +37,12 @@ Run before opening write access on a real vault, on a test vault first:
 - Measured on the Drive vault (CLI 1.15.0): the bridge's file edits are not seen by Obsidian, even after 3 minutes (`obsidian=stale`), and after an outside change (a reset) Obsidian's view is out of date, so the next `daily:append` fails with ENOENT. Run `obs reload` and wait about 45 s after every reset, before the next run. For that reason the pass test reads the file, not the CLI.
 - It does not reset the vault. Reset afterwards: in the vault (git dir outside Drive for the Drive vault), `git checkout -q -- <note>`, then remove the new daily note (`git clean -fdq -- <daily note>`), and check `git status` is empty, then `obs reload`. If the shell cannot read the Drive folder (stale `/mnt/g`), run the script with Windows `node.exe` through PowerShell. From WSL with a dead `/mnt/g` mount, run Windows git with `-c core.fileMode=false --git-dir=<UNC path of the .git dir> --work-tree=<vault>`.
 - Offline test of the guard and the checks: `node --test tests/e35-write-check.test.mjs`.
+
+## E3.6a bulk-operation rehearsal (`tests/e36-bulk-rehearsal.mjs`)
+Run before the first bulk operation on a real vault (E3.6b), on a test vault with a clean git tree:
+`node tests/e36-bulk-rehearsal.mjs --vault <test vault> [--wait 45] [--index-timeout 60]`
+- Creates its own fixtures under `_agentkit-lab/e36/` (2 notes to rename/move, 2 referrers, 2 notes with a tag), then for rename, move and tag rename: preview first and check nothing changed, run it for real, check `unresolved total` is unchanged and the referring notes were rewritten, and check the bridge's git snapshot (commit `obsidian-connect: snapshot before ...` holding the pre-state, plus the copies in `.trash/obsidian-connect-snapshots/`).
+- Rename and move have no dry-run mode in the bridge; their preview is `--backlinks` (the notes Obsidian will rewrite). Only `--tag-rename` has a real dry run (`NOT DONE: dry run`).
+- Resets itself: `git reset --hard` to the starting commit and `git clean` of the fixture and snapshot folders (named paths, test vault only), `git status` empty, `obs reload`, wait `--wait` seconds, `unresolved total` back to its start value.
+- Refuses (exit 2, nothing written) unless `vault info=path` ends in a test vault (same allowlist as the write check), the folder is a git work tree, and the tree is clean. Exit 0 = all checks pass and the vault is clean.
+- Offline test (guard, checks and a full run against the fake CLI): `node --test tests/e36-bulk-rehearsal.test.mjs`.
