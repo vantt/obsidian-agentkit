@@ -1,6 +1,6 @@
 # E6. Mở rộng cho các plugin: Tasks, Dataview, Templater
 
-**Trạng thái:** Todo · **Board:** [BACKLOG.md](../BACKLOG.md) · **Nguồn:** `docs/distillery/distill.yaml` (in_scope: "Bases queries, JSON Canvas creation, Dataview, Tasks plugin and Templater behaviour as used by agents")
+**Trạng thái:** Todo, P3 (để sau, user 2026-10-28) · **Board:** [BACKLOG.md](../BACKLOG.md) · **Nguồn:** `docs/distillery/distill.yaml` (in_scope: "Bases queries, JSON Canvas creation, Dataview, Tasks plugin and Templater behaviour as used by agents")
 
 ## Vấn đề
 v1 mới có Bases, Canvas và clip web (trong `formats.md`). Vault thật có bật Tasks, Dataview và Templater (FINDINGS F11), nhưng skill chưa hướng dẫn cách làm việc với chúng. Ví dụ: agent có thể ghi task thiếu cú pháp ngày của Tasks (`📅 2026-03-15`), viết query Dataview sai, hoặc tạo note từ template Templater mà không chạy được `<% %>`.

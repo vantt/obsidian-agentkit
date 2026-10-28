@@ -21,6 +21,9 @@ Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately
 
 Without Obsidian running, the skill falls back to file tools and labels its answers as approximate.
 
+## Which model
+The skill makes cheap models safe: with it, Haiku ran 27/27 scenarios clean at about $0.002 per task, the same result as Sonnet at a tenth of the cost. Without it, every model tested caused incidents, Sonnet included. **Default: Haiku.** Outside Claude: `glm-5.3-flash` or `gpt-6-luna`. Models below a minimum tier (for example `gpt-oss-20b`, `gemini-2.5-flash-lite`) fail even with the skill. Report and per-family table: [docs/models/REPORT.md](docs/models/REPORT.md); test kit: [tests/models/README.md](tests/models/README.md).
+
 ## Docs
 - [docs/BACKLOG.md](docs/BACKLOG.md): program board (work items, status, progress), linking to the plans in `docs/plans/`
 - [docs/FINDINGS.md](docs/FINDINGS.md): measured CLI behaviour

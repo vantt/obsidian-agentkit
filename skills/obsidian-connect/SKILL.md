@@ -5,6 +5,7 @@ metadata:
   tested-cli: "1.15.0"
   tested-on: "2026-10-28"
   skill-version: "2"
+  tested-models: "haiku, sonnet (v2); gpt-6-luna, glm-5.3-flash, deepseek-v4.1-flash, gemini-3.5-flash-lite (v1); see docs/models/REPORT.md"
 ---
 
 # obsidian-connect

@@ -1,6 +1,6 @@
 # E9. Bench dùng lại được: skill chạy tốt với Obsidian, agent CLI và model nào
 
-**Trạng thái:** Todo, 0/6 việc · **Board:** [BACKLOG.md](../BACKLOG.md) · **Prompt bàn giao:** [E9-SKILLBENCH-PROMPT.md](../handoff/E9-SKILLBENCH-PROMPT.md) · **Nguồn:** harness của E8 (`tests/models/`), bộ probe `tests/compat/`
+**Trạng thái:** Todo, 0/6 việc, P3 (để sau, user 2026-10-28) · **Board:** [BACKLOG.md](../BACKLOG.md) · **Prompt bàn giao:** [E9-SKILLBENCH-PROMPT.md](../handoff/E9-SKILLBENCH-PROMPT.md) · **Nguồn:** harness của E8 (`tests/models/`), bộ probe `tests/compat/`
 
 ## Mục tiêu
 Biến harness đo của E8 thành một công cụ dùng lại được (`bench/`). Công cụ này test lại skill theo 4 trục và giữ lịch sử điểm so sánh được:

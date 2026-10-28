@@ -492,3 +492,13 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - `calibrate` after the probes: backlinks 9, unresolved 35, base `1a8a43f`; the vault is clean.
 - Not added: live probes for the new bridge commands (`--find`, `--prop-set`, ...). They are bridge code over the probed CLI commands, covered by the 44 bridge tests and by round 1 (54/54 clean).
 - Side note: `obsidian help` on 1.15.0 lists 103 commands; the bridge's `KNOWN` list holds the 71 the skill can meet. It was a subset on 1.14.4 too (for example `dev:screenshot` existed then), so the gap is not new.
+
+## Board trimmed; E8 closed with a short report (2026-10-28)
+
+**User decision:** main path is E8.9 (short), then E2 and E3, to get the skill onto the real vault. E4, E6, E8.11, E8.13 and E9 go to P3.
+
+- E8.9 done as a short report without charts: [docs/models/REPORT.md](models/REPORT.md). H1–H3 hold above a minimum model tier; H4 (cheap models are faster) is rejected.
+- E8.10 merged into E8.9: `tests/models/README.md` (setup, run, score, re-judge, history), `tested-models` in SKILL.md metadata, a "Which model" section in the README.
+- E8.8 closed: round 1 met H1 on Claude; more rounds only if the skill changes.
+- E2.5 and E2.6 dropped: E8 already ran every scenario 3 times and measured tokens from transcripts for every run.
+- What is left on the main path needs the user: E2.2 and E2.3 (a test folder on Google Drive opened as its own vault), E2.1 (Claude Code on Windows), E2.4 (admin terminal), then E3.

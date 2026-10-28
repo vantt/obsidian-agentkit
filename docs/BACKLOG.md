@@ -6,19 +6,21 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 27 / 66 việc xong (40%)**
+**Toàn project: 29 / 63 việc xong (46%)**
+
+**Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | ⬜ Todo | P1 | 0/6 ░░░░░░░░░░ 0% | — | E2.5, E2.6 (agent làm được ngay) |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | ⏸ Chờ | P1 | 0/4 ░░░░░░░░░░ 0% | — | E2.2 và E2.3: user tạo thư mục test trên Google Drive, mở thành vault riêng |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | ⏸ Chờ | P1 | 0/6 ░░░░░░░░░░ 0% | E2.2, E2.3 | Chờ thư mục test trên Drive |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
-| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | — | E6.1–E6.3 (đo trên bản sao vault) |
+| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | — | Để sau (user 2026-10-28) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
-| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | 🔄 Doing | P2 | 8/13 ██████░░░░ 61% | — | Vòng 1 xong: skill v2, Haiku và Sonnet 27/27 sạch ([ROUND-1.md](models/ROUND-1.md)); skill đã kiểm trên CLI 1.15.0. Tiếp: báo cáo E8.9. Khuyến nghị model: [ROUND-0.md](models/ROUND-0.md) |
-| E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P2 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
+| E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | ✅ Done | — | 10/12 ████████░░ 83% | — | Báo cáo: [REPORT.md](models/REPORT.md). Mặc định `haiku`. Còn E8.11, E8.13 (P3, tuỳ chọn) |
+| E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
 | E10. Tách bộ tạo vault test thành repo `vantt/obsidian-test-fixture` | [E10-test-fixture-repo.md](plans/E10-test-fixture-repo.md) | ✅ Done | — | 3/3 ██████████ 100% | — | — (test dùng `otf` từ `obsidian-test-fixture#v0.3.0`) |
 
 Ký hiệu trạng thái:
@@ -37,7 +39,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| — | Không có việc đang chạy | Việc tiếp theo: E8.9 (báo cáo H1–H4) |
+| E2 | Kiểm chứng trên Google Drive, Windows, admin | Chờ user (mục "Cần user") |
 
 ## Cần user
 
@@ -66,8 +68,8 @@ Các việc này agent không tự làm được:
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ⏸ | User + agent | Cần thư mục test trên Drive |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ⏸ | Agent | Cùng thư mục với E2.2 |
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | — |
-| E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ⬜ | Agent | — |
-| E2.6 | Đo token từ transcript | E2 | P2 | ⬜ | Agent | — |
+| E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
+| E2.6 | Đo token từ transcript | E2 | P2 | ❌ | Agent | Bỏ: E8 đo token từ transcript cho mọi lượt (`tests/models/summary.mjs`) |
 | E3.1 | Cài skill cho vault thật | E3 | P1 | ⏸ | User + agent | Chờ E2.3 |
 | E3.2 | Profile vault thật | E3 | P1 | ⏸ | Agent | Chỉ đọc |
 | E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | — |
@@ -85,11 +87,11 @@ Các việc này agent không tự làm được:
 | E5.4 | Nhắc chạy probe định kỳ | E5 | P3 | ⬜ | Agent | — |
 | E5.5 | P18 tự dọn Thùng rác | E5 | P3 | ⬜ | Agent | — |
 | E5.6 | Dọn repo (distillery, handoff) | E5 | P2 | ✅ | User + agent | User chốt 2026-10-24: commit `docs/handoff/` và việc dời `docs/research/distillery` sang `docs/distillery`; chỉ `/upstreams/` không track |
-| E6.1 | Đo task của plugin Tasks qua CLI | E6 | P2 | ⬜ | Agent | — |
-| E6.2 | Đo Templater qua `--create` | E6 | P2 | ⬜ | Agent | — |
-| E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P2 | ⬜ | Agent | — |
-| E6.4 | Viết `references/plugins.md` | E6 | P2 | ⬜ | Agent | Sau E6.1–E6.3 |
-| E6.5 | Fixture và kịch bản test cho plugin | E6 | P2 | ⬜ | Agent | Sau E6.4 |
+| E6.1 | Đo task của plugin Tasks qua CLI | E6 | P3 | ⬜ | Agent | — |
+| E6.2 | Đo Templater qua `--create` | E6 | P3 | ⬜ | Agent | — |
+| E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P3 | ⬜ | Agent | — |
+| E6.4 | Viết `references/plugins.md` | E6 | P3 | ⬜ | Agent | Sau E6.1–E6.3 |
+| E6.5 | Fixture và kịch bản test cho plugin | E6 | P3 | ⬜ | Agent | Sau E6.4 |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |
 | E7.1 | Chốt tình huống diễn tập | E7 | P2 | ✅ | Agent | Plan E7, mục "Kịch bản đã chốt"; `tests/showcase/prompt.mjs` |
 | E7.2 | Chạy không có skill | E7 | P2 | ✅ | Agent | 9 phiên, `docs/showcase/scenarios/*/without*/` |
@@ -106,18 +108,18 @@ Các việc này agent không tự làm được:
 | E8.5 | Phân loại lỗi, xếp hạng việc cần sửa; sửa bộ chấm ("không làm gì" = từ chối, `eval` vô hại vs có hại, nghi chấm nhầm `sed -i` ở S3) rồi chấm lại vòng 0 | E8 | P2 | ✅ | Agent | [FAILURES.md](models/FAILURES.md); 53/434 lượt đổi kết quả; khuyến nghị giữ nguyên ([GATES.md](GATES.md) mục E8.5) |
 | E8.6 | Chuyển việc cơ học vào bridge (lệnh gộp) | E8 | P2 | ✅ | Agent | Chạy đúng trong vòng 1; 29/29 probe trên CLI 1.15.0, `TESTED_CLI` = 1.15.0 ([GATES.md](GATES.md) mục E8.6 close) |
 | E8.7 | Viết lại SKILL.md và output bridge cho model rẻ | E8 | P2 | ✅ | Agent | Vòng 1: 27/27 sạch mỗi model, rẻ hơn 37–51% ([ROUND-1.md](models/ROUND-1.md)) |
-| E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | 🔄 | Agent | Vòng 1 xong, H1 đạt với Claude; vòng sau chỉ khi skill đổi |
-| E8.9 | Báo cáo chứng minh H1–H4 và biểu đồ | E8 | P2 | ⬜ | Agent | — |
-| E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | P2 | ⬜ | Agent | — |
-| E8.11 | Kiểm sau: Codex CLI (Gemini, OpenAI đã vào vòng 0) | E8 | P3 | ⬜ | Agent | Sau E8.10 |
+| E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ✅ | Agent | Vòng 1 xong, H1 đạt với Claude; vòng sau chỉ khi skill đổi |
+| E8.9 | Báo cáo H1–H4, bản ngắn (gộp E8.10: bộ test chạy lại được, khuyến nghị model) | E8 | P2 | ✅ | Agent | [REPORT.md](models/REPORT.md): H1–H3 đạt trên ngưỡng, H4 bác bỏ; [tests/models/README.md](../tests/models/README.md); `tested-models` trong SKILL.md; mục "Which model" trong README |
+| E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | — | ❌ | Agent | Gộp vào E8.9 (user 2026-10-28) |
+| E8.11 | Kiểm sau: Codex CLI (Gemini, OpenAI đã vào vòng 0) | E8 | P3 | ⬜ | Agent | Tuỳ chọn |
 | E8.12 | Cô lập đáp án: đáp án ra ngoài vault (option mới trong `obsidian-test-fixture`), agent không đọc được repo và state, judge bắt việc đọc ngoài vault | E8 | P1 | ✅ | Agent + user | Vòng 0: 53 lượt đọc file đánh dấu chứa đáp án S6, 3 lượt đọc script trong repo ([GATES.md](GATES.md) mục E10.2). Đáp án ra ngoài vault, sandbox và proxy key chạy thật ở vòng 1 |
 | E8.13 | Kiểm cuối các model không phải Claude (4 model khuyến nghị, phía có skill, 3 lượt) | E8 | P3 | ⬜ | Agent + user | Tuỳ chọn, ~$1–3; cần key OpenRouter hoặc API của từng hãng |
-| E9.1 | Câu hỏi cho user (pi/omp, vault thứ hai, agent CLI, ngân sách, bản Obsidian cũ) | E9 | P2 | ⬜ | Agent + user | — |
-| E9.2 | Chuyển harness sang `bench/`, kịch bản thành dữ liệu, judge chung | E9 | P2 | ⬜ | Agent | Phải chấm lại E8 vòng 0 ra cùng kết quả |
-| E9.3 | Adapter Codex, pi/omp, Antigravity | E9 | P2 | ⬜ | Agent | — |
-| E9.4 | Lịch sử, `compare`, báo cáo, nhập dữ liệu E8 | E9 | P2 | ⬜ | Agent | — |
-| E9.5 | Một đợt chạy thật: 2 agent × 3 model | E9 | P2 | ⬜ | Agent + user | Không chạy cùng lúc với lượt E8; cô lập đáp án như E8.12 |
-| E9.6 | Tài liệu bench | E9 | P2 | ⬜ | Agent | — |
+| E9.1 | Câu hỏi cho user (pi/omp, vault thứ hai, agent CLI, ngân sách, bản Obsidian cũ) | E9 | P3 | ⬜ | Agent + user | — |
+| E9.2 | Chuyển harness sang `bench/`, kịch bản thành dữ liệu, judge chung | E9 | P3 | ⬜ | Agent | Phải chấm lại E8 vòng 0 ra cùng kết quả |
+| E9.3 | Adapter Codex, pi/omp, Antigravity | E9 | P3 | ⬜ | Agent | — |
+| E9.4 | Lịch sử, `compare`, báo cáo, nhập dữ liệu E8 | E9 | P3 | ⬜ | Agent | — |
+| E9.5 | Một đợt chạy thật: 2 agent × 3 model | E9 | P3 | ⬜ | Agent + user | Không chạy cùng lúc với lượt E8; cô lập đáp án như E8.12 |
+| E9.6 | Tài liệu bench | E9 | P3 | ⬜ | Agent | — |
 | E10.1 | Tạo repo `vantt/obsidian-test-fixture` (CLI `otf`, output giống hệt script cũ, `graph.json`) | E10 | P2 | ✅ | Agent + user | Repo public, MIT; tag `v0.1.0` → `v0.2.0` |
 | E10.2 | Chuyển repo này sang dùng package (npm git dependency ghim tag), xoá 3 script cũ | E10 | P2 | ✅ | Agent | Ghim `v0.2.0`; output và `truth` giống hệt script cũ; 3 script cũ đã xoá |
 | E10.3 | Kiểm tra với Obsidian thật: `preflight`, `calibrate`, một lượt Haiku S1, `probes.mjs --no-write` | E10 | P2 | ✅ | User + agent | Calibrate khớp; Haiku S1 pass; probe chỉ đọc 16/16 trên CLI 1.15.0 |
