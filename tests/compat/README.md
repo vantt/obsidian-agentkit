@@ -27,6 +27,34 @@ The skill's trap list and guards are true for the CLI version in `SKILL.md` `met
 2. Generate the fixture inside it and commit: `node tests/node_modules/.bin/otf generate --preset hard-cases --out <copy>/_agentkit-lab && git -C <copy> add -A && git -C <copy> commit -m fixture`.
 3. In the copy, keep Settings > Files and links > "Automatically update internal links" **on**. The probes switch it off and back on themselves.
 
+## Admin terminal check (E2.4b, about 5 minutes)
+Open question (FINDINGS F1, "Admin terminal: not tested"): does the CLI fail silently when called from an elevated PowerShell (Obsidian runs as your normal user, the shell as admin)? Run this once and paste the output back. All commands are read-only; nothing is written to the vault. Use a test vault, not your real one.
+
+1. Start Obsidian normally (not as admin) with the test vault open. Open PowerShell with **Run as administrator**.
+2. Run these, replacing `<repo>` with the checkout folder and `<test vault name>` with the test vault name:
+```powershell
+whoami /groups | Select-String "High Mandatory"
+obsidian version; "exit=$LASTEXITCODE"
+obsidian "vault=<test vault name>" vault info=path; "exit=$LASTEXITCODE"
+node <repo>\skills\obsidian-connect\scripts\obs.mjs --preflight --vault "<test vault name>"; "exit=$LASTEXITCODE"
+```
+3. Paste all output, including the `exit=` lines. If a command prints nothing, say "no output".
+
+Expected from a normal (non-admin) PowerShell, for comparison:
+```
+whoami line         -> no output (a line appears only in an elevated shell)
+obsidian version    -> 1.14.4 (installer 1.14.4)           exit=0
+vault info=path     -> C:\...\<test vault name>             exit=0
+--preflight         -> OK: vault "<test vault name>" at C:\...
+                       env=windows cli=1.14.4 tested=... match=yes
+                       alwaysUpdateLinks=... trashOption=...
+                       remembered: ...                      exit=0
+```
+Reading the result:
+- Same as above: the admin terminal works; record "no problem" in F1.
+- "unable to find Obsidian" or exit 1 from the CLI: the bridge already maps this to exit 2.
+- **No output and exit 0**: silent failure. The bridge does not catch this on `version` or `--preflight` today (see `tests/admin-silent.test.mjs`), so a fix is needed.
+
 ## Run
 ```
 cd tests && npm ci                 # obsidian-test-fixture: fixture generator and ground truth

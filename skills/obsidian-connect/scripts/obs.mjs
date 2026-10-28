@@ -126,6 +126,7 @@ export function classify({ status, stdout, stderr, signal, error }, cmd = '') {
   if (first.startsWith('Error:')) return [EXIT.error, first];
   if (first === 'Vault not found.') return [EXIT.error, first];
   if (status !== 0) return [EXIT.error, `exit ${status}`];
+  if (cmd === 'version' && out.trim() === '' && !(stderr || '').trim()) return [EXIT.unreachable, 'CLI printed nothing (silent failure; elevated terminal?)'];
   if (EMPTY_RE.test(first) || (LIST_CMDS.test(cmd) && out.trim() === '')) return [EXIT.empty, first || 'empty output'];
   return [EXIT.ok, ''];
 }

@@ -590,3 +590,9 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - `node install.mjs` (dry run) kiểm Node ≥ 18, Obsidian CLI (dùng `detectEnv`/`findCli` của `obs.mjs`, chỉ gọi `<cli> version`), đường link skill; `--link` tạo symlink (Linux/WSL) hoặc junction (Windows), từ chối ghi đè link khác; in nhắc `OBS_VAULT` và lệnh `--preflight` đầu tiên với đường dẫn thật.
 - Bằng chứng: 5 test offline pass (65 tổng); tôi chạy thật với `--skills-dir` tạm: dry-run rồi `--link` tạo đúng symlink; `~/.claude` thật không bị đụng. Chưa kiểm: máy Windows sạch (junction, `where`), macOS (`findCli` không có nhánh macOS nên luôn gợi ý đặt `OBS_CLI`).
 - Hệ quả phụ: import `findCli` ghi file cache `obsidian-connect-cli.json` ở thư mục tạm của hệ điều hành (hành vi sẵn có của `obs.mjs`).
+
+## E2.4a: chuẩn bị kiểm terminal admin (2026-10-28)
+- Hướng dẫn cho user (E2.4b, ~5 phút) trong `tests/compat/README.md`, mục "Admin terminal check": các lệnh chỉ đọc trong PowerShell admin (`whoami /groups`, `obsidian version`, `vault info=path`, `--preflight`), kèm `exit=$LASTEXITCODE` và kết quả mong đợi ở terminal thường.
+- Phát hiện: F1 mới ghi lỗi "unable to find Obsidian" (exit 2); chế độ "im lặng" ở terminal admin là giả thuyết, chưa đo. Với CLI giả im lặng (`FAKE_MODE=empty-out`), `search`/`read` đã cho exit 4, nhưng `version` và `--preflight` báo `OK:` exit 0 với trường trống. Đã sửa `classify()` trong `obs.mjs`: `version` không in gì và exit 0 thì exit 2, "CLI printed nothing (silent failure; elevated terminal?)"; `--preflight` rơi vào nhánh file-mode (APPROXIMATE).
+- Bằng chứng: `tests/admin-silent.test.mjs` 4 test; 69 test pass; `--preflight` thật trên `vault-copy` vẫn OK `match=yes`; size-check ok.
+- Còn mở: E2.4b (user chạy trong terminal admin, ghi kết quả vào F1). Test chỉ mô phỏng bằng CLI giả.

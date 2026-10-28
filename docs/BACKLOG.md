@@ -6,14 +6,14 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 50 / 68 việc xong (73%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 51 / 68 việc xong (75%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 3/6 █████░░░░░ 50% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 5/9 █████░░░░░ 55% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
@@ -71,7 +71,7 @@ Các việc này agent không tự làm được:
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | Tách thành a/b |
-| E2.4a | Lệnh chính xác và test bridge phát hiện lỗi im lặng (exit 2) bằng `fake-obsidian` | E2 | P2 | ⬜ | Agent | Xong khi: unit test pass, hướng dẫn ngắn viết xong |
+| E2.4a | Lệnh chính xác và test bridge phát hiện lỗi im lặng (exit 2) bằng `fake-obsidian` | E2 | P2 | ✅ | Agent | Hướng dẫn "Admin terminal check" trong [tests/compat/README.md](../tests/compat/README.md); `tests/admin-silent.test.mjs`. Test lộ lỗ hổng: `version`/`--preflight` im lặng vẫn báo OK exit 0; đã sửa `classify()` (exit 2 + NEXT), 69 test pass |
 | E2.4b | Chạy lệnh của E2.4a trong PowerShell admin, ghi FINDINGS F1 | E2 | P2 | ⏸ | User | ~5 phút |
 | E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
 | E2.6 | Đo token từ transcript | E2 | P2 | ❌ | Agent | Bỏ: E8 đo token từ transcript cho mọi lượt (`tests/models/summary.mjs`) |
