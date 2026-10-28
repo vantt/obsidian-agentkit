@@ -59,7 +59,7 @@ This repo is also a Claude Code plugin marketplace (`.claude-plugin/marketplace.
 
 Shell form: `claude plugin marketplace add vantt/obsidian-agentkit` then `claude plugin install obsidian-agentkit@obsidian-agentkit`.
 
-Status: both manifests pass `claude plugin validate`, and install from a local clone was verified. Install from the GitHub repo is verified only after the manifests are pushed. Script paths inside `SKILL.md` still assume the manual install above (tracked as E4.2).
+Status: both manifests pass `claude plugin validate`, and install from a local clone was verified. Install from the GitHub repo is verified only after the manifests are pushed. Script paths in `SKILL.md` use `${CLAUDE_SKILL_DIR}`, which Claude Code fills in for symlink, project and plugin installs alike (E4.2).
 
 ## Which model
 The skill makes cheap models safe: with it, Haiku ran 27/27 scenarios clean at about $0.002 per task, the same result as Sonnet at a tenth of the cost. Without it, every model tested caused incidents, Sonnet included. **Default: Haiku.** Outside Claude: `glm-5.3-flash` or `gpt-6-luna`. Models below a minimum tier (for example `gpt-oss-20b`, `gemini-2.5-flash-lite`) fail even with the skill. Report and per-family table: [docs/models/REPORT.md](docs/models/REPORT.md); test kit: [tests/models/README.md](tests/models/README.md).

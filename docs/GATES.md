@@ -570,3 +570,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 ## E4.4: hướng dẫn cài trên Windows (2026-10-28)
 - README mục Install: điều kiện (Node ≥ 18, Obsidian ≥ 1.12 bật CLI), cài trên WSL/Linux bằng `ln -s`, trên PowerShell bằng junction (không cần admin; symlink cần admin hoặc Developer Mode) hoặc `Copy-Item`, `OBS_VAULT` (`setx`), `--preflight` và dấu hiệu OK.
 - Bằng chứng: junction tạo và đọc được qua `powershell.exe` từ WSL; 54 test pass, size-check ok. Chưa kiểm: `setx`, tên mục cài đặt CLI trong Obsidian, chạy trọn vẹn trên Windows native (E2.1b). README nói rõ điều này.
+
+## E4.2: đường dẫn script không phụ thuộc chỗ cài (2026-10-28)
+- SKILL.md: `node ${CLAUDE_SKILL_DIR}/scripts/obs.mjs` và `.../profile.mjs`. Tài liệu chính thức: `${CLAUDE_SKILL_DIR}` được thay trong thân SKILL.md ở cả cài cá nhân, dự án và plugin; `${CLAUDE_PLUGIN_ROOT}` chỉ có ở plugin nên không dùng.
+- Bằng chứng: `claude -p` thật trong thư mục tạm có `.claude/skills/obsidian-connect` là symlink, agent trả lời đúng lệnh `node <đường dẫn đã thay>/scripts/obs.mjs --preflight --vault "test-x"` (không chạy lệnh). 54 test pass, size-check ok (SKILL.md ~1261/1630 token).
+- Chưa kiểm sống: cài bằng plugin (config tạm không đăng nhập). Agent khác Claude Code (Codex...) không thay biến này; nếu cần thêm dòng dự phòng thì còn chỗ trong ngân sách token.

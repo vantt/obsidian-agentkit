@@ -10,14 +10,14 @@ metadata:
 
 # obsidian-connect
 
-`obs` means `node <this skill's folder>/scripts/obs.mjs`. Run every vault command through `obs`. Never call `obsidian` or `Obsidian.com` yourself.
+`obs` means `node ${CLAUDE_SKILL_DIR}/scripts/obs.mjs`. Run every vault command through `obs`. Never call `obsidian` or `Obsidian.com` yourself.
 
 ## Start
 1. Get the vault name from the user. Do not read `obsidian.json` and do not list vaults.
 2. Run `obs --preflight --vault "<name>"` once. Later `obs` calls remember the vault.
    - First line `APPROXIMATE:` means Obsidian is closed. The read commands below still work from files. Never rename, move or delete then. Other jobs: `references/file-mode.md`.
    - `match=no`: tell the user the CLI version changed, so the traps may differ.
-3. Before you write a new note or links, run `node <this skill's folder>/scripts/profile.mjs "<vault folder from preflight>"` once. Follow its link style, folders and templates.
+3. Before you write a new note or links, run `node ${CLAUDE_SKILL_DIR}/scripts/profile.mjs "<vault folder from preflight>"` once. Follow its link style, folders and templates.
 
 ## Read the output
 - Bridge commands print the result first: `OK:`, `NOT DONE:` or `APPROXIMATE:`. Put that result in your answer. Say "done" only after `OK:`.
