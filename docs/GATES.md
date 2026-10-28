@@ -524,3 +524,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - `tests/package.json` có script `test` = `node --test *.test.mjs models/*.test.mjs && node size-check.mjs`; `.github/workflows/ci.yml` chạy `npm ci` rồi `npm test` (Node 22) mỗi push và PR; badge ở đầu README.
 - Bằng chứng: xoá `node_modules`, `npm ci`, `npm test` → 67/67 pass, size-check ok. Thêm 40 dòng vào SKILL.md → exit 1 (`FAIL SKILL.md body lines: 95 (max 70)`), đã hoàn lại.
 - Còn mở: badge xanh chỉ có sau lần chạy đầu trên GitHub. `privacy-scan.mjs` cần `tests/out/showcase/real-names.json` (cục bộ), nên chạy tay trước mỗi commit, không đưa vào CI.
+
+## E5.5: P18 tự dọn Thùng rác (2026-10-28)
+- `tests/compat/probes.mjs`: P18 liệt kê Thùng rác Windows (PowerShell, Shell.Application) trước và sau `delete`, chỉ xoá entry mới có đúng tên `ref-block.md` và đúng thư mục gốc của vault test. Không có PowerShell thì báo `bin=n/a` và để nguyên.
+- Bằng chứng: 2 lần chạy trên `vault-copy`, cả hai `PASS P18 ... bin before=7 added=1 after=7`; vault sạch sau đó; 49 test pass.
+- Còn mở: 7 entry `ref-block.md` cũ trong Thùng rác (từ trước bản sửa); agent không xoá vì ngoài phạm vi.

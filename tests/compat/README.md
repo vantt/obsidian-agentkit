@@ -38,7 +38,7 @@ node tests/compat/probes.mjs --vault <copy name> --dir <copy local path> --env-l
 Safety built in:
 - It refuses unless the CLI's vault path equals `--dir`, and `--dir` is a git repo.
 - It resets with `git checkout` and `git clean` on `_agentkit-lab/` after every write probe.
-- P18 sends one fixture file to the OS Recycle Bin per run. Empty it now and then.
+- P18 sends one fixture file (`ref-block.md`) to the OS Recycle Bin, then deletes its own new entry (exact name and original folder match, new since before the delete; Windows and WSL via PowerShell). Other Recycle Bin entries are never touched. The `observed` text shows `bin before/added/after` counts; without PowerShell it shows `bin=n/a` and the entry stays.
 - **Do not click inside the test vault window while probes run**: P15 opens a modal and answers it itself.
 
 ## When a probe flips

@@ -80,6 +80,23 @@ function poll(fn, ms = 20000) {
   return v;
 }
 
+// Windows Recycle Bin entries named `name` that came from `folder` (Windows path). Only these are ever touched.
+// Returns null when PowerShell is not reachable (then P18 cannot clean up and says so).
+function recycleBin(name, folder) {
+  if (env !== 'wsl' && env !== 'windows') return null;
+  const ps = `$sh=New-Object -ComObject Shell.Application; $rb=$sh.Namespace(10); foreach($i in $rb.Items()){ '{0}|{1}|{2}' -f $i.Name,$rb.GetDetailsOf($i,1),$i.Path }`;
+  const r = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', ps], { encoding: 'utf8', cwd: env === 'wsl' ? '/mnt/c' : undefined });
+  if (r.status !== 0) return null;
+  const want = folder.replace(/[\\/]+$/, '').toLowerCase();
+  return r.stdout.split(/\r?\n/).map((l) => l.split('|')).filter((a) => a.length === 3 && a[0] === name && a[1].replace(/[\\/]+$/, '').toLowerCase() === want).map((a) => a[2].trim());
+}
+// Delete one entry (the $R data file and its $I info file) by exact path.
+function purgeBinEntry(p) {
+  const info = p.replace(/\\\$R([^\\]*)$/, '\\$$I$1');
+  const ps = `foreach($x in @('${p.replace(/'/g, "''")}','${info.replace(/'/g, "''")}')){ if(Test-Path -LiteralPath $x){ Remove-Item -LiteralPath $x -Recurse -Force } }`;
+  return spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', ps], { encoding: 'utf8', cwd: env === 'wsl' ? '/mnt/c' : undefined }).status === 0;
+}
+
 // Weight = damage tier (YARDSTICK): data loss 5, links 4, silent wrong answer 3, metadata 3, tokens 2, env/UI 1.
 // pass = the CLI still behaves as recorded in docs/FINDINGS.md, so the skill's guidance holds.
 const probes = [
@@ -109,7 +126,23 @@ const probes = [
     return { pass: child.stdout.includes('blocked') && /Update links/.test(modal), obs: `${child.stdout.trim()}; modal=${modal.slice(0, 30)}` }; } },
   { id: 'P16', f: 'F4d', w: 2, name: 'move into missing folder: ENOENT, exit 0', write: true, run: () => { const r = raw([`vault=${vault}`, 'move', `path=${T}`, `to=${L}/no/such/dir/`]); return { pass: /ENOENT/.test(r.out) && fs.existsSync(path.join(dir, T)), obs: r.out.trim().slice(0, 50) }; } },
   { id: 'P17', f: 'F4b', w: 1, name: 'move restyles md links to newLinkFormat', write: true, run: () => { fs.mkdirSync(path.join(dir, L, 'moved'), { recursive: true }); sleep(1000); out(['move', `path=${T}`, `to=${L}/moved/`]); sleep(1500); const t = fs.readFileSync(path.join(dir, L, 'refs/deeper/ref-markdown.md'), 'utf8'); return { pass: t.includes('](Target%20Note.md)'), obs: t.trim() }; } },
-  { id: 'P18', f: 'F5', w: 5, name: 'CLI delete ignores trashOption local (Recycle Bin)', write: true, run: () => { evalJs("app.vault.setConfig('trashOption','local')"); const r = out(['delete', `path=${L}/refs/ref-block.md`]); sleep(1000); const local = fs.existsSync(path.join(dir, '.trash')); evalJs("app.vault.setConfig('trashOption','system')"); return { pass: /Moved to trash/.test(r) && !local, obs: `${r.slice(0, 40)}; .trash=${local}` }; } },
+  { id: 'P18', f: 'F5', w: 5, name: 'CLI delete ignores trashOption local (Recycle Bin)', write: true, run: () => {
+    const f = `${L}/refs/ref-block.md`, folder = `${winPath}\\${L}\\refs`;
+    const before = recycleBin('ref-block.md', folder);
+    evalJs("app.vault.setConfig('trashOption','local')");
+    const r = out(['delete', `path=${f}`]);
+    sleep(1000);
+    const local = fs.existsSync(path.join(dir, '.trash'));
+    evalJs("app.vault.setConfig('trashOption','system')");
+    // Clean up our own Recycle Bin entry: only new entries with this exact name from this exact folder.
+    let bin = '; bin=n/a';
+    if (before) {
+      const mine = (recycleBin('ref-block.md', folder) || []).filter((x) => !before.includes(x));
+      for (const x of mine) purgeBinEntry(x);
+      const after = recycleBin('ref-block.md', folder) || [];
+      bin = `; bin before=${before.length} added=${mine.length} after=${after.length}`;
+    }
+    return { pass: /Moved to trash/.test(r) && !local, obs: `${r.slice(0, 40)}; .trash=${local}${bin}` }; } },
   { id: 'P19', f: 'F9c', w: 5, name: 'create on existing path makes "name 1.md"', write: true, run: () => { const r = out(['create', `path=${L}/refs/ref-wikilink.md`, 'content=x']); return { pass: /ref-wikilink 1\.md/.test(r), obs: r }; } },
   { id: 'P20', f: 'F9c', w: 1, name: 'create makes parent folders', write: true, run: () => { out(['create', `path=${L}/p20/a/b.md`, 'content=x']); return { pass: fs.existsSync(path.join(dir, L, 'p20/a/b.md')), obs: '' }; } },
   { id: 'P21', f: 'F9e', w: 1, name: 'create opens no tab', write: true, run: () => { const a = out(['tabs']); out(['create', `path=${L}/p21.md`, 'content=x']); const b = out(['tabs']); return { pass: a === b, obs: '' }; } },

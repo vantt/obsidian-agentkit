@@ -6,7 +6,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 36 / 68 việc xong (52%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 37 / 68 việc xong (54%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -16,7 +16,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 3/9 ███░░░░░░░ 33% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
-| E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | 🔄 Doing | P2 | 3/6 █████░░░░░ 50% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
+| E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | 🔄 Doing | P2 | 4/6 ██████░░░░ 66% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | — | Để sau (user 2026-10-28) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | ✅ Done | — | 10/12 ████████░░ 83% | — | Báo cáo: [REPORT.md](models/REPORT.md). Mặc định `haiku`. Còn E8.11, E8.13 (P3, tuỳ chọn) |
@@ -96,7 +96,7 @@ Các việc này agent không tự làm được:
 | E5.2 | `npm test` | E5 | P2 | ✅ | Agent | `cd tests && npm ci && npm test`: 67/67 pass + size-check ok. privacy-scan không vào `npm test` (cần file cục bộ `real-names.json`) |
 | E5.3 | Checklist khi Obsidian cập nhật | E5 | P2 | ⬜ | Agent | — |
 | E5.4 | Nhắc chạy probe định kỳ | E5 | P3 | ⬜ | Agent | — |
-| E5.5 | P18 tự dọn Thùng rác | E5 | P3 | ⬜ | Agent | — |
+| E5.5 | P18 tự dọn Thùng rác | E5 | P3 | ✅ | Agent | P18 xoá đúng entry mới của nó (tên và thư mục gốc khớp); 2 lần chạy trên `vault-copy`: `bin before=7 added=1 after=7`. 7 entry cũ còn lại do các lần chạy trước, user dọn tay nếu muốn |
 | E5.6 | Dọn repo (distillery, handoff) | E5 | P2 | ✅ | User + agent | User chốt 2026-10-24: commit `docs/handoff/` và việc dời `docs/research/distillery` sang `docs/distillery`; chỉ `/upstreams/` không track |
 | E6.1 | Đo task của plugin Tasks qua CLI | E6 | P3 | ⬜ | Agent | — |
 | E6.2 | Đo Templater qua `--create` | E6 | P3 | ⬜ | Agent | — |
