@@ -16,3 +16,4 @@ Generated from `history/*.json` on every run of `tests/compat/probes.mjs`. Metho
 | 2026-10-28 17:16 | 1.15.0 | wsl-copy | 1/1 (partial: P18) | 100% | none | — |
 | 2026-10-28 17:24 | 1.15.0 | wsl-copy | 30/30 | 100% | none | — |
 | 2026-10-28 17:40 | 1.15.0 | wsl | 31/31 | 100% | none | — |
+| 2026-10-28 17:48 | 1.15.0 | wsl | 32/32 | 100% | none | — |

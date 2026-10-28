@@ -165,6 +165,16 @@ CLI 1.15.0, `vault-copy` (Templater 2.16.0 enabled with default settings: templa
 - **Consequence:** with the default (trigger off) a Templater template made through `obs --create template=` keeps its `<% %>` tags, so render it yourself or have the user turn the trigger on. With the trigger on, any note content containing `<% %>` is executed, so do not write untrusted text that contains it. The skill should not offer `template=` for Templater templates (damage tier 3, silent wrong result).
 - The probe sets both settings temporarily and restores them. Verdict: new finding, no source claim. Probe P31.
 
+## F14 Dataview results are not reachable through the CLI (E6.3, 2026-10-28)
+
+CLI 1.15.0, `vault-copy` (Dataview 0.5.68 enabled). A fixture note with a `dataview` TABLE block and a `dataviewjs` block that writes `DVJS-MARK-` plus a computed number.
+
+- **No CLI command runs or returns a Dataview query.** `help` never mentions Dataview. `commands filter=dataview` lists three command ids, all maintenance (`dataview-drop-cache`, `dataview-force-refresh-views`, `dataview-rebuild-current-view`); none takes a query or prints rows. `plugin id=dataview` only gives name, version and enabled.
+- **Every read path returns the source, never the rendered result.** `read` returns the note text with the fenced block exactly as written. `outline` shows headings only. `search` for the computed `DVJS-MARK-42` finds nothing, because that text exists only in the rendered view. Dataview writes nothing to disk, so the note stays byte-identical after a refresh. `properties` and `tags` see the front matter only.
+- **The results exist only inside the running app.** `eval` calling the Dataview API (`queryMarkdown`) returned the table with a row for the note. The bridge refuses `eval` and `dev:*` (exit 7, never unlockable) and gates `command` behind `--allow-unsafe` (and that only refreshes views). So there is no allowed way to read results.
+- **Consequence for the skill:** guide the agent to write Dataview queries (as note text, for Obsidian to render), not to read their results. For the same answer, use what the CLI does return: `search`, `tags`, `properties`, `tasks`, `base:query` for Bases. Do not report "the query returns N rows" from `read`: that is the source, and a silent wrong answer (damage tier 3 if relied on). Do not try `eval` or `dev:dom` to get around this; it is refused on purpose.
+- Verdict: new finding, no source claim. Probe P32 (the probe runner uses `eval` for measurement only).
+
 ## Not verified
 
 - An admin terminal (F1).

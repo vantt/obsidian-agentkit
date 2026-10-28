@@ -6,18 +6,18 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 39 / 68 việc xong (57%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 40 / 68 việc xong (58%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 3/6 █████░░░░░ 50% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 3/9 ███░░░░░░░ 33% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | 🔄 Doing | P2 | 4/6 ██████░░░░ 66% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
-| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 2/6 ███░░░░░░░ 33% | — | Để sau (user 2026-10-28) |
+| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 3/6 █████░░░░░ 50% | — | Để sau (user 2026-10-28) |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | ✅ Done | — | 10/12 ████████░░ 83% | — | Báo cáo: [REPORT.md](models/REPORT.md). Mặc định `haiku`. Còn E8.11, E8.13 (P3, tuỳ chọn) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
@@ -100,7 +100,7 @@ Các việc này agent không tự làm được:
 | E5.6 | Dọn repo (distillery, handoff) | E5 | P2 | ✅ | User + agent | User chốt 2026-10-24: commit `docs/handoff/` và việc dời `docs/research/distillery` sang `docs/distillery`; chỉ `/upstreams/` không track |
 | E6.1 | Đo task của plugin Tasks qua CLI | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F12: CLI chỉ đọc dòng checkbox, không hiểu emoji ngày/priority; mọi status khác cách trắng bị tính là done (`todo` bỏ sót `[/]`, `[-]`); probe P30, 30/30 |
 | E6.2 | Đo Templater qua `--create` | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F13: `create template=` chỉ chạy core Templates; `<% %>` giữ nguyên chữ trừ khi bật "trigger on new file creation" (khi đó chạy cả với note thường); probe P31, 31/31; thêm 1 dòng bẫy vào `references/traps.md` |
-| E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P3 | ⬜ | Agent | — |
+| E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F14: không có lệnh CLI nào chạy query Dataview; `read`/`outline`/`search` chỉ thấy mã nguồn; kết quả chỉ có trong app (cần `eval`, bridge chặn); skill chỉ nên hướng dẫn viết query, không đọc kết quả; probe P32, 32/32 |
 | E6.4 | Viết `references/plugins.md` | E6 | P3 | ⬜ | Agent | Sau E6.1–E6.3 |
 | E6.5 | Fixture và kịch bản test cho plugin | E6 | P3 | ⬜ | Agent | Sau E6.4 |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |

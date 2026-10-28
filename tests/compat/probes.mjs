@@ -181,6 +181,24 @@ const probes = [
     }
     const pass = off === `T=p31-off X=${tag}` && on === 'T=p31-on X=2' && plain === 'Z=4';
     return { pass, obs: `trigger off: ${off}; on: ${on}; plain content, on: ${plain}` }; } },
+  { id: 'P32', f: 'F14', w: 2, name: 'Dataview results are not reachable: read, outline, search show source only; no CLI command; bridge refuses eval', write: true, run: () => {
+    const f = `${L}/p32-dv.md`, bridge = path.join(here, '..', '..', 'skills/obsidian-connect/scripts/obs.mjs');
+    const DV = 'app.plugins.plugins.dataview';
+    if (evalJs(`!!${DV}`) !== 'true') return { pass: false, obs: 'Dataview not loaded' };
+    const src = ['# DV', '', '```dataview', `TABLE file.name FROM "${L}" WHERE file.name = "p32-dv"`, '```', '', '```dataviewjs', 'dv.paragraph("DVJS-MARK-" + (40+2))', '```', ''].join('\n');
+    fs.writeFileSync(path.join(dir, f), src);
+    const v = poll(() => { const r = out(['read', `path=${f}`]); return { ok: r.includes('```dataview'), r }; });
+    const rd = out(['read', `path=${f}`]), ol = out(['outline', `path=${f}`]);
+    const hit = run(['search', 'query=DVJS-MARK-42']).out;
+    const help = out(['help']), cmds = out(['commands', 'filter=dataview']).split('\n').filter(Boolean).sort().join(',');
+    const refused = ['eval code=1', 'dev:dom selector=body', 'command id=dataview:dataview-force-refresh-views'].map((c) => spawnSync(process.execPath, [bridge, ...c.split(' ')], { encoding: 'utf8', env: { ...process.env, OBS_VAULT: vault } }).status);
+    const inApp = evalJs(`(async()=>{const r=await ${DV}.api.queryMarkdown('TABLE file.name FROM "${L}" WHERE file.name = "p32-dv"');return r.successful?r.value:"ERR"})()`); // measurement only: the skill never uses eval
+    sleep(2000);
+    const same = fs.readFileSync(path.join(dir, f), 'utf8') === src;
+    const pass = v.ok && rd.trim() === src.trim() && ol.includes('DV') && !ol.includes('[[') && /No matches/.test(hit) && !/dataview/i.test(help)
+      && cmds === 'dataview:dataview-drop-cache,dataview:dataview-force-refresh-views,dataview:dataview-rebuild-current-view'
+      && refused.every((c) => c === 7) && inApp.includes('| p32-dv') && same;
+    return { pass, obs: `read=source:${rd.trim() === src.trim()}; outline=${ol.replace(/\s+/g, ' ')}; search rendered marker: ${hit.trim().slice(0, 16)}; help mentions dataview: ${/dataview/i.test(help)}; commands: ${cmds.split(',').length}; bridge exits ${refused.join('/')}; in-app query has rows: ${inApp.includes('| p32-dv')}; file unchanged: ${same}` }; } },
   { id: 'P27', f: 'F6', w: 1, name: 'unknown flags ignored silently', run: () => { const r = out(['search', 'query="Section A"', `path=${L}`, 'bogusflag=1', 'matches']); return { pass: r.split('\n').length === 2, obs: r.replace(/\n/g, ' | ').slice(0, 60) }; } },
   { id: 'P28', f: 'F1', w: 1, name: 'bridge --preflight <= 5 lines, exit 0', run: () => { const r = spawnSync(process.execPath, [path.join(here, '..', '..', 'skills/obsidian-connect/scripts/obs.mjs'), '--preflight'], { encoding: 'utf8', env: { ...process.env, OBS_VAULT: vault } }); return { pass: r.status === 0 && r.stdout.trim().split('\n').length <= 5, obs: `exit=${r.status}` }; } },
 ];

@@ -539,3 +539,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Kết quả ở [FINDINGS.md](FINDINGS.md) F13; probe P31 đặt tạm hai cài đặt rồi khôi phục (trong `finally`).
 - Bằng chứng: đủ 31 probe trên `vault-copy`, CLI 1.15.0, 100% có trọng số; 49 test pass; vault sạch. Trigger tắt: `X=<% 1+1 %>`; bật: `X=2`, note thường `Z=4`.
 - Rủi ro cần biết: khi trigger bật, mọi nội dung chứa `<% %>` được thực thi, nên không ghi văn bản không tin cậy có chuỗi này.
+
+## E6.3: kết quả Dataview qua CLI (2026-10-28)
+- Kết quả ở [FINDINGS.md](FINDINGS.md) F14; probe P32 (ghi note thử, kiểm `read`/`outline`/`search`/`help`/`commands`, bridge từ chối `eval`/`dev:dom`/`command` với exit 7; `eval` chỉ dùng để đo trong probe).
+- Kết luận: không có đường đọc kết quả Dataview; skill chỉ nên hướng dẫn viết query.
+- Điểm mở cho E6.4: dòng bẫy "đừng báo số dòng kết quả từ `read` một note có khối dataview; đó là mã nguồn".
