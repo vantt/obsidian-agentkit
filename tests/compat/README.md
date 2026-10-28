@@ -72,6 +72,21 @@ Precedent: the CLI went 1.14.4 → 1.15.0 on 2026-10-27/28. What was done then i
     - Root `README.md` status line: the new version and date.
     - If behaviour changed: a dated entry in `docs/FINDINGS.md` under the same `F#`.
 
+## Monthly check
+Obsidian updates itself, so once a month run the read-only probes on the vault copy from "Setup" (Obsidian open on it, nothing clicked in its window):
+```
+node tests/compat/probes.mjs --vault <copy name> --dir <copy local path> --env-label wsl --no-write
+```
+- Takes about 1 min and changes nothing in the vault. It writes a partial row to `HISTORY.md` and a `history/*.json` file (labelled `--no-write`); commit them only if you want the record.
+- **Look at:** the final score line (expect all read-only probes passed), any `CLI x differs from tested y` line, and `node tests/compat/probes.mjs --compare` for flips against the previous run.
+- **Escalate to the full checklist** ("When Obsidian updates: checklist") when a probe fails or flips, or when the CLI version differs from `metadata.tested-cli`, even by a patch number. A clean monthly run needs no other action.
+- This is a reminder note, not an installed schedule. Nothing in this repo runs it for you.
+
+Examples only. Adapt the placeholders and install them yourself if you want the reminder automated; none of this is set up by the repo:
+- **crontab (Linux/WSL, 09:00 on the 1st):** `0 9 1 * * cd <repo path> && node tests/compat/probes.mjs --vault "<copy name>" --dir <copy local path> --env-label wsl --no-write >> <log path> 2>&1`. It needs the desktop Obsidian running and the vault open, so a headless cron job often fails; a calendar reminder is the safer choice.
+- **Windows Task Scheduler:** create a monthly task whose action runs `node` with the same arguments, "Start in" set to the repo folder, and "Run only when user is logged on" (the Obsidian CLI needs the app).
+- **Claude Code `/schedule`:** can create a recurring routine that runs the command above. A cloud routine cannot reach your local Obsidian, so use it only as a reminder to run the command yourself.
+
 ## Not covered by probes (manual)
 - Obsidian closed (bridge exit 2): close the app, then run `obs --preflight`.
 - Git Bash `.exe` exit 127.

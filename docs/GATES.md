@@ -557,3 +557,7 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Phát hiện: [FINDINGS.md](FINDINGS.md) F15. Đọc lại qua CLI trên vault Drive cho 1/10 vì Obsidian chậm; đọc file thì 10/10.
 - Môi trường: `/mnt/g` chết trong phiên này nên chạy bằng `node.exe` Windows qua PowerShell. Agent thử mount lại bằng root và bị chặn; không ai mount lại.
 - Còn mở: E3.5b trên vault thật cùng user; không đưa vào `npm test` (3 phút, cần Obsidian).
+
+## E5.4: nhắc kiểm tra định kỳ (2026-10-28)
+- Mục "Monthly check" trong `tests/compat/README.md`: lệnh `probes.mjs ... --no-write` (~1 phút), cái cần xem, khi nào leo lên checklist E5.3; ví dụ crontab, Task Scheduler, `/schedule` chỉ là văn bản để user tự cài. Cảnh báo: cron và routine đám mây có thể hỏng vì Obsidian desktop phải đang mở vault; nhắc lịch là cách an toàn hơn.
+- Bằng chứng: 54 test pass, size-check ok. Chưa chạy lệnh trên vault (đã có chạy đủ probe ở các việc khác).

@@ -4,7 +4,7 @@
 
 Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately and cheaply (few tokens).
 
-**Status: built and tested on Obsidian CLI 1.14.4 (2026-10-22); all 32 compatibility probes pass on 1.15.0 (2026-10-28).** Scenario results: [tests/RESULTS.md](tests/RESULTS.md). Probe score history: [tests/compat/HISTORY.md](tests/compat/HISTORY.md).
+**Status: built and tested on Obsidian CLI 1.14.4 (2026-10-22); all 32 compatibility probes pass on 1.15.0 (2026-10-28).** Scenario results: [tests/RESULTS.md](tests/RESULTS.md). Probe score history: [tests/compat/HISTORY.md](tests/compat/HISTORY.md). Re-check monthly: [tests/compat/README.md#monthly-check](tests/compat/README.md#monthly-check).
 
 ## What is in it
 - [`skills/obsidian-connect/`](skills/obsidian-connect/SKILL.md): an Agent Skill. It holds a routing table (CLI or file tools), safety thresholds, and the CLI traps measured on 1.14.4, with four references that load on demand.
