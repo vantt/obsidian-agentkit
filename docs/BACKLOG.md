@@ -6,15 +6,15 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 34 / 63 việc xong (53%)**
+**Toàn project: 34 / 68 việc xong (50%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/4 █████░░░░░ 50% | — | E2.1 (Claude Code trên Windows) và E2.4 (terminal admin) cần user |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 3/6 █████░░░░░ 50% | ✅ E2.2, E2.3 | E3.3: một tuần chỉ đọc (user dùng); sau đó E3.5 mở quyền ghi một note |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 2/6 ███░░░░░░░ 33% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 3/9 ███░░░░░░░ 33% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ⬜ Todo | P3 | 0/5 ░░░░░░░░░░ 0% | E3.1 | Để sau (quyết định ở cổng 0) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ⬜ Todo | P2 | 1/6 █░░░░░░░░░ 16% | — | E5.1, E5.2 (CI phải `cd tests && npm ci` trước) |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | — | Để sau (user 2026-10-28) |
@@ -39,7 +39,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E3.3 | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi |
+| E3.3b | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi |
 
 ## Cần user
 
@@ -47,9 +47,11 @@ Các việc này agent không tự làm được:
 
 | ID | Việc | User cần làm |
 |---|---|---|
-| E2.1 | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill |
-| E3.3 | Một tuần chỉ đọc trên vault thật | Dùng agent hỏi vault (tìm, backlink, đếm task); báo lại câu trả lời sai hoặc thiếu |
-| E2.4 | Terminal quyền admin | Mở PowerShell bằng quyền admin |
+| E2.1b | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill, chạy case 1 và 4 theo checklist của E2.1a (~20 phút) |
+| E3.3b | Một tuần chỉ đọc trên vault thật | Dùng agent hỏi vault (tìm, backlink, đếm task); báo lại câu trả lời sai hoặc thiếu (dùng bảng ghi của E3.3a) |
+| E2.4b | Terminal quyền admin | Mở PowerShell bằng quyền admin, chạy lệnh của E2.4a (~5 phút) |
+| E3.5b | Mở quyền ghi một note trên vault thật | Cho agent ghi 10 lần (append daily note, sửa property), xem kết quả (~15 phút), sau E3.3b |
+| E3.6b | Thao tác lớn trên vault thật | Theo dõi lần đầu rename, move, đổi tên tag (~20 phút), sau E3.5b |
 | — | Thu hồi key OpenRouter đã lộ | OpenRouter → Keys → revoke key E8 ([GATES.md](GATES.md) mục sự cố bảo mật) |
 
 ## Backlog chi tiết
@@ -63,18 +65,28 @@ Các việc này agent không tự làm được:
 | E1.4 | Bộ probe, lịch sử điểm, nhật ký sự cố | E1 | — | ✅ | Agent | [HISTORY.md](../tests/compat/HISTORY.md) 29/29 |
 | E1.5 | 11 kịch bản test | E1 | — | ✅ | Agent | [RESULTS.md](../tests/RESULTS.md) |
 | E1.6 | Tài liệu HOW-IT-WORKS | E1 | — | ✅ | Agent | [HOW-IT-WORKS.md](HOW-IT-WORKS.md) |
-| E2.1 | Case 9 với agent trên Windows | E2 | P1 | ⏸ | User + agent | Cần máy Windows có Claude Code |
+| E2.1 | Case 9 với agent trên Windows | E2 | P1 | ⏸ | User + agent | Tách thành a/b |
+| E2.1a | Checklist cài skill và chạy case 1, 4 trên Windows, đi thử trên vault test | E2 | P1 | ⬜ | Agent | Xong khi: checklist trong `tests/`, các prompt đã chạy thử đúng một lần ở WSL |
+| E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ⏸ | User | Cần máy Windows có Claude Code, ~20 phút |
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
-| E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | — |
+| E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | Tách thành a/b |
+| E2.4a | Lệnh chính xác và test bridge phát hiện lỗi im lặng (exit 2) bằng `fake-obsidian` | E2 | P2 | ⬜ | Agent | Xong khi: unit test pass, hướng dẫn ngắn viết xong |
+| E2.4b | Chạy lệnh của E2.4a trong PowerShell admin, ghi FINDINGS F1 | E2 | P2 | ⏸ | User | ~5 phút |
 | E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
 | E2.6 | Đo token từ transcript | E2 | P2 | ❌ | Agent | Bỏ: E8 đo token từ transcript cho mọi lượt (`tests/models/summary.mjs`) |
 | E3.1 | Cài skill cho vault thật | E3 | P1 | ✅ | User + agent | Symlink `~/.claude/skills/obsidian-connect`; `--preflight` OK, `match=yes` (lần đầu timeout vì Obsidian đang mở vault; `NEXT:` đã sửa, test mới) |
 | E3.2 | Profile vault thật | E3 | P1 | ✅ | Agent | `profile.mjs` khớp giá trị live (`alwaysUpdateLinks` true, daily note ở gốc, không template). Vault có Tasks, Dataview, Templater, Breadcrumbs; `.obsidian/` đã có 2 bản xung đột Drive từ 2025 |
-| E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | — |
+| E3.3 | Một tuần chỉ đọc | E3 | P1 | ⏸ | User | Tách thành a/b |
+| E3.3a | Bảng ghi lỗi và 10 câu hỏi chỉ đọc mẫu, chạy thử trên `vault-copy` | E3 | P1 | ⬜ | Agent | Xong khi: 10 câu trả lời đúng, vault sạch |
+| E3.3b | Một tuần dùng chỉ đọc trên vault thật | E3 | P1 | ⏸ | User | 1 tuần dùng bình thường |
 | E3.4 | Chọn cách snapshot | E3 | P1 | ✅ | User | Git, repo ngoài Drive (`--separate-git-dir`), chỉ file text; bridge tự commit trước rename, move, đổi tên tag ([GATES.md](GATES.md) mục E3.4) |
-| E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | — |
-| E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | — |
+| E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | Tách thành a/b |
+| E3.5a | Script 10 lần ghi (append daily, sửa property) + đọc lại, chạy trên vault Drive test | E3 | P1 | ⬜ | Agent | Xong khi: 10/10 đúng, không có bản xung đột sau 3 phút |
+| E3.5b | Làm lại trên vault thật cùng user | E3 | P1 | ⏸ | User + agent | Sau E3.3b; ~15 phút. Agent không tự ghi vào vault thật |
+| E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | Tách thành a/b |
+| E3.6a | Diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | E3 | P2 | ⬜ | Agent | Xong khi: `unresolved total` không đổi, vault sạch sau reset |
+| E3.6b | Làm lần đầu trên vault thật có người theo dõi | E3 | P2 | ⏸ | User + agent | Sau E3.5b; ~20 phút |
 | E4.1 | Plugin và marketplace của Claude Code | E4 | P3 | ⬜ | Agent | — |
 | E4.2 | Đường dẫn script không phụ thuộc chỗ cài | E4 | P3 | ⬜ | Agent | — |
 | E4.3 | Script cài đặt kiểm tra điều kiện | E4 | P3 | ⬜ | Agent | — |
@@ -110,15 +122,15 @@ Các việc này agent không tự làm được:
 | E8.8 | Vòng 1+: đo lại, lặp tới khi đạt H1 (tối đa 3 vòng) | E8 | P2 | ✅ | Agent | Vòng 1 xong, H1 đạt với Claude; vòng sau chỉ khi skill đổi |
 | E8.9 | Báo cáo H1–H4, bản ngắn (gộp E8.10: bộ test chạy lại được, khuyến nghị model) | E8 | P2 | ✅ | Agent | [REPORT.md](models/REPORT.md): H1–H3 đạt trên ngưỡng, H4 bác bỏ; [tests/models/README.md](../tests/models/README.md); `tested-models` trong SKILL.md; mục "Which model" trong README |
 | E8.10 | Bộ test model chạy lại được, khuyến nghị model | E8 | — | ❌ | Agent | Gộp vào E8.9 (user 2026-10-28) |
-| E8.11 | Kiểm sau: Codex CLI (Gemini, OpenAI đã vào vòng 0) | E8 | P3 | ⬜ | Agent | Tuỳ chọn |
+| E8.11 | Kiểm sau: Codex CLI (Gemini, OpenAI đã vào vòng 0) | E8 | P3 | ⬜ | Agent | Loại khỏi autopilot: tốn phí API / cần key hãng; tuỳ chọn |
 | E8.12 | Cô lập đáp án: đáp án ra ngoài vault (option mới trong `obsidian-test-fixture`), agent không đọc được repo và state, judge bắt việc đọc ngoài vault | E8 | P1 | ✅ | Agent + user | Vòng 0: 53 lượt đọc file đánh dấu chứa đáp án S6, 3 lượt đọc script trong repo ([GATES.md](GATES.md) mục E10.2). Đáp án ra ngoài vault, sandbox và proxy key chạy thật ở vòng 1 |
-| E8.13 | Kiểm cuối các model không phải Claude (4 model khuyến nghị, phía có skill, 3 lượt) | E8 | P3 | ⬜ | Agent + user | Tuỳ chọn, ~$1–3; cần key OpenRouter hoặc API của từng hãng |
-| E9.1 | Câu hỏi cho user (pi/omp, vault thứ hai, agent CLI, ngân sách, bản Obsidian cũ) | E9 | P3 | ⬜ | Agent + user | — |
-| E9.2 | Chuyển harness sang `bench/`, kịch bản thành dữ liệu, judge chung | E9 | P3 | ⬜ | Agent | Phải chấm lại E8 vòng 0 ra cùng kết quả |
-| E9.3 | Adapter Codex, pi/omp, Antigravity | E9 | P3 | ⬜ | Agent | — |
-| E9.4 | Lịch sử, `compare`, báo cáo, nhập dữ liệu E8 | E9 | P3 | ⬜ | Agent | — |
-| E9.5 | Một đợt chạy thật: 2 agent × 3 model | E9 | P3 | ⬜ | Agent + user | Không chạy cùng lúc với lượt E8; cô lập đáp án như E8.12 |
-| E9.6 | Tài liệu bench | E9 | P3 | ⬜ | Agent | — |
+| E8.13 | Kiểm cuối các model không phải Claude (4 model khuyến nghị, phía có skill, 3 lượt) | E8 | P3 | ⬜ | Agent + user | Loại khỏi autopilot: tốn tiền (~$1–3), cần key OpenRouter hoặc API của từng hãng |
+| E9.1 | Câu hỏi cho user (pi/omp, vault thứ hai, agent CLI, ngân sách, bản Obsidian cũ) | E9 | P3 | ⬜ | Agent + user | Loại khỏi autopilot: giao agent khác ([prompt](handoff/E9-SKILLBENCH-PROMPT.md)) |
+| E9.2 | Chuyển harness sang `bench/`, kịch bản thành dữ liệu, judge chung | E9 | P3 | ⬜ | Agent | Phải chấm lại E8 vòng 0 ra cùng kết quả · Loại khỏi autopilot: giao agent khác ([prompt](handoff/E9-SKILLBENCH-PROMPT.md)) |
+| E9.3 | Adapter Codex, pi/omp, Antigravity | E9 | P3 | ⬜ | Agent | Loại khỏi autopilot: giao agent khác ([prompt](handoff/E9-SKILLBENCH-PROMPT.md)) |
+| E9.4 | Lịch sử, `compare`, báo cáo, nhập dữ liệu E8 | E9 | P3 | ⬜ | Agent | Loại khỏi autopilot: giao agent khác ([prompt](handoff/E9-SKILLBENCH-PROMPT.md)) |
+| E9.5 | Một đợt chạy thật: 2 agent × 3 model | E9 | P3 | ⬜ | Agent + user | Không chạy cùng lúc với lượt E8; cô lập đáp án như E8.12 · Loại khỏi autopilot: giao agent khác ([prompt](handoff/E9-SKILLBENCH-PROMPT.md)) |
+| E9.6 | Tài liệu bench | E9 | P3 | ⬜ | Agent | Loại khỏi autopilot: giao agent khác ([prompt](handoff/E9-SKILLBENCH-PROMPT.md)) |
 | E10.1 | Tạo repo `vantt/obsidian-test-fixture` (CLI `otf`, output giống hệt script cũ, `graph.json`) | E10 | P2 | ✅ | Agent + user | Repo public, MIT; tag `v0.1.0` → `v0.2.0` |
 | E10.2 | Chuyển repo này sang dùng package (npm git dependency ghim tag), xoá 3 script cũ | E10 | P2 | ✅ | Agent | Ghim `v0.2.0`; output và `truth` giống hệt script cũ; 3 script cũ đã xoá |
 | E10.3 | Kiểm tra với Obsidian thật: `preflight`, `calibrate`, một lượt Haiku S1, `probes.mjs --no-write` | E10 | P2 | ✅ | User + agent | Calibrate khớp; Haiku S1 pass; probe chỉ đọc 16/16 trên CLI 1.15.0 |
