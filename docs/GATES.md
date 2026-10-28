@@ -585,3 +585,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - `tests/e36-bulk-rehearsal.mjs` (dùng lại danh sách cho phép của `e35-write-check`; từ chối nếu không phải vault test, không phải git work tree hoặc cây bẩn): tạo fixture trong `_agentkit-lab/e36/`, rồi rename, move, đổi tên tag; kiểm snapshot (bản sao `.trash/obsidian-connect-snapshots/` và commit git `obsidian-connect: snapshot before <op>`), link, `unresolved total`; reset bằng `git reset --hard` + `git clean` đúng đường dẫn; `obs reload`, chờ 45 s.
 - Bằng chứng: chạy 1 lần trên `vault-copy`: 33/33 kiểm tra đạt; `unresolved total` 89 trước và sau từng thao tác và sau reset; vault sạch (tôi kiểm lại `git status` rỗng). 60 test pass.
 - Lưu ý: bridge không có dry-run cho rename/move (chỉ `--tag-rename` có); bước xem trước của hai thao tác này là `--backlinks`. Chỉ mục tag của Obsidian chưa kiểm cho tag mới. Chưa thay E3.6b.
+
+## E4.3: `install.mjs` (2026-10-28)
+- `node install.mjs` (dry run) kiểm Node ≥ 18, Obsidian CLI (dùng `detectEnv`/`findCli` của `obs.mjs`, chỉ gọi `<cli> version`), đường link skill; `--link` tạo symlink (Linux/WSL) hoặc junction (Windows), từ chối ghi đè link khác; in nhắc `OBS_VAULT` và lệnh `--preflight` đầu tiên với đường dẫn thật.
+- Bằng chứng: 5 test offline pass (65 tổng); tôi chạy thật với `--skills-dir` tạm: dry-run rồi `--link` tạo đúng symlink; `~/.claude` thật không bị đụng. Chưa kiểm: máy Windows sạch (junction, `where`), macOS (`findCli` không có nhánh macOS nên luôn gợi ý đặt `OBS_CLI`).
+- Hệ quả phụ: import `findCli` ghi file cache `obsidian-connect-cli.json` ở thư mục tạm của hệ điều hành (hành vi sẵn có của `obs.mjs`).

@@ -17,6 +17,8 @@ Toolkit that lets LLM coding agents work with an Obsidian vault fast, accurately
 - `tests/`: bridge and profile unit tests (`node --test tests/*.test.mjs`), a size budget check, the synthetic fixture and file-only ground truth (from [`obsidian-test-fixture`](https://github.com/vantt/obsidian-test-fixture); `cd tests && npm ci`), scenario cases, and a scored [compatibility probe suite](tests/compat/README.md) for re-testing new CLI versions.
 
 ## Install
+Quickest: `node install.mjs` checks Node, the Obsidian CLI and the skill link (dry run; add `--link` to create the link) and prints your first command. The manual steps follow.
+
 Needs Node 18 or later, and Obsidian 1.12 or later with the CLI enabled (Settings > General > Command line interface; this menu path is from the earlier README, not re-checked). Obsidian runs on Windows and must be open. The skill is `skills/obsidian-connect/`; `<repo>` below is your clone of this repo. Prefer the plugin? See [Install as a plugin](#install-as-a-plugin).
 
 ### WSL, Linux or macOS-style shell
