@@ -237,7 +237,7 @@ Các file này không phải một phần của skill khi cài đặt, nhưng gi
 | `tests/profile.test.mjs` | Kiểm tra profile đọc đúng giá trị và không lộ nội dung note |
 | `tests/size-check.mjs` | Kiểm tra ngân sách kích thước (mô tả ≤ 60 từ, SKILL ≤ 70 dòng và không lớn hơn v1, tải điển hình ≤ 3k token) |
 | `otf` (package [`obsidian-test-fixture`](https://github.com/vantt/obsidian-test-fixture), ghim tag trong `tests/package.json`; đường dẫn ở `tests/otf.mjs`) | `otf generate --preset hard-cases` sinh vault giả với các trường hợp khó (đủ kiểu link, note CRLF 3.000 dòng, tên tiếng Việt, tag dễ nhầm); `--preset personal-vault` sinh vault tổng hợp ~1.800 note cho E8. `otf truth` tính đáp án đúng chỉ từ file (backlink, task, tag, YAML, CRLF) để chấm kết quả |
-| `tests/compat/probes.mjs` | 29 probe kiểm tra lại từng hành vi CLI mà skill dựa vào, chấm điểm theo mức độ thiệt hại, lưu lịch sử vào `HISTORY.md` |
+| `tests/compat/probes.mjs` | 30 probe kiểm tra lại từng hành vi CLI mà skill dựa vào, chấm điểm theo mức độ thiệt hại, lưu lịch sử vào `HISTORY.md` |
 | `tests/compat/TROUBLESHOOTING.md` | Kinh nghiệm xử lý sự cố khi đo (index chậm, reload, hộp thoại...) |
 | `tests/scenarios/README.md`, `tests/RESULTS.md` | 11 kịch bản test với agent thật, cùng kết quả từng lần chạy |
 

@@ -152,6 +152,16 @@ const probes = [
   { id: 'P25', f: 'F9d', w: 1, name: 'properties format=json is JSON', run: () => { try { JSON.parse(out(['properties', `path=${L}/props/Property Note.md`, 'format=json'])); return { pass: true, obs: '' }; } catch (e) { return { pass: false, obs: e.message }; } } },
   { id: 'P26', f: 'F9g', w: 2, name: 'daily:append twice duplicates', write: true, run: () => { const p = out(['daily:path']); out(['daily:append', 'content=P26 marker']); out(['daily:append', 'content=P26 marker']); const t = fs.existsSync(path.join(dir, p)) ? fs.readFileSync(path.join(dir, p), 'utf8') : ''; const n = (t.match(/P26 marker/g) || []).length; return { pass: n === 2, obs: `${p} count=${n}` }; } },
   { id: 'P29', f: 'F9j', w: 2, name: 'daily:read creates the daily note (empty, or from the template)', write: true, run: () => { const p = out(['daily:path']); for (let i = 0; i < 15 && run(['file', `path=${p}`]).code === 0; i++) sleep(1000); const before = fs.existsSync(path.join(dir, p)) || run(['file', `path=${p}`]).code === 0; out(['daily:read']); sleep(800); const after = fs.existsSync(path.join(dir, p)); const size = after ? fs.statSync(path.join(dir, p)).size : 0; return { pass: !before && after, obs: `before=${before} after=${after} bytes=${size}` }; } },
+  { id: 'P30', f: 'F12', w: 3, name: 'tasks: raw text only; any non-space status counts as done', write: true, run: () => {
+    const f = `${L}/p30-tasks.md`;
+    fs.writeFileSync(path.join(dir, f), ['- [ ] a', '- [ ] b ⏫ 📅 2026-10-30', '- [/] c 🔼', '- [-] d', '- [x] e ✅ 2026-10-27'].join('\n') + '\n');
+    const v = poll(() => { const t = num(out(['tasks', `path=${f}`, 'total'])); return { ok: t === 5, t }; });
+    const todo = num(out(['tasks', `path=${f}`, 'todo', 'total'])), done = num(out(['tasks', `path=${f}`, 'done', 'total']));
+    let j = []; try { j = JSON.parse(out(['tasks', `path=${f}`, 'format=json'])); } catch { /* shown in obs */ }
+    const keys = [...new Set(j.flatMap((x) => Object.keys(x)))].sort().join(',');
+    const byS = out(['tasks', `path=${f}`, 'status=/']);
+    const pass = v.ok && todo === 2 && done === 3 && keys === 'file,line,status,text' && j[1]?.text.includes('📅 2026-10-30') && j.map((x) => x.status).join('') === '  /-x' && /^- \[\/\] c/.test(byS);
+    return { pass, obs: `total=${v.t} todo=${todo} done=${done} keys=${keys} status=/ -> ${byS.slice(0, 20)}` }; } },
   { id: 'P27', f: 'F6', w: 1, name: 'unknown flags ignored silently', run: () => { const r = out(['search', 'query="Section A"', `path=${L}`, 'bogusflag=1', 'matches']); return { pass: r.split('\n').length === 2, obs: r.replace(/\n/g, ' | ').slice(0, 60) }; } },
   { id: 'P28', f: 'F1', w: 1, name: 'bridge --preflight <= 5 lines, exit 0', run: () => { const r = spawnSync(process.execPath, [path.join(here, '..', '..', 'skills/obsidian-connect/scripts/obs.mjs'), '--preflight'], { encoding: 'utf8', env: { ...process.env, OBS_VAULT: vault } }); return { pass: r.status === 0 && r.stdout.trim().split('\n').length <= 5, obs: `exit=${r.status}` }; } },
 ];

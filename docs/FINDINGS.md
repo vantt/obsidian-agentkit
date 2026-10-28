@@ -146,6 +146,16 @@ jackal's `HIGH_RISK_REPORT.md` gives 13/57 silent failures on CLI 1.12.1. The ma
 - With the key absent, `alwaysUpdateLinks` read back as `true` after a reload. This may be cached from the session, so the profile reports it as "default". Recommendation: rename and move must still verify links afterwards (F4c).
 - Plugins write their own `data.json` during normal use (`colored-tags` changed after new tags appeared), so diff checks should ignore `.obsidian/plugins/*/data.json`.
 
+## F12 `tasks` and the Tasks plugin syntax (E6.1, 2026-10-28)
+
+CLI 1.15.0, `vault-copy` (Tasks, Dataview and Templater enabled). A fixture note with five tasks (plain, emoji priority and due date, `[/]`, `[-]`, `[x]` with a done date), read with `tasks path=… format=json`.
+
+- **The CLI reads the checkbox line, not the Tasks syntax.** Each item has only `status`, `text`, `file` and `line`. `text` is the whole line with the emoji untouched (`- [ ] b ⏫ 📅 2026-10-30`). There is no due, start, scheduled or priority field, and no filter for them. Do not ask the CLI "what is due this week"; read the text and parse the dates yourself.
+- **`status` is the raw character**, so custom statuses are visible: `/` (in progress), `-` (cancelled), `>` (deferred). `status="/"` filters on it and returns the right line.
+- **Every non-space status counts as done.** With 2 `[ ]` and 3 tasks marked `/`, `-` and `x`: `todo total` → 2, `done total` → 3. So `todo` (and `obs --tasks-count`, which uses it) treat an in-progress `[/]` or cancelled `[-]` task as finished, and leave it out of the open count. For open work pass the status as one space (argument `status= `, 1 hit on the fixture; the literal `status=" "` returns 0), or count `[ ]` lines yourself (silent wrong answer, damage tier 3).
+- `line` is a string (`"2"`) in JSON, and 1-based.
+- Verdict: new finding, no source claim. Probe P30.
+
 ## Not verified
 
 - An admin terminal (F1).

@@ -529,3 +529,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - `tests/compat/probes.mjs`: P18 liệt kê Thùng rác Windows (PowerShell, Shell.Application) trước và sau `delete`, chỉ xoá entry mới có đúng tên `ref-block.md` và đúng thư mục gốc của vault test. Không có PowerShell thì báo `bin=n/a` và để nguyên.
 - Bằng chứng: 2 lần chạy trên `vault-copy`, cả hai `PASS P18 ... bin before=7 added=1 after=7`; vault sạch sau đó; 49 test pass.
 - Còn mở: 7 entry `ref-block.md` cũ trong Thùng rác (từ trước bản sửa); agent không xoá vì ngoài phạm vi.
+
+## E6.1: `tasks` và cú pháp plugin Tasks (2026-10-28)
+- Kết quả đầy đủ ở [FINDINGS.md](FINDINGS.md) F12; probe P30 (đã có trong 30 probe).
+- Bằng chứng: chạy đủ bộ probe trên `vault-copy`, CLI 1.15.0: 30/30, 100% có trọng số; 49 test pass; vault sạch.
+- Điểm mở cho E6.4: bẫy `[/]`/`[-]` bị tính là done khi đếm `todo`; chưa đưa vào `references/`.
