@@ -10,7 +10,7 @@ Kiểm chứng những gì v1 mới giả định hoặc mới test một phần
 | ID | Việc | Cần gì | Xong khi |
 |---|---|---|---|
 | E2.1 | **Case 9 đầy đủ:** chạy case 1 và case 4 bằng agent chạy thẳng trên Windows (Claude Code trong PowerShell) | User mở Claude Code trên Windows, cài skill vào thư mục skills của Windows | Có dòng kết quả trong RESULTS.md với env = Windows native; câu trả lời giống WSL |
-| E2.1a | **Chuẩn bị E2.1:** checklist cài skill trên Windows và hai prompt case 1, 4 | Không cần user | Checklist có trong `tests/`; prompt chạy thử đúng một lần ở WSL trên vault test |
+| E2.1a ✅ | **Chuẩn bị E2.1:** checklist cài skill trên Windows và hai prompt case 1, 4 | Không cần user | Checklist có trong `tests/`; prompt chạy thử đúng một lần ở WSL trên vault test |
 | E2.1b | **Chạy E2.1** trong Claude Code ở PowerShell (user, ~20 phút) | Máy Windows có Claude Code | Như "Xong khi" của E2.1 |
 | E2.4a ✅ | **Chuẩn bị E2.4:** lệnh chính xác và test bridge phát hiện lỗi im lặng (exit 2) bằng `fake-obsidian` | Không cần user | Unit test pass; hướng dẫn ngắn |
 | E2.4b | **Chạy E2.4** trong PowerShell admin (user, ~5 phút) | PowerShell admin | Như "Xong khi" của E2.4 |

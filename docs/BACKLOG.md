@@ -2,22 +2,22 @@
 
 Bảng quản lý công việc, trạng thái và tiến độ của toàn project. Mỗi epic có một plan chi tiết trong [`docs/plans/`](plans/); mỗi việc có ID (`E2.3`) trỏ tới dòng tương ứng trong plan đó.
 
-**Cập nhật lần cuối:** 2026-10-28 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4); skill v2 kiểm trên CLI 1.15.0
+**Cập nhật lần cuối:** 2026-10-28 (autopilot) · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4); skill v2 kiểm trên CLI 1.15.0
 
 ## Tổng quan tiến độ
 
-**Toàn project: 53 / 68 việc xong (77%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 54 / 68 việc xong (79%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 3/6 █████░░░░░ 50% | — | E2.1a, E2.4a agent chuẩn bị; E2.1b, E2.4b cần user |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 6/9 ██████░░░░ 66% | ✅ E2.2, E2.3 | E3.3a/E3.5a/E3.6a agent chuẩn bị; E3.3b: một tuần chỉ đọc (user); sau đó E3.5b |
-| E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | Để sau (quyết định ở cổng 0) |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 4/6 ██████░░░░ 66% | — | Chờ user: E2.1b (Windows, ~20 phút), E2.4b (terminal admin, ~5 phút) |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 6/9 ██████░░░░ 66% | ✅ E2.2, E2.3 | Phần agent xong. Chờ user: E3.3b một tuần chỉ đọc, sau đó E3.5b, E3.6b |
+| E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | — (đẩy repo lên GitHub là đã cài được bằng `/plugin`; bump `version` mỗi bản phát hành) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
-| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 5/6 ████████░░ 83% | — | E6.4 (sau E6.1–E6.3), E6.5, E6.6 |
+| E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 5/6 ████████░░ 83% | — | E6.6 (tuỳ chọn) chờ user chọn MCP server để so sánh |
 | E7. Diễn tập có/không skill, tư liệu bài viết và video | [E7-showcase.md](plans/E7-showcase.md) | ✅ Done | — | 8/8 ██████████ 100% | — | — (đăng bài và quay video khi user sẵn sàng) |
 | E8. Tối ưu skill cho model nhỏ (DeepSeek, GLM, Gemini, OpenAI qua OpenRouter; Haiku) | [E8-small-models.md](plans/E8-small-models.md) | ✅ Done | — | 10/12 ████████░░ 83% | — | Báo cáo: [REPORT.md](models/REPORT.md). Mặc định `haiku`. Còn E8.11, E8.13 (P3, tuỳ chọn) |
 | E9. Bench dùng lại được: Obsidian × agent CLI × model × skill | [E9-skill-bench.md](plans/E9-skill-bench.md) | ⬜ Todo | P3 | 0/6 ░░░░░░░░░░ 0% | ✅ E8.4 xong | Giao [prompt](handoff/E9-SKILLBENCH-PROMPT.md) cho agent khác; E9.1 hỏi user |
@@ -39,7 +39,7 @@ Ký hiệu trạng thái:
 
 | ID | Việc | Ghi chú |
 |---|---|---|
-| E3.3b | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi; dùng [bảng ghi](handoff/E3.3-READONLY-LOG.md) |
+| E3.3b | Một tuần chỉ đọc trên vault thật | User dùng hằng ngày, agent ghi lại lỗi; dùng [bảng ghi](handoff/E3.3-READONLY-LOG.md). Chờ user |
 
 ## Cần user
 
@@ -52,6 +52,7 @@ Các việc này agent không tự làm được:
 | E2.4b | Terminal quyền admin | Mở PowerShell bằng quyền admin, chạy lệnh của E2.4a (~5 phút) |
 | E3.5b | Mở quyền ghi một note trên vault thật | Cho agent ghi 10 lần (append daily note, sửa property), xem kết quả (~15 phút), sau E3.3b |
 | E3.6b | Thao tác lớn trên vault thật | Theo dõi lần đầu rename, move, đổi tên tag (~20 phút), sau E3.5b |
+| E6.6 | (Tuỳ chọn) So sánh với MCP | Chọn một server MCP cho Obsidian để cài thử (bên thứ ba) |
 | — | Thu hồi key OpenRouter đã lộ | OpenRouter → Keys → revoke key E8 ([GATES.md](GATES.md) mục sự cố bảo mật) |
 
 ## Backlog chi tiết
@@ -66,7 +67,7 @@ Các việc này agent không tự làm được:
 | E1.5 | 11 kịch bản test | E1 | — | ✅ | Agent | [RESULTS.md](../tests/RESULTS.md) |
 | E1.6 | Tài liệu HOW-IT-WORKS | E1 | — | ✅ | Agent | [HOW-IT-WORKS.md](HOW-IT-WORKS.md) |
 | E2.1 | Case 9 với agent trên Windows | E2 | P1 | ⏸ | User + agent | Tách thành a/b |
-| E2.1a | Checklist cài skill và chạy case 1, 4 trên Windows, đi thử trên vault test | E2 | P1 | ⬜ | Agent | Xong khi: checklist trong `tests/`, các prompt đã chạy thử đúng một lần ở WSL |
+| E2.1a | Checklist cài skill và chạy case 1, 4 trên Windows, đi thử trên vault test | E2 | P1 | ✅ | Agent | [CASE9-WINDOWS.md](../tests/scenarios/CASE9-WINDOWS.md); `tests/scenarios/case9-rehearsal.mjs`; diễn tập ở WSL trên `vault-copy`: case 1 (9 note) và case 4 (114 task mở) đều pass, vault không đổi |
 | E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ⏸ | User | Cần máy Windows có Claude Code, ~20 phút |
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
@@ -103,7 +104,7 @@ Các việc này agent không tự làm được:
 | E6.3 | Đo khả năng đọc kết quả Dataview | E6 | P3 | ✅ | Agent | [FINDINGS.md](FINDINGS.md) F14: không có lệnh CLI nào chạy query Dataview; `read`/`outline`/`search` chỉ thấy mã nguồn; kết quả chỉ có trong app (cần `eval`, bridge chặn); skill chỉ nên hướng dẫn viết query, không đọc kết quả; probe P32, 32/32 |
 | E6.4 | Viết `references/plugins.md` | E6 | P3 | ✅ | Agent | `references/plugins.md` (~914 token): Tasks, Dataview, Templater từ F12–F14; SKILL.md có dòng trỏ tới; size-check đạt (tải điển hình 2538/3000). Cú pháp emoji Tasks và trường Dataview lấy từ tài liệu plugin, không đo |
 | E6.5 | Fixture và kịch bản test cho plugin | E6 | P3 | ✅ | Agent | Case 12 (Tasks) và 13 (Templater) trong [tests/scenarios/README.md](../tests/scenarios/README.md), kết quả trong [RESULTS.md](../tests/RESULTS.md): có skill pass cả hai; không skill: case 12 sai số task mở (4 thay vì 3). Runner `tests/scenarios/e65-plugins.mjs` chỉ chạy trên `vault-copy`; vault sạch sau reset |
-| E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⬜ | Agent | — |
+| E6.6 | (Tuỳ chọn) So sánh với MCP | E6 | P3 | ⏸ | User + agent | Loại khỏi autopilot: phải cài server MCP của bên thứ ba (và thường một plugin trong vault) để đo; user chọn server rồi mới làm. Agent đã sẵn kịch bản test 6 và cách đo token ở E7/E8 |
 | E7.1 | Chốt tình huống diễn tập | E7 | P2 | ✅ | Agent | Plan E7, mục "Kịch bản đã chốt"; `tests/showcase/prompt.mjs` |
 | E7.2 | Chạy không có skill | E7 | P2 | ✅ | Agent | 9 phiên, `docs/showcase/scenarios/*/without*/` |
 | E7.3 | Chạy có skill | E7 | P2 | ✅ | Agent | 9 phiên chạy mới, `docs/showcase/scenarios/*/with*/` |

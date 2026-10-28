@@ -608,3 +608,10 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Không có lỗi bridge/skill thật; đạt 10/10 sau khi sửa quy tắc đối chiếu của chính script (khớp từ nguyên, task đánh số, so sánh link không phân biệt hoa thường, v.v.; ghi trong README). 3 câu pass kèm khác biệt vô hại in ra (liên kết markdown/URL trong `unresolved`, ảnh orphan do cách Obsidian phân giải link).
 - Lưu ý cho user: `--find` khớp nguyên từ; `recents` là "mở gần đây", không phải "sửa gần đây"; `--backlinks` bỏ qua `.canvas` và alias nhưng `orphans` tính `.canvas`.
 - Chưa chạy trên `vault-synth` và vault Drive; lần chạy đầu ~70 s vì đọc ~1,9 nghìn note qua ổ Windows.
+
+## E2.1a: chuẩn bị case 9 trên Windows (2026-10-28)
+- [tests/scenarios/CASE9-WINDOWS.md](../tests/scenarios/CASE9-WINDOWS.md) (tiếng Anh): an toàn, junction/`install.mjs`, `--preflight`, prompt case 1 và 4, đáp án mong đợi (case 1: 9 note, nói rõ danh sách có thể thiếu; case 4: 114 task mở), hai dòng RESULTS mẫu "Windows native", mục xử lý lỗi (F1, exit 127, `OBS_CLI`). Đếm bằng `Select-String` thuần cho 115 vì một task nằm trong code block; checklist có script PowerShell biết rào code (114, đã chạy từ WSL qua `powershell.exe`).
+- Diễn tập ở WSL (`tests/scenarios/case9-rehearsal.mjs`, chỉ chạy trên `vault-copy`): case 1 pass (2 lệnh, 8 s), case 4 pass (2 lệnh, 6 s); `git status` và HEAD của vault không đổi (tôi kiểm lại `git status` rỗng). Không ghi vào RESULTS (env phải là Windows native).
+- Còn mở: E2.1b, user chạy ~20 phút.
+## E6.6: loại khỏi autopilot (2026-10-28)
+- Cần cài server MCP của bên thứ ba (thường kèm plugin trong vault) để đo; để user chọn. Ghi ở BACKLOG.
