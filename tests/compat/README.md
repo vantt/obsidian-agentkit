@@ -50,6 +50,28 @@ Safety built in:
 5. Run the full suite again; the row in `HISTORY.md` is the record.
 6. Re-run the scenario tests (`tests/scenarios/README.md`) and append their rows to `tests/RESULTS.md`.
 
+## When Obsidian updates: checklist
+Precedent: the CLI went 1.14.4 → 1.15.0 on 2026-10-27/28. What was done then is in `docs/GATES.md` (section "E8.6 close" and the E8 round-1 notes). Follow the steps in order and tick each one.
+
+1. **Detect.** Run `obs --preflight --vault "<copy name>"` (the bridge is `skills/obsidian-connect/scripts/obs.mjs`). It prints `cli=<new> tested=<old> match=yes|no`. `match` compares major.minor only, so a patch update (for example 1.15.0 → 1.15.3) still says `yes`: whenever `cli=` differs from `tested=`, run the checklist anyway. A probe run also prints `CLI x differs from tested y` at the end.
+2. **Prepare.** Use the vault copy from "Setup" above (never the real vault), clean in git, Obsidian open on it, "Automatically update internal links" on. Run `cd tests && npm ci` once.
+3. **Run all probes**, read-only and write: `node tests/compat/probes.mjs --vault <copy name> --dir <copy local path> --env-label wsl`. About 6-7 min; do not click in the vault window. A partial run (`--no-write`, about 1 min) is only a quick first look and does not close the update.
+4. **Compare.** `node tests/compat/probes.mjs --compare` prints the flips between the last two runs with the observed output. Also read the new row in `HISTORY.md` (columns "Changed" and "Failed probes"). Expected: "Changed: none", score 100%.
+5. **If a probe flipped:** re-run it alone (`--only P##`) to rule out index lag, then follow "When a probe flips" above. Check by hand whether it is a CLI change or a difference in the vault: P29 failed on 1.15.0 only because that vault had a Daily notes template.
+6. **Update the version** (when the verdict is "nothing the skill relies on changed", or after step 5 is done):
+   - `TESTED_CLI` in `skills/obsidian-connect/scripts/obs.mjs`;
+   - `metadata.tested-cli` and `tested-on` in `skills/obsidian-connect/SKILL.md`, and the traps line there;
+   - the version in the header of `skills/obsidian-connect/references/traps.md`;
+   - docs that state the CLI version or the probe count: the status line in the root `README.md`, `docs/SPEC.md` (line 3 and the "Version pin" bullet), the `docs/BACKLOG.md` header, `docs/HOW-IT-WORKS.md` (the `metadata.tested-cli` note and the `probes.mjs` row), and the probe count at the top of this file. Find them with `grep -rn "<old version>" README.md docs skills` and `grep -rn "probes" README.md docs`. Leave dated history entries (GATES.md, FINDINGS.md) as they are.
+7. **Offline gates** (no Obsidian needed): `node --test tests/*.test.mjs`, `node tests/size-check.mjs`, and the privacy scan the maintainer runs before a push.
+8. **Re-run `obs --preflight`.** It must print `match=yes` and the new version.
+9. **Model smoke check (optional; Claude subscription only, no paid API).** On the synthetic vault set up as in `tests/models/README.md`: `node tests/models/run.mjs calibrate` (expect the same backlinks and unresolved counts as the recorded baseline), then `node tests/models/run.mjs one haiku S1 with 1 --round 99` (expect a pass). Skip it when only the patch number changed and every probe passed.
+10. **Record.**
+    - `docs/GATES.md`: a new dated section "CLI <old> → <new> (<date>)" with the probes run and score, any flip and its by-hand check, the verdict, the files changed in step 6, and the optional smoke result.
+    - `tests/compat/HISTORY.md`: written by the probe run itself; commit the new `history/*.json` and the rebuilt file.
+    - Root `README.md` status line: the new version and date.
+    - If behaviour changed: a dated entry in `docs/FINDINGS.md` under the same `F#`.
+
 ## Not covered by probes (manual)
 - Obsidian closed (bridge exit 2): close the app, then run `obs --preflight`.
 - Git Bash `.exe` exit 127.

@@ -544,3 +544,9 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Kết quả ở [FINDINGS.md](FINDINGS.md) F14; probe P32 (ghi note thử, kiểm `read`/`outline`/`search`/`help`/`commands`, bridge từ chối `eval`/`dev:dom`/`command` với exit 7; `eval` chỉ dùng để đo trong probe).
 - Kết luận: không có đường đọc kết quả Dataview; skill chỉ nên hướng dẫn viết query.
 - Điểm mở cho E6.4: dòng bẫy "đừng báo số dòng kết quả từ `read` một note có khối dataview; đó là mã nguồn".
+
+## E5.3: checklist khi Obsidian cập nhật (2026-10-28)
+- Mục "When Obsidian updates: checklist" (10 bước) trong `tests/compat/README.md`: phát hiện bản mới, chạy đủ probe, so sánh, xử lý probe đổi kết quả, cập nhật `TESTED_CLI` và các file nêu tên, chạy cổng offline, preflight lại, (tuỳ chọn) kiểm model, ghi lại.
+- Bằng chứng: các lệnh và cờ đối chiếu với code `probes.mjs`, `run.mjs`; khớp với lần 1.14.4 → 1.15.0 ghi ở mục E8.6. Chạy được ở đây: test offline và size-check. Chưa chạy: các bước cần Obsidian, vì lần cập nhật thật chưa tới.
+- Đã sửa số probe lỗi thời (29 → 32) ở README và SPEC.
+- Còn mở: lần cập nhật Obsidian kế tiếp là lần chạy thật đầu tiên theo checklist.

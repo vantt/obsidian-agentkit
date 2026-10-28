@@ -1,6 +1,6 @@
 # Spec: obsidian-connect v1
 
-Every decision cites a finding (`F#` in `FINDINGS.md`) or a lesson key. Tested on Obsidian CLI **1.14.4**; the 29 probes pass unchanged on **1.15.0** (2026-10-28).
+Every decision cites a finding (`F#` in `FINDINGS.md`) or a lesson key. Tested on Obsidian CLI **1.14.4**; the 32 probes pass on **1.15.0** (2026-10-28).
 
 > **v2 (E8.6, E8.7, 2026-10-27).** This spec describes v1. v2 keeps every rule here and moves more into the bridge; see §8.
 
