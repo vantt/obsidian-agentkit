@@ -48,8 +48,8 @@ Các việc này agent không tự làm được:
 | ID | Việc | User cần làm |
 |---|---|---|
 | E3.3b | Một tuần chỉ đọc trên vault thật | Dùng agent hỏi vault (tìm, backlink, đếm task); báo lại câu trả lời sai hoặc thiếu (dùng bảng ghi của E3.3a) |
-| E2.4b | Terminal quyền admin | Mở PowerShell bằng quyền admin, chạy lệnh của E2.4a (~5 phút) |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | Chọn một server MCP cho Obsidian để cài thử (bên thứ ba) |
+| — | Quyết định có viết lại lịch sử git không | Commit `826e2e9` và `1c24d43` (repo công khai) có tên tài khoản và máy Windows; file đã sạch nhưng lịch sử còn. Viết lại cần force-push, chỉ làm khi user nói |
 | — | Thu hồi key OpenRouter đã lộ | OpenRouter → Keys → revoke key E8 ([GATES.md](GATES.md) mục sự cố bảo mật) |
 
 ## Backlog chi tiết
@@ -68,7 +68,7 @@ Các việc này agent không tự làm được:
 | E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ✅ | Agent | 2026-10-29, CLI 1.15.0, `vault-copy`: case 1 = 9 note, case 4 = 114, cả hai pass; vault `git status` trống, HEAD không đổi ([RESULTS.md](../tests/RESULTS.md)). Chạy bằng `claude -p` (headless) từ PowerShell, chưa phải phiên tương tác. Chạy lặp lại cùng ngày: kết quả như cũ (2 hàng mới trong RESULTS) |
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
-| E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | Tách thành a/b |
+| E2.4 | Terminal quyền admin | E2 | P2 | ✅ | User + agent | Tách thành a/b; cả hai xong |
 | E2.4a | Lệnh chính xác và test bridge phát hiện lỗi im lặng (exit 2) bằng `fake-obsidian` | E2 | P2 | ✅ | Agent | Hướng dẫn "Admin terminal check" trong [tests/compat/README.md](../tests/compat/README.md); `tests/admin-silent.test.mjs`. Test lộ lỗ hổng: `version`/`--preflight` im lặng vẫn báo OK exit 0; đã sửa `classify()` (exit 2 + NEXT), 69 test pass |
 | E2.4b | Chạy lệnh của E2.4a trong PowerShell admin, ghi FINDINGS F1 | E2 | P2 | ✅ | User + agent | 2026-10-29, [E2.4B-RESULT.md](handoff/E2.4B-RESULT.md): shell admin là tài khoản Windows khác với Obsidian; CLI báo "unable to find Obsidian" exit 1, bridge exit 2, không có lỗi im lặng. Sửa chữ báo lỗi và NEXT (`1c24d43`). Chưa thử: cùng tài khoản có UAC |
 | E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
