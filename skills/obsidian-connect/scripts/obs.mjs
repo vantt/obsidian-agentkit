@@ -120,7 +120,7 @@ export function classify({ status, stdout, stderr, signal, error }, cmd = '') {
   const out = (stdout || '').replace(/^\r?\n/, ''); // Obsidian.exe prints a leading blank line
   const first = out.split(/\r?\n/)[0].trim();
   // The "app closed" message goes to stderr (seen from WSL interop) or stdout (PowerShell).
-  if (/unable to find Obsidian/i.test(out + (stderr || ''))) return [EXIT.unreachable, 'Obsidian is not running'];
+  if (/unable to find Obsidian/i.test(out + (stderr || ''))) return [EXIT.unreachable, 'Obsidian is not running, or runs as another user (admin shell?)'];
   if (status === 127) return [EXIT.unreachable, 'exit 127 (Obsidian.exe instead of Obsidian.com?)'];
   if (/^Error: Command ".*" not found/.test(first)) return cmd && !KNOWN.has(cmd) ? [EXIT.usage, `no such command "${cmd}"`] : [EXIT.notReady, first];
   if (first.startsWith('Error:')) return [EXIT.error, first];
@@ -267,7 +267,7 @@ function preflight(ctx) {
       saveState({ ...ctx.state, vault, local: loc.local, savedAt: Date.now() });
     } else lines.push(`vault "${vault}": folder unknown`);
     lines.push(`env=${env} cli=${cli ? 'found' : 'none'} (${v.reason})`);
-    throw new Fail(EXIT.unreachable, v.reason, { out: lines.join('\n') + '\n', next: loc?.local ? nextFor(EXIT.unreachable) + ' For other jobs read references/file-mode.md.' : 'ask the user to start Obsidian, or for the vault folder: obs --preflight --dir "<folder>"' });
+    throw new Fail(EXIT.unreachable, v.reason, { out: lines.join('\n') + '\n', next: loc?.local ? nextFor(EXIT.unreachable) + ' For other jobs read references/file-mode.md.' : 'ask the user to start Obsidian and use a terminal under the same Windows user (not "Run as administrator"), or for the vault folder: obs --preflight --dir "<folder>"' });
   }
   const runV = makeRunner(cli, env, vault);
   const p = ctx.dir ? { local: ctx.dir } : vaultPaths(runV, env);
