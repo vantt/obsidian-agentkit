@@ -615,3 +615,10 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - Còn mở: E2.1b, user chạy ~20 phút.
 ## E6.6: loại khỏi autopilot (2026-10-28)
 - Cần cài server MCP của bên thứ ba (thường kèm plugin trong vault) để đo; để user chọn. Ghi ở BACKLOG.
+
+## E3.5b và E3.6b: ghi và thao tác lớn trên vault thật (2026-10-29)
+- User cho phép rõ ràng chạy trên vault thật (tên không ghi vào repo), bỏ qua E3.3b. Trước khi ghi: git ngoài vault (`~/.local/state/obs-e3/`, 1976 file text: `.md`, `.canvas`, `.base`, `.obsidian`), `--preflight` OK `match=yes`, `unresolved total` 85. Hai script `e35`/`e36` từ chối vault thật nên chạy tay bằng bridge trên note thử trong `_agentkit-lab/`; không đụng daily note thật.
+- E3.5b: 5 `--append once` + 5 `--prop-set`; mỗi dòng đúng 1 lần, property cuối khớp, `obs read` khớp file. Chỉ giá trị property cuối được so (5 giá trị trước bị ghi đè).
+- E3.6b: rename (backlinks 2 sang 2), move (link theo tên nên không phải sửa, backlinks 1 sang 1), đổi tên tag (dry-run 2 file, rồi apply, `tags` thấy tag mới). `unresolved total` 85 trước và sau từng bước và sau khi dọn. Mỗi thao tác có snapshot.
+- Dọn: xóa `_agentkit-lab/` và 3 thư mục snapshot của chính mình. So với git ngoài vault: chỉ `.obsidian/workspace.json` đổi (trạng thái giao diện Obsidian), không note nào khác.
+- Chưa kiểm: vault trên Drive (F15), ghi vào daily note thật, tag đã có trong note thật. E3.3b chưa làm.

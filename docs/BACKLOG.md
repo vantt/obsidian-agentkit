@@ -2,11 +2,11 @@
 
 Bảng quản lý công việc, trạng thái và tiến độ của toàn project. Mỗi epic có một plan chi tiết trong [`docs/plans/`](plans/); mỗi việc có ID (`E2.3`) trỏ tới dòng tương ứng trong plan đó.
 
-**Cập nhật lần cuối:** 2026-10-28 (autopilot) · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4); skill v2 kiểm trên CLI 1.15.0
+**Cập nhật lần cuối:** 2026-10-29 · **Phiên bản đã phát hành:** v1 (Obsidian CLI 1.14.4); skill v2 kiểm trên CLI 1.15.0
 
 ## Tổng quan tiến độ
 
-**Toàn project: 54 / 68 việc xong (79%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 56 / 68 việc xong (82%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
@@ -14,7 +14,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
 | E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 4/6 ██████░░░░ 66% | — | Chờ user: E2.1b (Windows, ~20 phút), E2.4b (terminal admin, ~5 phút) |
-| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 6/9 ██████░░░░ 66% | ✅ E2.2, E2.3 | Phần agent xong. Chờ user: E3.3b một tuần chỉ đọc, sau đó E3.5b, E3.6b |
+| E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 8/9 ████████░░ 88% | ✅ E2.2, E2.3 | E3.5b, E3.6b xong trên vault thật (2026-10-29). Còn E3.3b: một tuần chỉ đọc, chờ user |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | — (đẩy repo lên GitHub là đã cài được bằng `/plugin`; bump `version` mỗi bản phát hành) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
 | E6. Plugin Tasks, Dataview, Templater | [E6-plugin-coverage.md](plans/E6-plugin-coverage.md) | 🔄 Doing | P3 | 5/6 ████████░░ 83% | — | E6.6 (tuỳ chọn) chờ user chọn MCP server để so sánh |
@@ -50,8 +50,6 @@ Các việc này agent không tự làm được:
 | E2.1b | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill, chạy case 1 và 4 theo checklist của E2.1a (~20 phút) |
 | E3.3b | Một tuần chỉ đọc trên vault thật | Dùng agent hỏi vault (tìm, backlink, đếm task); báo lại câu trả lời sai hoặc thiếu (dùng bảng ghi của E3.3a) |
 | E2.4b | Terminal quyền admin | Mở PowerShell bằng quyền admin, chạy lệnh của E2.4a (~5 phút) |
-| E3.5b | Mở quyền ghi một note trên vault thật | Cho agent ghi 10 lần (append daily note, sửa property), xem kết quả (~15 phút), sau E3.3b |
-| E3.6b | Thao tác lớn trên vault thật | Theo dõi lần đầu rename, move, đổi tên tag (~20 phút), sau E3.5b |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | Chọn một server MCP cho Obsidian để cài thử (bên thứ ba) |
 | — | Thu hồi key OpenRouter đã lộ | OpenRouter → Keys → revoke key E8 ([GATES.md](GATES.md) mục sự cố bảo mật) |
 
@@ -82,12 +80,12 @@ Các việc này agent không tự làm được:
 | E3.3a | Bảng ghi lỗi và 10 câu hỏi chỉ đọc mẫu, chạy thử trên `vault-copy` | E3 | P1 | ✅ | Agent | [E3.3-READONLY-LOG.md](handoff/E3.3-READONLY-LOG.md) (bảng ghi + 10 câu + cách kiểm trên file); `tests/e33-readonly-check.mjs` chỉ đọc, chạy trên `vault-copy`: 10/10 đúng, vault không đổi, 78 test pass |
 | E3.3b | Một tuần dùng chỉ đọc trên vault thật | E3 | P1 | ⏸ | User | 1 tuần dùng bình thường |
 | E3.4 | Chọn cách snapshot | E3 | P1 | ✅ | User | Git, repo ngoài Drive (`--separate-git-dir`), chỉ file text; bridge tự commit trước rename, move, đổi tên tag ([GATES.md](GATES.md) mục E3.4) |
-| E3.5 | Mở quyền ghi một note | E3 | P1 | ⏸ | User + agent | Tách thành a/b |
+| E3.5 | Mở quyền ghi một note | E3 | P1 | ✅ | User + agent | Tách thành a/b; cả hai xong |
 | E3.5a | Script 10 lần ghi (append daily, sửa property) + đọc lại, chạy trên vault Drive test | E3 | P1 | ✅ | Agent | `tests/e35-write-check.mjs` (chỉ chạy trên 3 vault test): 10/10 đúng khi đọc file, không bản xung đột sau 180 s; 54 test pass. [FINDINGS.md](FINDINGS.md) F15: Obsidian chậm thấy sửa file ở vault Drive |
-| E3.5b | Làm lại trên vault thật cùng user | E3 | P1 | ⏸ | User + agent | Sau E3.3b; ~15 phút. Agent không tự ghi vào vault thật |
-| E3.6 | Mở thao tác lớn | E3 | P2 | ⏸ | User + agent | Tách thành a/b |
+| E3.5b | Làm lại trên vault thật | E3 | P1 | ✅ | User + agent | User cho phép chạy (2026-10-29), bỏ qua E3.3b. Agent ghi 10 lần vào note thử trong `_agentkit-lab/` của vault thật: 5 append + 5 `--prop-set`, mỗi dòng đúng 1 lần, property cuối khớp, CLI đọc lại khớp file. Daily note thật không bị ghi. Đã xóa note thử. [GATES.md](GATES.md) mục E3.5b/E3.6b |
+| E3.6 | Mở thao tác lớn | E3 | P2 | ✅ | User + agent | Tách thành a/b; cả hai xong |
 | E3.6a | Diễn tập dry-run, rename, move, đổi tên tag trên `vault-copy` | E3 | P2 | ✅ | Agent | `tests/e36-bulk-rehearsal.mjs` chạy trên `vault-copy`: 33/33 kiểm tra đạt, `unresolved total` 89 không đổi ở cả 3 thao tác, snapshot git có đủ, vault sạch sau reset |
-| E3.6b | Làm lần đầu trên vault thật có người theo dõi | E3 | P2 | ⏸ | User + agent | Sau E3.5b; ~20 phút |
+| E3.6b | Làm lần đầu trên vault thật | E3 | P2 | ✅ | User + agent | Rename, move, đổi tên tag trên 6 note thử trong vault thật: `unresolved total` 85 không đổi sau cả 3; link của note tham chiếu cập nhật đúng; tag dry-run liệt kê đúng 2 file thử rồi apply; mỗi thao tác có snapshot. Đã dọn; không note nào khác đổi |
 | E4.1 | Plugin và marketplace của Claude Code | E4 | P3 | ✅ | Agent | `.claude-plugin/plugin.json` + `marketplace.json`; `claude plugin validate` pass; sau push, `marketplace add vantt/obsidian-agentkit` + `plugin install` từ GitHub OK trong config tạm (skill `obsidian-connect` hiện ra); mục "Install as a plugin" trong README |
 | E4.2 | Đường dẫn script không phụ thuộc chỗ cài | E4 | P3 | ✅ | Agent | SKILL.md dùng `${CLAUDE_SKILL_DIR}`; chạy `claude -p` thật với skill cài bằng symlink: agent in ra đúng đường dẫn script; cài bằng plugin chỉ dựa trên tài liệu chính thức (chưa chạy sống) |
 | E4.3 | Script cài đặt kiểm tra điều kiện | E4 | P3 | ✅ | Agent | `install.mjs` (mặc định chỉ in; `--link` tạo symlink/junction; `--skills-dir` để thử): kiểm Node ≥ 18, tìm Obsidian CLI bằng code của `obs.mjs`, nhắc `OBS_VAULT`, in lệnh đầu tiên; 5 test; đã chạy thật với thư mục tạm. Chưa thử máy Windows sạch và macOS |
