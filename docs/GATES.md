@@ -622,3 +622,8 @@ Done by a sub-agent, then reviewed and committed by the main session. Nothing ha
 - E3.6b: rename (backlinks 2 sang 2), move (link theo tên nên không phải sửa, backlinks 1 sang 1), đổi tên tag (dry-run 2 file, rồi apply, `tags` thấy tag mới). `unresolved total` 85 trước và sau từng bước và sau khi dọn. Mỗi thao tác có snapshot.
 - Dọn: xóa `_agentkit-lab/` và 3 thư mục snapshot của chính mình. So với git ngoài vault: chỉ `.obsidian/workspace.json` đổi (trạng thái giao diện Obsidian), không note nào khác.
 - Chưa kiểm: vault trên Drive (F15), ghi vào daily note thật, tag đã có trong note thật. E3.3b chưa làm.
+
+## E2.1b và E2.4b: chạy trên Windows thật (2026-10-29)
+- Hai agent chạy trong PowerShell Windows; kết quả push `bcb867f`, `78df4e7` (E2.1b, case 1 = 9 note, case 4 = 114, pass hai lần, chạy bằng `claude -p` headless, không phải phiên tương tác), `826e2e9` và `1c24d43` (E2.4b).
+- E2.4b: shell admin chạy dưới một tài khoản Windows khác với Obsidian, CLI báo lỗi rõ (exit 1), bridge exit 2; không có lỗi im lặng. Bridge đổi chữ báo lỗi và dòng NEXT. Chưa thử cùng tài khoản có UAC.
+- Tôi kiểm lại: 78 test pass, size-check và privacy-scan sạch. Privacy-scan không bắt được tên tài khoản và máy Windows trong `E2.4B-RESULT.md`; tôi đã thay bằng placeholder. Các commit cũ trong lịch sử git vẫn còn các tên đó (repo công khai).

@@ -17,7 +17,7 @@ Phase 1 of `docs/handoff/BUILD-PROMPT.md`. Every item: command, short output exc
 | PowerShell | `obsidian vault=vault-copy …` (`Get-Command obsidian -All` lists `.com` first) | confirmed |
 | Git Bash | `obsidian.com vault=vault-copy …` | confirmed |
 | Git Bash | `obsidian …` resolves to `Obsidian.exe`: plain commands work (with a leading blank line), colon commands exit **127** with no output (`property:read …` → `exit=127`) | confirmed (lesson `windows-com-redirector-and-wrapper`) |
-| Admin terminal | not tested (would need elevation) | could not test |
+| Admin terminal | tested 2026-10-29 (shell under another admin account): fails loudly, "unable to find Obsidian", exit 1; bridge maps it to exit 2. Same account with UAC not tested | see [E2.4B-RESULT.md](handoff/E2.4B-RESULT.md) |
 
 - **F1a Obsidian closed.** In all three environments, `version` prints `The CLI is unable to find Obsidian. Please make sure Obsidian is running and try again.` and exits **1**. From WSL interop this message arrives on **stderr** with empty stdout (seen when the app was closed during a later run); in PowerShell it showed on the console stream. It takes about 144 ms, does not hang, and does not start Obsidian. Verdict: confirmed. One call is enough to detect it.
 - **F1b App starting up or reloading.** For a few seconds, commands fail with `Error: Command "vault" not found. Did you mean: daily?` or `Error: Command "eval" not found. It may require a plugin to be enabled.`, still exit 0. `vault info=name` can succeed before every command is registered. Verdict: confirmed. The bridge must treat "Command … not found" during the first seconds as "not ready".

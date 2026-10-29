@@ -6,14 +6,14 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 
 ## Tổng quan tiến độ
 
-**Toàn project: 56 / 68 việc xong (82%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
+**Toàn project: 58 / 68 việc xong (85%)** (đã tách 5 việc hỗn hợp thành a/b, 2026-10-28)
 
 **Đường chính (user chốt 2026-10-28):** E8.9 (xong) → E2 → E3, tức đưa skill lên vault thật. E4, E6, E8.11, E8.13 và E9 để P3.
 
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 5/6 ████████░░ 83% | — | Chờ user: E2.4b (terminal admin, ~5 phút) |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | ✅ Done | P1 | 6/6 ██████████ 100% | — | — (E2.4b: chưa thử cùng tài khoản có UAC) |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 8/9 ████████░░ 88% | ✅ E2.2, E2.3 | E3.5b, E3.6b xong trên vault thật (2026-10-29). Còn E3.3b: một tuần chỉ đọc, chờ user |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | — (đẩy repo lên GitHub là đã cài được bằng `/plugin`; bump `version` mỗi bản phát hành) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
@@ -70,7 +70,7 @@ Các việc này agent không tự làm được:
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | Tách thành a/b |
 | E2.4a | Lệnh chính xác và test bridge phát hiện lỗi im lặng (exit 2) bằng `fake-obsidian` | E2 | P2 | ✅ | Agent | Hướng dẫn "Admin terminal check" trong [tests/compat/README.md](../tests/compat/README.md); `tests/admin-silent.test.mjs`. Test lộ lỗ hổng: `version`/`--preflight` im lặng vẫn báo OK exit 0; đã sửa `classify()` (exit 2 + NEXT), 69 test pass |
-| E2.4b | Chạy lệnh của E2.4a trong PowerShell admin, ghi FINDINGS F1 | E2 | P2 | ⏸ | User | ~5 phút |
+| E2.4b | Chạy lệnh của E2.4a trong PowerShell admin, ghi FINDINGS F1 | E2 | P2 | ✅ | User + agent | 2026-10-29, [E2.4B-RESULT.md](handoff/E2.4B-RESULT.md): shell admin là tài khoản Windows khác với Obsidian; CLI báo "unable to find Obsidian" exit 1, bridge exit 2, không có lỗi im lặng. Sửa chữ báo lỗi và NEXT (`1c24d43`). Chưa thử: cùng tài khoản có UAC |
 | E2.5 | Chạy lại 4 case, mỗi case 3 lần, để đo độ dao động | E2 | P2 | ❌ | Agent | Bỏ: E8 đã chạy mỗi tình huống 3 lượt ([REPORT.md](models/REPORT.md)) |
 | E2.6 | Đo token từ transcript | E2 | P2 | ❌ | Agent | Bỏ: E8 đo token từ transcript cho mọi lượt (`tests/models/summary.mjs`) |
 | E3.1 | Cài skill cho vault thật | E3 | P1 | ✅ | User + agent | Symlink `~/.claude/skills/obsidian-connect`; `--preflight` OK, `match=yes` (lần đầu timeout vì Obsidian đang mở vault; `NEXT:` đã sửa, test mới) |
