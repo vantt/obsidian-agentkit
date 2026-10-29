@@ -13,7 +13,7 @@ Bảng quản lý công việc, trạng thái và tiến độ của toàn proje
 | Epic | Plan | Trạng thái | Ưu tiên | Tiến độ | Phụ thuộc | Bước tiếp theo |
 |---|---|---|---|---|---|---|
 | E1. Xây dựng v1 | [E1-v1-build.md](plans/E1-v1-build.md) | ✅ Done | — | 7/7 ██████████ 100% | — | — |
-| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 4/6 ██████░░░░ 66% | — | Chờ user: E2.1b (Windows, ~20 phút), E2.4b (terminal admin, ~5 phút) |
+| E2. Lấp lỗ hổng kiểm chứng | [E2-verification-gaps.md](plans/E2-verification-gaps.md) | 🔄 Doing | P1 | 5/6 ████████░░ 83% | — | Chờ user: E2.4b (terminal admin, ~5 phút) |
 | E3. Dùng trên vault thật | [E3-real-vault-rollout.md](plans/E3-real-vault-rollout.md) | 🔄 Doing | P1 | 8/9 ████████░░ 88% | ✅ E2.2, E2.3 | E3.5b, E3.6b xong trên vault thật (2026-10-29). Còn E3.3b: một tuần chỉ đọc, chờ user |
 | E4. Đóng gói, phân phối | [E4-packaging.md](plans/E4-packaging.md) | ✅ Done | P3 | 5/5 ██████████ 100% | E3.1 | — (đẩy repo lên GitHub là đã cài được bằng `/plugin`; bump `version` mỗi bản phát hành) |
 | E5. Bảo trì và CI | [E5-maintenance-ci.md](plans/E5-maintenance-ci.md) | ✅ Done | — | 6/6 ██████████ 100% | — | — |
@@ -47,7 +47,6 @@ Các việc này agent không tự làm được:
 
 | ID | Việc | User cần làm |
 |---|---|---|
-| E2.1b | Case 9 với agent chạy thẳng trên Windows | Mở Claude Code trong PowerShell, cài skill, chạy case 1 và 4 theo checklist của E2.1a (~20 phút) |
 | E3.3b | Một tuần chỉ đọc trên vault thật | Dùng agent hỏi vault (tìm, backlink, đếm task); báo lại câu trả lời sai hoặc thiếu (dùng bảng ghi của E3.3a) |
 | E2.4b | Terminal quyền admin | Mở PowerShell bằng quyền admin, chạy lệnh của E2.4a (~5 phút) |
 | E6.6 | (Tuỳ chọn) So sánh với MCP | Chọn một server MCP cho Obsidian để cài thử (bên thứ ba) |
@@ -64,9 +63,9 @@ Các việc này agent không tự làm được:
 | E1.4 | Bộ probe, lịch sử điểm, nhật ký sự cố | E1 | — | ✅ | Agent | [HISTORY.md](../tests/compat/HISTORY.md) 29/29 |
 | E1.5 | 11 kịch bản test | E1 | — | ✅ | Agent | [RESULTS.md](../tests/RESULTS.md) |
 | E1.6 | Tài liệu HOW-IT-WORKS | E1 | — | ✅ | Agent | [HOW-IT-WORKS.md](HOW-IT-WORKS.md) |
-| E2.1 | Case 9 với agent trên Windows | E2 | P1 | ⏸ | User + agent | Tách thành a/b |
+| E2.1 | Case 9 với agent trên Windows | E2 | P1 | ✅ | User + agent | Tách thành a/b; cả hai xong |
 | E2.1a | Checklist cài skill và chạy case 1, 4 trên Windows, đi thử trên vault test | E2 | P1 | ✅ | Agent | [CASE9-WINDOWS.md](../tests/scenarios/CASE9-WINDOWS.md); `tests/scenarios/case9-rehearsal.mjs`; diễn tập ở WSL trên `vault-copy`: case 1 (9 note) và case 4 (114 task mở) đều pass, vault không đổi |
-| E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ⏸ | User | Cần máy Windows có Claude Code, ~20 phút |
+| E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ✅ | Agent | 2026-10-29, CLI 1.15.0, `vault-copy`: case 1 = 9 note, case 4 = 114, cả hai pass; vault `git status` trống, HEAD không đổi ([RESULTS.md](../tests/RESULTS.md)). Chạy bằng `claude -p` (headless) từ PowerShell, chưa phải phiên tương tác |
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | Tách thành a/b |

@@ -40,7 +40,7 @@ node "$env:USERPROFILE\.claude\skills\obsidian-connect\scripts\obs.mjs" --prefli
 - A junction needs no admin rights. A symlink (`-ItemType SymbolicLink`) needs an admin shell or Windows Developer Mode. To copy instead: `Copy-Item -Recurse <repo>\skills\obsidian-connect "$env:USERPROFILE\.claude\skills\"` (copy again after each update).
 - To keep `OBS_VAULT` across sessions: `setx OBS_VAULT "<vault name>"`, then open a new terminal. Or skip it: `--preflight --vault` makes the bridge remember the vault for 12 hours.
 - Git Bash runs the same Windows `node`, so these steps apply there too (use `$USERPROFILE` and `/` paths).
-- **Windows native path: written from measurements in WSL and bridge code; first full native run is pending.** Measured: the bridge from PowerShell 5.1 gave the same answers as from WSL ([tests/RESULTS.md](tests/RESULTS.md) case 9, partial). Not yet seen: a Claude Code agent session running natively on Windows (E2.1b), and any admin terminal ([docs/FINDINGS.md](docs/FINDINGS.md) F1).
+- **Windows native path: tested once (2026-10-29, CLI 1.15.0).** A Claude Code agent run from PowerShell (headless `claude -p`) with the skill answered cases 1 and 4 the same as WSL: 9 backlinks, 114 open tasks, vault unchanged ([tests/RESULTS.md](tests/RESULTS.md) case 9, native rows). Not yet seen: an interactive session, and any admin terminal ([docs/FINDINGS.md](docs/FINDINGS.md) F1).
 
 ### What OK looks like
 ```
