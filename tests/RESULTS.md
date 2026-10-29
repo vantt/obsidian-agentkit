@@ -28,6 +28,8 @@ Cases and judging: `tests/scenarios/README.md`.
 | 2026-10-28 | WSL | 1.15.0 | 13 Templater (without skill, comparison) | 1 without | **pass**: same route; said Templater did not run and that it resolved the tags by hand | 4 | — | same checks |
 | 2026-10-29 | Windows native (PowerShell, Claude Code) | 1.15.0 | 1 backlinks | 1 | **pass**: 9 files = ground truth; code-block file excluded; incompleteness stated | 3 (skill load, preflight, backlinks) | — | `otf truth backlinks` total 9; vault `git status` empty, HEAD unchanged (aa078c1); WSL row 2026-10-22 gave the same set. Run as fresh headless `claude -p` from PowerShell in `%TEMP%`, `env=windows`, no `/mnt` paths |
 | 2026-10-29 | Windows native (PowerShell, Claude Code) | 1.15.0 | 4 open tasks | 1 | **pass**: answer 114 = ground truth 114 | 3 (skill load, preflight, `--tasks-count`) | — | file count 114; vault `git status` empty, HEAD unchanged (aa078c1); WSL rows 2026-10-22 gave 114. Same headless run setup as the case 1 row |
+| 2026-10-29 | Windows native (PowerShell, Claude Code) | 1.15.0 | 1 backlinks | 1 | **pass**: 9 files = ground truth; code-block file excluded; incompleteness stated (alias names, canvas) | 5 turns (about 4 tool calls; count not logged) | $0.21 | `otf truth backlinks` total 9; vault `git status` empty, HEAD unchanged (aa078c1); repeat of the earlier native run, fresh headless `claude -p` from `%TEMP%`, `env=windows`, no `/mnt` paths, no dialog |
+| 2026-10-29 | Windows native (PowerShell, Claude Code) | 1.15.0 | 4 open tasks | 1 | **pass**: answer 114 = ground truth 114 | 5 turns (about 4 tool calls; count not logged) | $0.19 | file count 114; vault `git status` empty, HEAD unchanged (aa078c1); same setup as the case 1 row above |
 
 ## Summary for CLI 1.14.4 (2026-10-22)
 

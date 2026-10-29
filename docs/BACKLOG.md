@@ -65,7 +65,7 @@ Các việc này agent không tự làm được:
 | E1.6 | Tài liệu HOW-IT-WORKS | E1 | — | ✅ | Agent | [HOW-IT-WORKS.md](HOW-IT-WORKS.md) |
 | E2.1 | Case 9 với agent trên Windows | E2 | P1 | ✅ | User + agent | Tách thành a/b; cả hai xong |
 | E2.1a | Checklist cài skill và chạy case 1, 4 trên Windows, đi thử trên vault test | E2 | P1 | ✅ | Agent | [CASE9-WINDOWS.md](../tests/scenarios/CASE9-WINDOWS.md); `tests/scenarios/case9-rehearsal.mjs`; diễn tập ở WSL trên `vault-copy`: case 1 (9 note) và case 4 (114 task mở) đều pass, vault không đổi |
-| E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ✅ | Agent | 2026-10-29, CLI 1.15.0, `vault-copy`: case 1 = 9 note, case 4 = 114, cả hai pass; vault `git status` trống, HEAD không đổi ([RESULTS.md](../tests/RESULTS.md)). Chạy bằng `claude -p` (headless) từ PowerShell, chưa phải phiên tương tác |
+| E2.1b | Chạy case 1, 4 với Claude Code trong PowerShell | E2 | P1 | ✅ | Agent | 2026-10-29, CLI 1.15.0, `vault-copy`: case 1 = 9 note, case 4 = 114, cả hai pass; vault `git status` trống, HEAD không đổi ([RESULTS.md](../tests/RESULTS.md)). Chạy bằng `claude -p` (headless) từ PowerShell, chưa phải phiên tương tác. Chạy lặp lại cùng ngày: kết quả như cũ (2 hàng mới trong RESULTS) |
 | E2.2 | Case 10: sửa hàng loạt trên Drive | E2 | P1 | ✅ | User + agent | 6 note sửa + 1 rename, sau 3 phút sync không có bản xung đột; link 9→9 ([RESULTS.md](../tests/RESULTS.md)) |
 | E2.3 | Xoá file trên Drive đi đâu | E2 | P1 | ✅ | Agent | CLI `delete` trên `G:` vào Recycle Bin của Windows, khôi phục được; `obs --trash` vào `.trash/` của vault ([FINDINGS.md](FINDINGS.md) F5) |
 | E2.4 | Terminal quyền admin | E2 | P2 | ⏸ | User + agent | Tách thành a/b |
